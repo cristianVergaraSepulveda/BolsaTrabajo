@@ -1,0 +1,19 @@
+{% extends 'base_single_column.html' %}
+{% block main %}
+
+    <h2>Formulario de registro de estudiantes y profesionales</h2>
+    
+    <p>Por favor rellene el siguiente formulario para poder acceder al servicio de búsqueda y postulación de prácticas profesionales y trabajos.</p>
+   
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ register_form.as_table }}
+        </table>
+        <input type="submit" value="Enviar" />
+    </form>
+
+{% endblock %}

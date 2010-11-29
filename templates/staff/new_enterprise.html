@@ -1,0 +1,25 @@
+{% extends 'account/base_superuser.html' %}
+{% block main %}
+    <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.new_enterprise %}">Nueva empresa</a></div>
+
+    <h2>Formulario de registro de empresas</h2>
+    
+    <p>Utilice el siguiente formulario para agregar manualmente una empresa a la bolsa de trabajo.</p>
+    
+    <p>Primero ingrese los datos de la empresa, luego los datos del usuario que representará a dicha empresa.</p>
+    
+    <p>Este formulario sólo debería utilizarse en casos particulares.</p>
+   
+    <form method="post" action="">
+        {% csrf_token %}
+        <h3>Datos de la empresa</h3>
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ register_form.as_table }}
+        </table>
+        <input type="submit" value="Enviar" />
+    </form>
+
+{% endblock %}

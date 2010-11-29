@@ -1,0 +1,27 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request %}">Solicitudes de empresas</a></div>
+
+<h2>Solicitudes de empresas</h2>
+
+<div class="content-separator"></div>
+<p>
+    Desde acá se asignan los permisos para que las empresas puedan publicar sus avisos laborales.
+</p>
+<p>    
+    Antes de darle los permisos correspondientes, por favor contactar directamente a la empresa para verificar su seriedad.
+</p>
+{% if pending_requests %}
+    <h5>Empresas con solicitudes pendientes</h5>
+    <ul>
+        {% for request in pending_requests %}
+            <li><a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request_details request.id %}">{{ request }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <b>No hay solicitudes pendientes</b>
+{% endif %}
+
+{% endblock %}

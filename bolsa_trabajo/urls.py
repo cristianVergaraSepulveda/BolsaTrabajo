@@ -1,0 +1,27 @@
+from django.conf.urls.defaults import *
+
+urlpatterns = patterns('bolsa_trabajo.views',
+    (r'^$', 'index'))
+    
+urlpatterns += patterns('bolsa_trabajo.views_account',
+    (r'^account/$', 'index'),
+    (r'^account/login/$', 'login'),
+    (r'^account/logout/$', 'logout'),
+    (r'^account/register/$', 'register'),
+    (r'^account/register/enterprise/$', 'register_enterprise'),
+    (r'^account/register/student/$', 'register_student'),
+    (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
+    (r'^account/successful_student_registration/$', 'successful_student_registration'),
+    (r'^account/send_register_mail/$', 'send_register_mail'),
+    (r'^account/validate_email/$', 'validate_email'),
+    (r'^account/edit_profile/$', 'edit_profile'),
+    (r'^student/(?P<student_id>\d+)/download_cv$', 'download_cv'),
+    )
+    
+urlpatterns += patterns('bolsa_trabajo.views_staff',
+    (r'^account/pending_enterprise_request/$', 'pending_enterprise_request'),
+    (r'^account/pending_enterprise_request/(?P<request_id>\d+)/$', 'pending_enterprise_request_details'),
+    (r'^account/pending_enterprise_request/(?P<request_id>\d+)/accept/$', 'accept_pending_enterprise_request'),
+    (r'^account/pending_enterprise_request/(?P<request_id>\d+)/reject/$', 'reject_pending_enterprise_request'),
+    (r'^account/new_enterprise/$', 'new_enterprise'),
+    )

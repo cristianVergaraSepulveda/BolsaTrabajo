@@ -1,0 +1,4 @@
+from enterprise_register_form import EnterpriseRegisterForm
+from student_register_form import StudentRegisterForm
+from student_profile_form import StudentProfileForm
+from login_form import LoginForm

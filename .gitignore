@@ -1,0 +1,4 @@
+*.pyc
+bolsa_trabajo.db
+settings.py
+*~

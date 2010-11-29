@@ -1,0 +1,32 @@
+{% extends 'base_single_column.html' %}
+
+{% block main %}
+
+	<h1>Sistema de Registro</h1>
+	
+	<p>Por favor seleccione el tipo de usuario que desea crear</p>
+
+	<div class="content-separator"></div>
+
+	<img src="/media/images/sample-thumbnail.jpg" width="64" height="64" alt="" class="left bordered" />
+
+	<h3><a href="{% url bolsa_trabajo.views_account.register_student %}">Estudiante / Profesional</a></h3>
+	
+	<p>Le permite ver todos los registros de las empresas y postular a prácticas profesionales y trabajos.</p>
+
+	<div class="clearer">&nbsp;</div>
+
+	<div class="content-separator"></div>
+	
+	<img src="/media/images/sample-thumbnail.jpg" width="64" height="64" alt="" class="left bordered" />
+
+	<h3><a href="{% url bolsa_trabajo.views_account.register_enterprise %}">Empresa</a></h3>
+	
+	<p>Le permite publicar ofertas laborales y ver todos los perfiles de todos los profesionales que usan el sistema.</p>
+
+	<div class="clearer">&nbsp;</div>
+
+	<div class="content-separator"></div>
+
+{% endblock %}
+

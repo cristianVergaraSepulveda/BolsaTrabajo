@@ -1,0 +1,23 @@
+{% extends template_suffix %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a></div>
+
+{% if not user.is_active %}
+	<div class="notice">
+	    {% if not user.profile.validated_email %}
+	        <p>Su correo electrónico aún no ha sido verificado, necesita hacer este paso para usar las herramientas del portal.</p>
+	        <p><a href="{% url bolsa_trabajo.views_account.send_register_mail %}?next={{ path }}">Haga click acá para reenviar el correo de confirmación</a></p>
+	    {% else %}
+	        Su cuenta aún no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.
+	    {% endif %}
+	</div>
+{% endif %}
+
+<h2>Panel de Control</h2>
+<div class="content-separator"></div>
+<p>
+    Desde acá tiene acceso a las herramientas del sistema de gestión de prácticas profesionales.
+</p>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_enterprise_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request %}">Solicitudes de empresas</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request_details enterprise.id %}">{{ enterprise }}</a></div>
+
+<h2>{{ enterprise }}</h2>
+
+<div class="content-separator"></div>
+
+<h5>Datos de la empresa</h5>
+    <ul>
+        <li><b>Nombre:</b> {{ enterprise.name }}</li>
+        <li><b>RUT:</b> {{ enterprise.rut }}</li>
+        <li><b>Teléfono:</b> {{ enterprise.phone }}</li>
+        <li><b>Dirección:</b> {{ enterprise.address }}</li>
+        <li><b>Sitio web:</b> <a href="{{ enterprise.website }}">{{ enterprise.website }}</a></li>
+        <li><b>Descripción:</b> <br /> {{ enterprise.description }}</li>
+    </ul>
+<h5>Datos del representante</h5>
+    <ul>
+        <li><b>Nombre:</b> {{ enterprise.get_full_name }}</li>
+        <li><b>E-mail:</b> {{ enterprise.email }}</li>
+    </ul>
+    
+<div class="content-separator"></div>
+
+<h5>Opciones</h5>
+<p><a class="no_decoration" href="{% url bolsa_trabajo.views_staff.accept_pending_enterprise_request enterprise.id %}">Aceptar la solicitud de la empresa</a></p>
+<p><a id="reject_link" class="no_decoration reject" href="">Rechazar la solicitud de la empresa</a></p>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base_single_column.html' %}
+{% block main %}
+
+
+    <h2>Registro exitoso</h2>
+    
+    <p>
+        Su cuenta ha sido creada exitosamente, para terminar el proceso le solicitamos realizar los siguientes pasos:
+    </p>
+    
+    <ol>
+        <li>Un mensaje de confirmación ha sido enviado a su correo electrónico, por favor siga las instrucciones del mismo para validar esta cuenta.
+        </li>
+        <li>Una vez realizado este paso será contactado directamente por nosotros para validar la empresa y darle permiso para publicar anuncios laborales.
+        </li>
+    </ol>
+    
+    <p><a href="{% url bolsa_trabajo.views.index %}">Volver a la página inicial</a></p>
+    <p><a href="{% url bolsa_trabajo.views_account.index %}">Ir al panel de control</a></p>
+
+
+{% endblock %}

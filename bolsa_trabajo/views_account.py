@@ -1,0 +1,232 @@
+#-*- coding: UTF-8 -*-
+import hashlib
+from django.contrib import auth
+from django.template import RequestContext
+from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response
+from django.core.exceptions import ValidationError
+from django.http import HttpResponseRedirect
+import os, tempfile, zipfile
+from django.http import HttpResponse
+from django.core.servers.basehttp import FileWrapper
+import settings
+from forms import *
+from models import *
+from utils import *
+
+def student_login_required(f):
+    def wrap(request, *args, **kwargs):
+        uid = request.user.id
+        students = Student.objects.filter(pk = uid)
+        if students:
+            return f(request, *args, **kwargs)
+        else:
+            url = reverse('bolsa_trabajo.views_account.login')
+            path = request.path
+            return HttpResponseRedirect(url + '?next=' + path)
+    return wrap
+
+def enterprise_login_required(f):
+    def wrap(request, *args, **kwargs):
+        uid = request.user.id
+        enterprises = Enterprise.objects.filter(pk = uid)
+        if enterprises:
+            return f(request, *args, **kwargs)
+        else:
+            url = reverse('bolsa_trabajo.views_account.login')
+            path = request.path
+            return HttpResponseRedirect(url + '?next=' + path)
+    return wrap
+    
+@login_required
+def index(request):
+    return append_account_metadata_to_response(request, 'account/index.html')
+        
+@login_required
+def send_register_mail(request):
+    next = '/'
+    if 'next' in request.GET:
+        next = request.GET['next']
+    request.user.profile.send_register_mail()
+    request.flash['message'] = u'Correo de validación enviado a %s' % request.user.email
+    return HttpResponseRedirect(next)
+
+def login(request):
+    next = '/account'
+        
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = auth.authenticate(username = username, password = password)
+            if user:
+                auth.login(request, user)
+                return HttpResponseRedirect(next)
+            else:
+                request.flash['error_message'] = u'Nombre de usuario o contraseña erróneos'
+                return HttpResponseRedirect(request.path)
+    else:
+        form = LoginForm()
+    return append_user_to_response(request, 'account/login.html', {
+        'login_form': form
+        })
+        
+def register(request):
+    return append_user_to_response(request, 'account/register.html')
+    
+def register_enterprise(request):
+    error = None
+    if request.method == 'POST':
+        form = EnterpriseRegisterForm(request.POST) 
+        if form.is_valid():
+            enterprise = Enterprise.create_from_form(form)
+            try:
+                enterprise.save()
+                
+                user = auth.authenticate(username = enterprise.username, password = form.cleaned_data['password'])
+                if user:
+                    auth.login(request, user)
+                    user.profile.send_register_mail()
+                
+                url = reverse('bolsa_trabajo.views_account.successful_enterprise_registration')
+                return HttpResponseRedirect(url)
+            except ValidationError, e:
+                error = 'El nombre de usuario ya está tomado'
+            except Exception, e:
+                error = 'Error desconocido'
+    else:
+        form = EnterpriseRegisterForm()
+    return append_user_to_response(request, 'account/register_enterprise.html',{
+        'register_form': form,
+        'error': error
+    })
+
+def register_student(request):
+    error = None
+    if request.method == 'POST':
+        form = StudentRegisterForm(request.POST) 
+        if form.is_valid():
+            student = Student.create_from_form(form)
+            try:
+                student.save()
+                
+                user = auth.authenticate(username = student.username, password = form.cleaned_data['password'])
+                if user:
+                    auth.login(request, user)
+                    user.profile.send_register_mail()
+                
+                url = reverse('bolsa_trabajo.views_account.successful_student_registration')
+                return HttpResponseRedirect(url)
+            except ValidationError, e:
+                error = 'El nombre de usuario ya está tomado'
+            except Exception, e:
+                error = str(e)
+            
+    else:
+        form = StudentRegisterForm()
+    return append_user_to_response(request, 'account/register_student.html',{
+        'register_form': form,
+        'error': error
+    })
+
+@enterprise_login_required
+def successful_enterprise_registration(request):
+    return append_user_to_response(request, 'account/successful_enterprise_response.html')
+    
+@student_login_required
+def successful_student_registration(request):
+    return append_user_to_response(request, 'account/successful_student_response.html')
+    
+@login_required
+def logout(request):
+    auth.logout(request)
+    request.flash['message'] = 'Sesión cerrada exitosamente'
+    next_url = '/'
+    if 'next' in request.GET:
+        next_url = request.GET['next']
+    return HttpResponseRedirect(next_url)
+    
+@login_required
+def validate_email(request):
+    try:
+        user = request.user
+        if user.is_active:
+            request.flash['message'] = 'El correo ya está validado'
+            url = reverse('bolsa_trabajo.views.index')
+            return HttpResponseRedirect(url)
+        validation_key = request.GET['validation_key']
+        orig_validation_key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
+        if validation_key != orig_validation_key:
+            raise ValidationError('Error en código de validación')
+
+        user.profile.validated_email = True;
+        user.profile.save()
+        
+        UserProfile.notify_staff_of_new_register()
+        
+        if user.profile.is_student():
+            user.is_active = True
+            user.save()
+
+        request.flash['message'] = 'Cuenta de correo activada correctamente'
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+    except ValidationError, e:
+        error = unicode(e)
+    except Exception, e:
+        error = str(e)
+    return append_user_to_response(request, 'account/validate_email.html', {
+            'error': error,
+        })
+        
+@login_required
+def edit_profile(request):
+    if request.user.profile.is_enterprise():
+        return edit_enterprise_profile(request)
+    else:
+        return edit_student_profile(request)
+        
+def edit_student_profile(request):
+    error = None
+    student = Student.objects.get(pk = request.user.id)
+    if request.method == 'POST':
+        form = StudentProfileForm(request.POST) 
+        if form.is_valid():
+            try:
+                student.save()
+                
+                request.flash['message'] = 'Perfil actualizado exitosamente'
+                url = reverse('bolsa_trabajo.views_account.index')
+                return HttpResponseRedirect(url)
+            except Exception, e:
+                error = str(e)
+            
+    else:
+        form = StudentProfileForm.new_from_student(student)
+    return append_user_to_response(request, 'account/edit_student_profile.html',{
+        'profile_form': form,
+        'error': error,
+        'student': student,
+    })
+    
+def download_cv(request, student_id):
+    try:
+        students = Student.objects.filter(pk = student_id)
+        if not students:
+            raise Exception
+        student = students[0]
+        if not student.has_cv:
+            raise Exception
+        if student.profile.block_public_access and not request.user.is_authenticated():
+            raise Exception
+        filename = settings.PROJECT_ROOT + '/media/cv/%d.pdf' % student.id
+        print filename
+        wrapper = FileWrapper(file(filename))
+        response = HttpResponse(wrapper, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=curriculum.pdf'
+        response['Content-Length'] = os.path.getsize(filename)
+        return response
+    except:
+        return HttpResponseRedirect('/')

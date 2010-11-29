@@ -1,0 +1,58 @@
+{% extends 'base_two_columns.html' %}
+
+{% block sidebar %}
+<div class="box">
+	<div class="box-title">Herramientas</div>
+
+	<div class="box-content">
+		<ul class="nice-list">
+			{% if user.profile.is_enterprise %}
+			    <li>
+			        {% if user.is_active %}
+			            <a href="http://templates.arcsin.se/category/website-templates/">Avisos laborales</a>
+			        {% else %}
+			            <span class="disabled">Avisos laborales</span>
+			        {% endif %}
+		        </li>
+		    {% endif %}
+			{% if user.profile.is_student %}
+			    <li>
+			        {% if user.is_active %}
+			            <a href="http://templates.arcsin.se/category/website-templates/">Postulaciones</a>
+			        {% else %}
+			            <span class="disabled">Postulaciones</span>
+			        {% endif %}
+		        </li>
+		    {% endif %}
+			<li>
+		        {% if user.is_active %}
+		            <a href="http://templates.arcsin.se/category/website-templates/">Mensajes</a>
+		        {% else %}
+		            <span class="disabled">Mensajes</span>
+		        {% endif %}
+		    </li>
+			<li>
+		        {% if user.is_active %}
+		            <a href="http://templates.arcsin.se/category/website-templates/">Notificaciones</a>
+		        {% else %}
+		            <span class="disabled">Notificaciones</span>
+		        {% endif %}
+			</li>
+		</ul>
+	</div>
+
+</div>
+
+<div class="box">
+
+	<div class="box-title">Recursos</div>
+
+	<div class="box-content">
+		<ul class="nice-list">
+			<li><a href="{% url bolsa_trabajo.views_account.edit_profile %}">Editar perfil</a></li>
+			<li><a href="http://www.google.com/">Cambiar mail</a></li>
+			<li><a href="http://www.w3schools.com/">Cambiar contraseña</a></li>
+		</ul>
+	</div>
+</div>
+{% endblock %}

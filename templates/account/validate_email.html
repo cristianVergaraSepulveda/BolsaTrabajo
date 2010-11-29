@@ -1,0 +1,20 @@
+{% extends 'base_single_column.html' %}
+
+{% block main %}
+
+
+
+    <h1>Error en la validación</h1>
+
+    <p>Hemos detectado un problema durante la validación</p>
+
+    <p>Por favor verifica lo siguiente: </p>
+
+    <ul>
+        <li>Estas ingresado en el sistema con el usuario asignado a la cuenta de correo que recibió el mensaje</li>
+        <li>La dirección en la barra de tu navegador es idéntica a la que te llegó a tu correo</li>
+    </ul>
+
+    <h3><a href="/account/send_confirmation_mail">Enviar correo de validación nuevamente</a></h3>
+
+{% endblock %}

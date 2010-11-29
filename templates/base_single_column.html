@@ -1,0 +1,22 @@
+{% extends 'base_generic.html' %}
+
+{% block body %}
+<div class="content">
+    <div id="main">
+	    {% if flash.message %}
+            <div id="info_message" class="success">
+                <p>{{ flash.message }}</p>
+            </div>
+        {% endif %}
+        
+        {% if flash.error_message %}
+            <div id="error_message" class="error">
+                <p>{{ flash.error_message }}</p>
+            </div>
+        {% endif %}
+        
+	    {% block main %}
+	    {% endblock %}
+	</div>
+</div>
+{% endblock%}

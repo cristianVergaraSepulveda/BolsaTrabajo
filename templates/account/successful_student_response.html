@@ -1,0 +1,17 @@
+{% extends 'base_single_column.html' %}
+{% block main %}
+
+
+    <h2>Registro exitoso</h2>
+    
+    <p>
+        Su cuenta ha sido creada exitosamente y ya puede acceder a su panel de control y visitar todas las páginas del sitio.
+    </p>
+    
+    <p>Para poder postular a las ofertas laborales necesita validar su correo electrónico. Hemos enviado un mensaje a su dirección de email con las instrucciones para realizar este proceso.</p>
+    
+    <p><a href="{% url bolsa_trabajo.views.index %}">Volver a la página inicial</a></p>
+    <p><a href="{% url bolsa_trabajo.views_account.index %}">Ir al panel de control</a></p>
+
+
+{% endblock %}
