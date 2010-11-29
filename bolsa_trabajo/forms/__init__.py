@@ -1,4 +1,6 @@
 from enterprise_register_form import EnterpriseRegisterForm
 from student_register_form import StudentRegisterForm
 from student_profile_form import StudentProfileForm
+from change_password_form import ChangePasswordForm
+from change_email_form import ChangeEmailForm
 from login_form import LoginForm

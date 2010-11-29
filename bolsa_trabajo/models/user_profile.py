@@ -37,6 +37,9 @@ class UserProfile(models.Model):
     def send_register_mail(self):
         self.send_confirmation_mail_from_template('mails/confirmation_mail.html')
         
+    def send_change_mail_confirmation(self):
+        self.send_confirmation_mail_from_template('mails/change_mail.html')    
+        
     def send_confirmation_mail_from_template(self, template):
         subject = 'Bolsa de Trabajo - Confirmación de correo electrónico'
         user_digest = hashlib.sha224(settings.SECRET_KEY + self.user.username + self.user.email).hexdigest()

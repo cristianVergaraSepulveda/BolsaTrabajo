@@ -27,9 +27,9 @@
     
     {% if student.has_cv %}
         <p>
-            Actualmente tienes un currículum vitae disponible - <a href="">Descargar</a> </p>
+            Actualmente tienes un currículum vitae disponible - <a href="{% url bolsa_trabajo.views_account.download_cv user.id %}">Descargar</a> </p>
         <p>
-            Si no quieres tener ningún currículum, puedes <a href="">eliminarlo</a>
+            Si no quieres tener ningún currículum, puedes <a href="{% url bolsa_trabajo.views_account.delete_cv %}">eliminarlo</a>
         </p>
             
     {% else %}

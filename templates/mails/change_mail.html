@@ -1,0 +1,11 @@
+Estimado {{ user.get_full_name }},
+
+Hemos recibido una solicitud de cambio de correo electrónico de tu cuenta
+
+Por motivos de seguridad necesitamos validar esta nueva cuenta de correo, para esto, solo necesitas hacer click en este link.
+
+{{ server_name }}account/validate_email/?validation_key={{ user_digest }}
+
+Atentamente,
+
+El staff de la Bolsa de Trabajo CaDCC

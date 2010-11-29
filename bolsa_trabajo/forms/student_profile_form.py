@@ -5,7 +5,7 @@ from bolsa_trabajo.models import *
 
 class StudentProfileForm(forms.Form):
     resume = forms.CharField(widget = forms.Textarea(), label = 'Resumen de tu perfil')
-    block_public_access = forms.BooleanField(label = '¿Bloquear acceso público?')
+    block_public_access = forms.BooleanField(label = '¿Bloquear acceso público?', required = False)
     cv = forms.FileField(label = 'Currículum Vitae (PDF)', required = False)
     
     @staticmethod

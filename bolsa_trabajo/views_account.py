@@ -53,7 +53,12 @@ def send_register_mail(request):
     return HttpResponseRedirect(next)
 
 def login(request):
-    next = '/account'
+    if 'next' in request.GET:
+        next = request.GET['next']
+        if next == '/':
+            next = '/account/'
+    else:
+        next = '/account'
         
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -192,17 +197,18 @@ def edit_student_profile(request):
     error = None
     student = Student.objects.get(pk = request.user.id)
     if request.method == 'POST':
-        form = StudentProfileForm(request.POST) 
+        form = StudentProfileForm(request.POST, request.FILES) 
         if form.is_valid():
             try:
+                student.update_from_form(form)
                 student.save()
+                student.profile.save()
                 
                 request.flash['message'] = 'Perfil actualizado exitosamente'
                 url = reverse('bolsa_trabajo.views_account.index')
                 return HttpResponseRedirect(url)
             except Exception, e:
                 error = str(e)
-            
     else:
         form = StudentProfileForm.new_from_student(student)
     return append_user_to_response(request, 'account/edit_student_profile.html',{
@@ -222,11 +228,75 @@ def download_cv(request, student_id):
         if student.profile.block_public_access and not request.user.is_authenticated():
             raise Exception
         filename = settings.PROJECT_ROOT + '/media/cv/%d.pdf' % student.id
-        print filename
         wrapper = FileWrapper(file(filename))
         response = HttpResponse(wrapper, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=curriculum.pdf'
+        response['Content-Disposition'] = 'attachment; filename=curriculum-%s.pdf' % student.get_full_name().replace(' ', '-')
         response['Content-Length'] = os.path.getsize(filename)
         return response
     except:
         return HttpResponseRedirect('/')
+        
+@student_login_required
+def delete_cv(request):
+    student = Student.objects.get(pk = request.user.id)
+    if student.has_cv:
+        student.delete_cv()
+        student.save()
+        request.flash['message'] = 'Currículum eliminado exitosamente'
+    else:
+        request.flash['error'] = 'No se tiene currículum'
+    url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+    
+@login_required
+def change_password(request):
+    error = None
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            if request.user.check_password(form.cleaned_data['old_password']):
+                try:
+                    request.user.set_password(form.cleaned_data['new_password'])
+                    request.user.save()
+                    request.flash['message'] = 'Contraseña actualizada exitosamente'
+                    url = reverse('bolsa_trabajo.views_account.index')
+                    return HttpResponseRedirect(url)
+                except Exception, e:
+                    error = str(e)
+            else:
+                error = 'La contraseña original no es correcta'
+    else:
+        form = ChangePasswordForm()
+    return append_user_to_response(request, 'account/change_password.html',{
+        'password_form': form,
+        'error': error,
+    })
+    
+@login_required
+def change_email(request):
+    user = request.user
+    error = None
+    if request.method == 'POST':
+        form = ChangeEmailForm(request.POST)
+        if form.is_valid():
+            if user.check_password(form.cleaned_data['password']):
+                try:
+                    user.email = form.cleaned_data['new_email']
+                    if user.profile.is_student():
+                        user.is_active = False
+                        user.profile.validated_email = False
+                        user.profile.send_change_mail_confirmation()
+                    user.save()
+                    request.flash['message'] = 'E-mail actualizado exitosamente'
+                    url = reverse('bolsa_trabajo.views_account.index')
+                    return HttpResponseRedirect(url)
+                except Exception, e:
+                    error = str(e)
+            else:
+                error = 'La contraseña no es correcta'
+    else:
+        form = ChangeEmailForm()
+    return append_user_to_response(request, 'account/change_email.html',{
+        'email_form': form,
+        'error': error,
+    })

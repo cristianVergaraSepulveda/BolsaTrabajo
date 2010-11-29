@@ -15,6 +15,9 @@ urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/send_register_mail/$', 'send_register_mail'),
     (r'^account/validate_email/$', 'validate_email'),
     (r'^account/edit_profile/$', 'edit_profile'),
+    (r'^account/change_email/$', 'change_email'),
+    (r'^account/change_password/$', 'change_password'),
+    (r'^account/delete_cv/$', 'delete_cv'),
     (r'^student/(?P<student_id>\d+)/download_cv$', 'download_cv'),
     )
     
