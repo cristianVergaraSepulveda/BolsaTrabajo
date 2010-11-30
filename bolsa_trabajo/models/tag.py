@@ -15,6 +15,20 @@ class Tag(models.Model):
         name_clashes = Tag.objects.filter(name__iexact = self.name)
         if name_clashes:
             raise ValidationError('No pueden existir dos tags con el mismo nombre')
+            
+    @staticmethod
+    def parse_string(string):
+        tag_names = [name.strip() for name in string.split(',')]
+        tags = set()
+        for tag_name in tag_names:
+            try:
+                tag = Tag.objects.get(name__iexact = tag_name)
+            except:
+                tag = Tag()
+                tag.name = tag_name
+                tag.save()
+            tags.add(tag)
+        return list(tags)
 
     def __unicode__(self):
         return unicode(self.name)

@@ -26,18 +26,6 @@ def student_login_required(f):
             path = request.path
             return HttpResponseRedirect(url + '?next=' + path)
     return wrap
-
-def enterprise_login_required(f):
-    def wrap(request, *args, **kwargs):
-        uid = request.user.id
-        enterprises = Enterprise.objects.filter(pk = uid)
-        if enterprises:
-            return f(request, *args, **kwargs)
-        else:
-            url = reverse('bolsa_trabajo.views_account.login')
-            path = request.path
-            return HttpResponseRedirect(url + '?next=' + path)
-    return wrap
     
 @login_required
 def index(request):
@@ -95,7 +83,7 @@ def register_enterprise(request):
                     auth.login(request, user)
                     user.profile.send_register_mail()
                 
-                url = reverse('bolsa_trabajo.views_account.successful_enterprise_registration')
+                url = reverse('bolsa_trabajo.views_enterprise.successful_enterprise_registration')
                 return HttpResponseRedirect(url)
             except ValidationError, e:
                 error = 'El nombre de usuario ya está tomado'
@@ -135,10 +123,6 @@ def register_student(request):
         'register_form': form,
         'error': error
     })
-
-@enterprise_login_required
-def successful_enterprise_registration(request):
-    return append_user_to_response(request, 'account/successful_enterprise_response.html')
     
 @student_login_required
 def successful_student_registration(request):
@@ -215,6 +199,30 @@ def edit_student_profile(request):
         'profile_form': form,
         'error': error,
         'student': student,
+    })
+    
+def edit_enterprise_profile(request):
+    error = None
+    enterprise = Enterprise.objects.get(pk = request.user.id)
+    if request.method == 'POST':
+        form = EnterpriseProfileForm(request.POST) 
+        if form.is_valid():
+            try:
+                enterprise.update_from_form(form)
+                enterprise.save()
+                enterprise.profile.save()
+                
+                request.flash['message'] = 'Perfil actualizado exitosamente'
+                url = reverse('bolsa_trabajo.views_account.index')
+                return HttpResponseRedirect(url)
+            except Exception, e:
+                error = str(e)
+    else:
+        form = EnterpriseProfileForm.new_from_enterprise(enterprise)
+    return append_user_to_response(request, 'account/edit_enterprise_profile.html',{
+        'profile_form': form,
+        'error': error,
+        'enterprise': enterprise,
     })
     
 def download_cv(request, student_id):

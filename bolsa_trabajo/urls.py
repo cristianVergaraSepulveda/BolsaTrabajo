@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('bolsa_trabajo.views',
+    (r'^search_tag$', 'search_tag'),
     (r'^$', 'index'))
     
 urlpatterns += patterns('bolsa_trabajo.views_account',
@@ -10,7 +11,6 @@ urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/register/$', 'register'),
     (r'^account/register/enterprise/$', 'register_enterprise'),
     (r'^account/register/student/$', 'register_student'),
-    (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
     (r'^account/successful_student_registration/$', 'successful_student_registration'),
     (r'^account/send_register_mail/$', 'send_register_mail'),
     (r'^account/validate_email/$', 'validate_email'),
@@ -27,4 +27,10 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/accept/$', 'accept_pending_enterprise_request'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/reject/$', 'reject_pending_enterprise_request'),
     (r'^account/new_enterprise/$', 'new_enterprise'),
+    )
+    
+urlpatterns += patterns('bolsa_trabajo.views_enterprise',
+    (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
+    (r'^account/offer/$', 'offer'),
+    (r'^account/offer/add$', 'add_offer'),
     )

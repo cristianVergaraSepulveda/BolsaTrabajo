@@ -24,7 +24,7 @@ def staff_login_required(f):
     
 @staff_login_required
 def pending_enterprise_request(request):
-    return append_account_metadata_to_response(request, 'account/pending_enterprise_request.html', {
+    return append_account_metadata_to_response(request, 'staff/pending_enterprise_request.html', {
         'pending_requests': Enterprise.get_pending_requests()
     })
     
@@ -34,7 +34,7 @@ def pending_enterprise_request_details(request, request_id):
         enterprise = Enterprise.objects.get(pk = request_id)
         if enterprise.is_active:
             raise Exception
-        return append_account_metadata_to_response(request, 'account/pending_enterprise_request_details.html', {
+        return append_account_metadata_to_response(request, 'staff/pending_enterprise_request_details.html', {
         'enterprise': enterprise
     })
     except Exception, e:

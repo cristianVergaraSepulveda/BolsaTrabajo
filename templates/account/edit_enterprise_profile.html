@@ -1,0 +1,25 @@
+{% extends 'account/base.html' %}
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_account.edit_profile %}">Editar perfil</a></div>
+
+    <h2>Editar perfil</h2>
+    <div class="content-separator"></div>
+    <p>
+        Use este formulario para actualizar el perfil de su empresa
+    </p>
+   
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            <tr><th><b>Nombre:</th><td>{{ enterprise.name }}</td></tr>
+            <tr><th><b>RUT:</th><td>{{ enterprise.rut }}</td></tr>
+            {{ profile_form.as_table }}
+            <tr><td><input type="submit" value="Actualizar" /></td></tr>
+        </table>
+    </form>
+
+{% endblock %}

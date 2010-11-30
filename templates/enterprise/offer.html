@@ -1,0 +1,23 @@
+{% extends 'account/base.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Ofertas laborales</a></div>
+
+<h2>Ofertas laborales</h2>
+
+<div class="content-separator"></div>
+
+{% if offers %}
+    <ul>
+        {% for offer in offers %}
+            <li><a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request_details offer.id %}">{{ offer }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><b>No hay ofertas existentes</b></p>
+{% endif %}
+
+<p><a href="{% url bolsa_trabajo.views_enterprise.add_offer %}">Crear nueva oferta laboral</a></p>
+
+{% endblock %}

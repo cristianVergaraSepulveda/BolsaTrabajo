@@ -50,6 +50,13 @@ class Enterprise(User):
         enterprise.is_active = False
         return enterprise
         
+    def update_from_form(self, form):
+        self.phone = form.cleaned_data['phone']
+        self.address = form.cleaned_data['address']
+        self.website = form.cleaned_data['website']
+        self.description = form.cleaned_data['description']
+        self.profile.block_public_access = form.cleaned_data['block_public_access']
+        
     @staticmethod
     def get_pending_requests():
         return Enterprise.objects.filter(is_active = False).filter(profile__validated_email = True)

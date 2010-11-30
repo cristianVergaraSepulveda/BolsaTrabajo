@@ -1,0 +1,28 @@
+{% extends 'account/base.html' %}
+
+{% block header %}
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui-1.8.6.custom.css" media="screen" />
+	<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+	<script type="text/javascript" src="/media/js/tags_autocomplete.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Ofertas laborales</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.add_offer %}">Nueva oferta</a></div>
+
+    <h2>Formulario de creación de oferta laboral</h2>
+    
+    <p>Utilice el siguiente formulario para crear una nueva oferta laboral</p>
+   
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ offer_form.as_table }}
+        </table>
+        <input type="submit" value="Crear oferta" />
+    </form>
+
+{% endblock %}

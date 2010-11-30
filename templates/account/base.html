@@ -9,7 +9,7 @@
 			{% if user.profile.is_enterprise %}
 			    <li>
 			        {% if user.is_active %}
-			            <a href="http://templates.arcsin.se/category/website-templates/">Avisos laborales</a>
+			            <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Avisos laborales</a>
 			        {% else %}
 			            <span class="disabled">Avisos laborales</span>
 			        {% endif %}
