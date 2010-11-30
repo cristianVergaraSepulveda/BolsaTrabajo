@@ -1,0 +1,28 @@
+{% extends 'base_two_columns.html' %}
+
+{% block header %}
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui-1.8.6.custom.css" media="screen" />
+	<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+	<script type="text/javascript" src="/media/js/tags_autocomplete.js"></script>
+{% endblock %}
+
+{% block sidebar %}
+<div class="box">
+	<div class="box-title">Búsqueda de ofertas</div>
+
+	<div class="box-content">
+	    <form method="get">
+		<ul class="nice-list" id="search-ul">
+		    <li>Empresa: {{ search_form.enterprise }} </li>
+		    <li>Sueldo líquido mínimo <br /><span class="subtext">(omitir si se desean ver todos)</span> <br /><span class="formerror">{{ search_form.liquid_salary.errors.0 }}</span>
+ {{ search_form.liquid_salary }} </li>
+		    <li>{{ search_form.include_unavailable_salaries }} ¿Incluir ofertas sin sueldo definido? <br /><span class="subtext">(i.e.: "Enviar pretensión de salario")</span> </li>
+		    <li>Tags: <br /><span class="subtext">(Separador por comas, e.g. "MySQL, PHP")</span> <br />{{ search_form.tags }} </li>
+		    <li>Niveles <br /><span class="subtext">(omitir si se desean ver todos)</span> <br /> {{ search_form.level }} </li>
+	        <li><input type="submit" value="Buscar" />
+		</ul>
+		</form>
+	</div>
+
+</div>
+{% endblock %}

@@ -8,14 +8,32 @@
 
 <div class="content-separator"></div>
 
-{% if offers %}
+<h4>Ofertas activas</h4>
+
+{% if active_offers %}
     <ul>
-        {% for offer in offers %}
-            <li><a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request_details offer.id %}">{{ offer }}</a></li>
+        {% for offer in active_offers %}
+            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a> (<a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar</a>)</li>
         {% endfor %}
     </ul>
 {% else %}
-    <p><b>No hay ofertas existentes</b></p>
+    <p><b>No hay ofertas activas</b></p>
+{% endif %}
+
+<h4>Ofertas pasadas</h4>
+
+{% if inactive_offers %}
+    <ul>
+        {% for offer in inactive_offers %}
+            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a>
+                <ul>
+                    <li>Motivo de cierre: {{ offer.motive }}</li>
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><b>No hay ofertas registradas</b></p>
 {% endif %}
 
 <p><a href="{% url bolsa_trabajo.views_enterprise.add_offer %}">Crear nueva oferta laboral</a></p>

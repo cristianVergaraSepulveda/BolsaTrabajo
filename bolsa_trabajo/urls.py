@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('bolsa_trabajo.views',
     (r'^search_tag$', 'search_tag'),
+    (r'^offer$', 'offer'),
     (r'^$', 'index'))
     
 urlpatterns += patterns('bolsa_trabajo.views_account',
@@ -32,5 +33,8 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
 urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
     (r'^account/offer/$', 'offer'),
+    (r'^account/offer/(?P<offer_id>\d+)/$', 'offer_details'),
+    (r'^account/offer/(?P<offer_id>\d+)/edit$', 'edit_offer'),
+    (r'^account/offer/(?P<offer_id>\d+)/close/$', 'close_offer'),
     (r'^account/offer/add$', 'add_offer'),
     )

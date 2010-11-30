@@ -27,3 +27,11 @@ def search_tag(request):
         
     data = simplejson.dumps(response, indent=4)
     return HttpResponse(data, mimetype='application/javascript')
+    
+def offer(request):
+    form = OfferSearchForm(request.GET)
+    offers = Offer.get_from_form(form, request.user.is_authenticated())
+    return append_user_to_response(request, 'public/browse.html', {
+        'search_form': form,
+        'offers': offers
+    }) 

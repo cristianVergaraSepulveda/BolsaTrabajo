@@ -1,8 +1,10 @@
 #-*- coding: UTF-8 -*-
+from django.db.models import Q
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from bolsa_trabajo.models import Enterprise, OfferLevel, Tag
+from bolsa_trabajo.utils import *
 
 class Offer(models.Model):
     enterprise = models.ForeignKey(Enterprise)
@@ -30,6 +32,81 @@ class Offer(models.Model):
             offer.tags.add(tag)
         offer.level = data['level']
         return offer
+        
+    def load_from_form(self, form):
+        data = form.cleaned_data
+        self.title = data['title']
+        self.description = data['description']
+        self.liquid_salary = data['liquid_salary']
+        self.available_slots = data['available_slots']
+        tags = Tag.parse_string(data['tags'])
+        self.tags.clear()
+        for tag in tags:
+            self.tags.add(tag)
+        self.level = data['level']
+        
+    def get_salary_string(self):
+        if self.liquid_salary == 0:
+            return 'Solicitar pretensión de salario'
+        else:
+            return pretty_price(self.liquid_salary)
+            
+    def get_available_slots_string(self):
+        if self.available_slots == 0:
+            return 'Puestos indefinidos'
+        else:
+            return self.available_slots
+            
+    def get_level_string(self):
+        levels = self.level.all()
+        return ', '.join(level.name for level in levels)
+        
+    def get_tags_string(self):
+        tags = self.tags.all()
+        return ', '.join(tag.name for tag in tags)
+        
+    @staticmethod
+    def get_from_form(form, include_hidden):
+        offers = Offer.objects.filter(closed = False)
+        if not include_hidden:
+            offers = offers.filter(enterprise__profile__block_public_access = False)
+        
+        if form.is_valid():
+            data = form.cleaned_data
+            if data['enterprise']:
+                offers = offers.filter(enterprise = data['enterprise'])
+            if data['liquid_salary']:
+                print data['liquid_salary']
+                offers = offers.filter(Q(liquid_salary__gte = data['liquid_salary']) | Q(liquid_salary = 0))
+            if not data['include_unavailable_salaries']:
+                offers = offers.filter(liquid_salary__gt = 0)
+            if data['level']:
+                offers = offers.filter(level__in = data['level']).distinct()
+            if data['tags']:
+                tags = Tag.parse_string(data['tags'])
+                offers = offers.filter(tags__in = tags).distinct()
+                valued_offers = []
+                for offer in offers:
+                    valued_offers.append([offer, offer.get_affinity(tags)])
+                offers = valued_offers
+                offers = sorted(offers, key = lambda offer: offer[1], reverse = True)
+            else:
+                offers = [[offer, 0] for offer in offers]
+        else:
+            offers = [[offer, 0] for offer in offers]
+        
+        return offers
+        
+    def get_affinity(self, tags):
+        if not tags:
+            return None
+        num_tags = len(tags)
+        num_hits = 0
+        for tag in tags:
+            if tag in self.tags.all():
+                num_hits += 1
+                
+        return int(100 * num_hits / num_tags)
 
     def __unicode__(self):
         return unicode(self.title)

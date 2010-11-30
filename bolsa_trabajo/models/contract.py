@@ -10,6 +10,7 @@ class Contract(models.Model):
     end_date = models.DateField()
     enterprise = property(lambda self: self.application.enterprise)
     student = property(lambda self: self.application.student)
+    offer = property(lambda self: self.application.message.offer)
     
     def __unicode__(self):
         return unicode(self.enterprise) + ' - ' + unicode(self.student)

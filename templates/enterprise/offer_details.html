@@ -1,0 +1,23 @@
+{% extends 'account/base.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Ofertas laborales</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer.title }}</a></div>
+
+    <h2>Detalles de la oferta</h2>
+    
+    <ul>
+        <li><b>Título:</b> {{ offer.title }}</li>
+        <li><b>Descripción:</b> {{ offer.description }}</li>
+        <li><b>Sueldo líquido:</b> {{ offer.get_salary_string }}</li>
+        <li><b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}</li>
+        <li><b>Nivel:</b> {{ offer.get_level_string }}</li>
+        <li><b>Términos clave:</b> {{ offer.get_tags_string }}</li>
+    </ul>    
+<br />
+    
+{% if not offer.closed %}
+    <p><a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar la oferta</a></p>
+{% endif %}
+
+{% endblock %}

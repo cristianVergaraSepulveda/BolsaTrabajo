@@ -4,12 +4,14 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
+from bolsa_trabajo.models import Tag
 import settings
 
 
 class Student(User):
     resume = models.TextField()
     has_cv = models.BooleanField(default = False)
+    tags = models.ManyToManyField(Tag, blank = True, null = True)
     
     def update_from_form(self, form):
         self.resume = form.cleaned_data['resume']
@@ -17,6 +19,10 @@ class Student(User):
         if 'cv' in form.cleaned_data and form.cleaned_data['cv']:
             self.has_cv = True
             self.store_cv(form.cleaned_data['cv'])
+        tags = Tag.parse_string(form.cleaned_data['tags'])
+        self.tags.clear()
+        for tag in tags:
+            self.tags.add(tag)
     
     def store_cv(self, uploaded_file):
         filename = uploaded_file.name

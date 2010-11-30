@@ -1,0 +1,17 @@
+{% extends 'public/base.html' %}
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Buscar ofertas laborales</a></div>
+
+    <h2>Resultados de la búsqueda</h2>
+    <div class="content-separator"></div>
+    {% if offers %}
+    <ul>
+        {% for offer in offers %}
+            <li>{{ offer.0 }} {% if offer.1 %}({{ offer.1 }}%){% endif %}
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>No se encontraron ofertas según sus criterios</p>
+    {% endif %}
+{% endblock %}

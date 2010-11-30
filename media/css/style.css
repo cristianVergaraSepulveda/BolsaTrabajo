@@ -662,3 +662,22 @@ a.no_decoration {
 a#reject_link{
     color: red;
 }
+
+#search-ul {
+    
+}
+
+#search-ul select {
+    height: inherit;
+    padding: 2px;
+}
+
+.subtext {
+    font-size: 8px;
+}
+
+#search-ul .formerror {
+    color: red;
+    font-size: 8px;
+    font-weight: bold;
+}

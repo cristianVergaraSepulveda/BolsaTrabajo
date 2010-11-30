@@ -1,4 +1,5 @@
 #-*- coding: UTF-8 -*-
+import locale
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 import settings
@@ -29,3 +30,7 @@ def send_email(user, subject, template, args):
     args['user'] = user
     body = template.render(Context(args))
     send_mail(subject, body, settings.EMAIL_FULL_ADDRESS, [ user.username + '<' + user.email + '>' ])
+    
+def pretty_price(value, spacing = ' '):
+    locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+    return '$' + spacing + locale.format("%d", value, True).replace(',', '.')

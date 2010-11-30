@@ -21,6 +21,8 @@ class Tag(models.Model):
         tag_names = [name.strip() for name in string.split(',')]
         tags = set()
         for tag_name in tag_names:
+            if not tag_name:
+                continue
             try:
                 tag = Tag.objects.get(name__iexact = tag_name)
             except:
