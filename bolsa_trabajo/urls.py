@@ -2,13 +2,20 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('bolsa_trabajo.views',
     (r'^search_tag$', 'search_tag'),
-    (r'^offer$', 'offer'),
+    (r'^offer/$', 'offer'),
+    (r'^contact/$', 'contact'),
     (r'^offer/(?P<offer_id>\d+)/$', 'offer_details'),
+    (r'^offer/(?P<offer_id>\d+)/send_message$', 'offer_send_message'),
     (r'^enterprise/(?P<enterprise_id>\d+)/$', 'enterprise_details'),
+    (r'^student/$', 'student'),
+    (r'^student/(?P<student_id>\d+)/$', 'student_details'),
+    (r'^student/(?P<student_id>\d+)/send_message$', 'student_send_message'),
     (r'^$', 'index'))
     
 urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/$', 'index'),
+    (r'^account/public_profile/$', 'public_profile'),
+    (r'^account/notification/$', 'notification'),
     (r'^account/login/$', 'login'),
     (r'^account/logout/$', 'logout'),
     (r'^account/register/$', 'register'),

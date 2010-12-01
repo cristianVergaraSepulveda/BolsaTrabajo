@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
-from bolsa_trabajo.models import Tag
+from bolsa_trabajo.models import Tag, StudentLevel
 import settings
 
 
@@ -12,6 +12,55 @@ class Student(User):
     resume = models.TextField()
     has_cv = models.BooleanField(default = False)
     tags = models.ManyToManyField(Tag, blank = True, null = True)
+    level = models.ForeignKey(StudentLevel)
+    
+    def get_tags_string(self):
+        tags = self.tags.all()
+        return ', '.join(tag.name for tag in tags)
+        
+    def get_resume_string(self):
+        suffix = ''
+        if len(self.resume) > 300:
+            suffix = ' ...'
+        return self.resume[:300] + suffix
+    
+    @staticmethod
+    def get_from_form(form, include_hidden):
+        students = Student.objects.all()
+        if not include_hidden:
+            students = students.filter(profile__block_public_access = False)
+        
+        if form.is_valid():
+            data = form.cleaned_data
+            if not data['include_unavailable_cv']:
+                students = students.filter(has_cv = True)
+            if data['level']:
+                students = students.filter(level__in = data['level']).distinct()
+            if data['tags']:
+                tags = Tag.parse_string(data['tags'])
+                students = students.filter(tags__in = tags).distinct()
+                for student in students:
+                    student.affinity = student.get_affinity(tags)
+                students = sorted(students, key = lambda student: student.affinity, reverse = True)
+            else:
+                for student in students:
+                    student.affinity = 0
+        else:
+            for student in students:
+                student.affinity = 0
+        
+        return students
+        
+    def get_affinity(self, tags):
+        if not tags:
+            return None
+        num_tags = len(tags)
+        num_hits = 0
+        for tag in tags:
+            if tag in self.tags.all():
+                num_hits += 1
+                
+        return int(100 * num_hits / num_tags)
     
     def update_from_form(self, form):
         self.resume = form.cleaned_data['resume']

@@ -26,10 +26,26 @@ def student_login_required(f):
             path = request.path
             return HttpResponseRedirect(url + '?next=' + path)
     return wrap
+
+@login_required
+def notification(request):
+    return append_account_metadata_to_response(request, 'account/notifications.html', {
+        'notifications': request.user.profile.get_notifications()
+    })
     
 @login_required
 def index(request):
     return append_account_metadata_to_response(request, 'account/index.html')
+    
+    
+@login_required
+def public_profile(request):
+    if request.user.profile.is_student():
+        url = reverse('bolsa_trabajo.views.student_details', args = [request.user.id])
+    else:
+        url = reverse('bolsa_trabajo.views.enterprise_details', args = [request.user.id])
+    
+    return HttpResponseRedirect(url)
         
 @login_required
 def send_register_mail(request):

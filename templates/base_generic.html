@@ -30,7 +30,7 @@
 					<div id="help">
 
 						{% if user.is_authenticated %}
-						    <a href="{% url bolsa_trabajo.views_account.index %}">Panel de control</a> 
+						    <a href="{% url bolsa_trabajo.views_account.index %}">Panel de control {% if num_notifications %}({{ num_notifications }}){% endif %}</a> 
 						    <span class="text-separator">|</span>                       <a href="{% url bolsa_trabajo.views_account.logout %}">Salir</a> 
 					    {% else %} 
 					        <a href="{% url bolsa_trabajo.views_account.login %}?next={{ path }}">Entrar</a> 
@@ -55,7 +55,7 @@
 				<ul class="tabbed">
 					<li><a href="{% url bolsa_trabajo.views.index %}">Página principal</a></li>
 					<li><a href="{% url bolsa_trabajo.views.offer %}">Ofertas laborales</a></li>
-					<li><a href="/student">Practicantes y profesionales</a></li>
+					<li><a href="{% url bolsa_trabajo.views.student %}">Practicantes y profesionales</a></li>
 				</ul>
 
 				<div class="clearer">&nbsp;</div>

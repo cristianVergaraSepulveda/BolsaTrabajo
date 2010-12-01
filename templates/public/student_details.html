@@ -1,0 +1,26 @@
+{% extends 'public/base_student.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views.student %}">Búsqueda de profesionales</a> &gt; <a href="{% url bolsa_trabajo.views.student_details student.id %}">{{ student.get_full_name }}</a></div>
+
+<h2>{{ student.get_full_name }}</h2>
+<div class="content-separator"></div>
+
+    <b>Nivel:</b> {{ student.level }}<br />
+    <b>Currículum vitae:</b> {% if student.has_cv %}<a href="{% url bolsa_trabajo.views_account.download_cv student.id %}">Descargar</a>{% else %}No disponible{% endif %}
+    <br />
+    <b>Resumen:</b> {{ student.get_resume_string|linebreaks }}
+    <b>Términos clave:</b> {{ student.get_tags_string }}
+<br />
+<br />
+
+{% if user.profile.is_enterprise %}
+<h3>Opciones</h3>
+<div class="content-separator"></div>
+<ul>
+    <li><a href="{% url bolsa_trabajo.views.student_send_message student.id %}">Envíe un mensaje a este profesional</a></li>
+</ul>
+{% endif %}
+
+{% endblock %}

@@ -1,4 +1,5 @@
 from tag import Tag
+from student_level import StudentLevel
 from student import Student
 from enterprise import Enterprise
 from enterprise_comment import EnterpriseComment

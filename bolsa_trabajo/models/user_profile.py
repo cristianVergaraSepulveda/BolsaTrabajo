@@ -7,7 +7,9 @@ from bolsa_trabajo.models import Tag
 from bolsa_trabajo.models import Student, Enterprise
 from django.template.loader import get_template
 from bolsa_trabajo.utils import *
+from bolsa_trabajo.models import Offer, OfferComment
 import settings
+from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):
     validated_email = models.BooleanField(default = False)
@@ -17,6 +19,31 @@ class UserProfile(models.Model):
 
     def __unicode__(self):  
         return 'Perfil de %s' % self.user
+        
+    def get_notifications(self):
+        notifications = []
+        if self.user.is_staff:
+            return notifications    
+        elif self.is_student():
+            unread_offer_comment_replies = OfferComment.objects.filter(author = self.user, has_replies = True)
+            for reply in unread_offer_comment_replies:
+                notifications.append(['Nueva respuesta en tu comentario para %s' % reply.offer.title, reverse('bolsa_trabajo.views.offer_details', args = [reply.offer.id])])
+                
+            unread_enterprise_comment_replies = EnterpriseComment.objects.filter(author = self.user, has_replies = True)
+            for reply in unread_enterprise_comment_replies:
+                notifications.append(['Nueva respuesta en tu comentario para la empresa %s' % reply.enterprise.name, reverse('bolsa_trabajo.views.enterprise_details', args = [reply.enterprise.id])])
+            
+        else:
+            enterprise = Enterprise.objects.get(pk = self.user.id)
+            unread_offer_comments = Offer.objects.filter(enterprise = enterprise, has_unread_comments = True)
+            
+            for offer in unread_offer_comments:
+                notifications.append(['Nuevo comentario para la oferta %s' % offer.title, reverse('bolsa_trabajo.views.offer_details', args = [offer.id])])
+            
+            if enterprise.has_unread_comments:
+                notifications.append(['Nuevo comentario para la empresa', reverse('bolsa_trabajo.views.enterprise_details', args = [enterprise.id])])
+                
+        return notifications
         
     def can_reply(self, offer):
         response = False

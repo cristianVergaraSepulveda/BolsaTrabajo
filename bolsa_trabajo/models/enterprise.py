@@ -12,6 +12,7 @@ class Enterprise(User):
     address = models.CharField(max_length = 80)
     website = models.CharField(max_length = 80)
     description = models.TextField()
+    has_unread_comments = models.BooleanField(default = False)
     
     def __unicode__(self):
         return self.name

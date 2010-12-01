@@ -1,0 +1,43 @@
+{% extends 'public/base_student.html' %}
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Buscar profesionales</a></div>
+
+    {% if not user.is_authenticated %}
+    <div class="notice">
+        <p>Si no está registrado no podrá ver todas las ofertas de trabajos y prácticas profesionales.</p>
+        <p><a href="{% url bolsa_trabajo.views_account.register %}">Registrarse</a> | <a href="{% url bolsa_trabajo.views_account.login %}">Iniciar sesión</a></p>
+    </div>
+    {% endif %}
+
+    <h2>Resultados de la búsqueda</h2>
+    <div class="content-separator"></div>
+    {% if students %}
+    {% for student in students %}
+        <ul>
+            <li>
+                <a href="{% url bolsa_trabajo.views.student_details student.id %}">{{ student.get_full_name }}</a> {% if student.affinity %}({{ student.affinity }}%){% endif %}
+                <br />
+                <b>Resumen:</b> {{ student.get_resume_string|linebreaks }}
+                <b>Nivel:</b> {{ student.level }}
+                <br />
+                <b>Currículum vitae:</b> {% if student.has_cv %}<a href="{% url bolsa_trabajo.views_account.download_cv student.id %}">Descargar</a>{% else %}No disponible{% endif %}
+                <br />
+                <b>Términos clave:</b> {{ student.get_tags_string }}
+            </li>
+        </ul>
+        
+    {% endfor %}
+        <div class="page_navigator">
+            {% for page in page_range %}
+                {% ifequal page page_number %}
+                    <b>{{ page }}</b>
+                {% else %}
+                    <a href="{{ paging_url }}&page_number={{ page }}">{{ page }}</a>
+                {% endifequal %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No se encontraron profesionales según sus criterios</p>
+    {% endif %}
+{% endblock %}

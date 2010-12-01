@@ -1,4 +1,4 @@
-{% extends 'public/base.html' %}
+{% extends 'public/base_enterprise.html' %}
 {% block main %}
 
 <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Buscar ofertas laborales</a></div>
@@ -26,6 +26,8 @@
                 <b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}
                 <br />
                 <b>Nivel:</b> {{ offer.get_level_string }}
+                <br />
+                <b>Fecha publicación:</b> {{ offer.creation_date.date }}
                 <br />
                 <b>Términos clave:</b> {{ offer.get_tags_string }}
             </li>

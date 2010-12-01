@@ -1,4 +1,4 @@
-{% extends 'public/base.html' %}
+{% extends 'public/base_enterprise.html' %}
 
 {% load offer_comment %}
 
@@ -25,8 +25,7 @@
 <h3>Opciones</h3>
 <div class="content-separator"></div>
 <ul>
-    <li><a href="">Hacer una consulta privada acerca de esta oferta a la empresa</a></li>
-    <li><a href="">Postular a esta oferta</a></li>
+    <li><a href="{% url bolsa_trabajo.views.offer_send_message offer.id %}">Hacer una consulta privada acerca de esta oferta a la empresa</a></li>
 </ul>
 {% endif %}
 

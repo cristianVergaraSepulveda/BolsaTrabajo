@@ -16,6 +16,7 @@ class Offer(models.Model):
     creation_date = models.DateTimeField(auto_now_add = True)
     available_slots = models.IntegerField()
     closed = models.BooleanField(default = False)
+    has_unread_comments = models.BooleanField(default = False)
     
     @staticmethod
     def create_from_form(enterprise, form):

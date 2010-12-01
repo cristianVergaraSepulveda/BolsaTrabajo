@@ -9,9 +9,16 @@ class EnterpriseComment(models.Model):
     author = models.ForeignKey(User)
     body = models.TextField()
     parent = models.ForeignKey('self', null = True)
-    new_replies = models.IntegerField()
+    has_replies = models.BooleanField(default = False)
     creation_date = models.DateTimeField(auto_now_add = True)
     children = property(lambda self: self.enterprisecomment_set.all())
+    
+    def set_reply_to_parent(self):
+        current_comment = self.parent
+        while current_comment:
+            current_comment.has_replies = True
+            current_comment.save()
+            current_comment = current_comment.parent
     
     def clear(self):
         # Verificar que el autor es estudiante o la empresa original

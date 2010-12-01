@@ -15,27 +15,18 @@
 			        {% endif %}
 		        </li>
 		    {% endif %}
-			{% if user.profile.is_student %}
-			    <li>
-			        {% if user.is_active %}
-			            <a href="http://templates.arcsin.se/category/website-templates/">Postulaciones</a>
-			        {% else %}
-			            <span class="disabled">Postulaciones</span>
-			        {% endif %}
-		        </li>
-		    {% endif %}
 			<li>
 		        {% if user.is_active %}
-		            <a href="http://templates.arcsin.se/category/website-templates/">Mensajes</a>
-		        {% else %}
-		            <span class="disabled">Mensajes</span>
-		        {% endif %}
-		    </li>
-			<li>
-		        {% if user.is_active %}
-		            <a href="http://templates.arcsin.se/category/website-templates/">Notificaciones</a>
+		            <a href="{% url bolsa_trabajo.views_account.notification %}">Notificaciones {% if num_notifications %}({{ num_notifications }}){% endif %}</a>
 		        {% else %}
 		            <span class="disabled">Notificaciones</span>
+		        {% endif %}
+			</li>
+			<li>
+		        {% if user.is_active %}
+		            <a href="{% url bolsa_trabajo.views_account.public_profile %}">Perfil público</a>
+		        {% else %}
+		            <span class="disabled">Perfil público</span>
 		        {% endif %}
 			</li>
 		</ul>

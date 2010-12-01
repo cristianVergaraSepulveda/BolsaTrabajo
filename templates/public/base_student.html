@@ -1,0 +1,25 @@
+{% extends 'base_two_columns.html' %}
+
+{% block header %}
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui-1.8.6.custom.css" media="screen" />
+	<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
+	<script type="text/javascript" src="/media/js/tags_autocomplete.js"></script>
+{% endblock %}
+
+{% block sidebar %}
+<div class="box">
+	<div class="box-title">Búsqueda de profesionales</div>
+
+	<div class="box-content">
+	    <form method="get" action="{% url bolsa_trabajo.views.student %}">
+		<ul class="nice-list" id="search-ul">
+		    <li>Nivel <br /><span class="subtext">(omitir si se desean ver todos)</span> <br /> {{ search_form.level }} </li>
+		    <li>Tags <br /><span class="subtext">(Separador por comas, e.g. "MySQL, PHP")</span> <br />{{ search_form.tags }} </li>
+		    <li>{{ search_form.include_unavailable_cv }} ¿Incluir profesionales sin CV? <br /></li>
+	        <li><input type="submit" value="Buscar" />
+		</ul>
+		</form>
+	</div>
+
+</div>
+{% endblock %}

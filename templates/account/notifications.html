@@ -1,0 +1,19 @@
+{% extends 'account/base.html' %}
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_account.notification %}">Notificaciones</a></div>
+
+    <h2>Notificaciones</h2>
+    <div class="content-separator"></div>
+   
+    {% if notifications %}
+        <ul>
+            {% for notification in notifications %}
+                <li>{{ notification.0 }} (<a href="{{ notification.1 }}">Link</a>)</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay notificaciones</p>
+    {% endif %}
+
+{% endblock %}
