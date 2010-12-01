@@ -11,7 +11,7 @@
 	<div class="box-title">Búsqueda de ofertas</div>
 
 	<div class="box-content">
-	    <form method="get">
+	    <form method="get" action="{% url bolsa_trabajo.views.offer %}">
 		<ul class="nice-list" id="search-ul">
 		    <li>Empresa: {{ search_form.enterprise }} </li>
 		    <li>Sueldo líquido mínimo <br /><span class="subtext">(omitir si se desean ver todos)</span> <br /><span class="formerror">{{ search_form.liquid_salary.errors.0 }}</span>

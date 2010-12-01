@@ -2,27 +2,35 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from bolsa_trabajo.models import EnterpriseCommentRing, Student
+from bolsa_trabajo.models import Student, Enterprise
 
 class EnterpriseComment(models.Model):
-    ring = models.ForeignKey(EnterpriseCommentRing)
+    enterprise = models.ForeignKey(Enterprise, related_name = 'ent')
     author = models.ForeignKey(User)
     body = models.TextField()
     parent = models.ForeignKey('self', null = True)
-    unread_replies = models.IntegerField()
+    new_replies = models.IntegerField()
     creation_date = models.DateTimeField(auto_now_add = True)
+    children = property(lambda self: self.enterprisecomment_set.all())
     
     def clear(self):
-        # Verificar que el padre pertenezca al mismo anillo
-        if self.parent and self.parent.ring != self.ring:
-            raise ValidationError('El anillo de mensajes del padre debe ser igual al propio')
-            
         # Verificar que el autor es estudiante o la empresa original
-        if not isinstance(self.author, Student) and self.author != self.ring.enterprise:
+        if not isinstance(self.author, Student) and self.author != self.enterprise:
             raise ValidationError('Terceras empresas no pueden comentar sobre otras empresas')
+            
+    @staticmethod
+    def create_from_form(user, enterprise, form):
+        comment = EnterpriseComment()
+        comment.enterprise = enterprise
+        comment.author = user
+        comment.body = form.cleaned_data['body']
+        if 'parent' in form.cleaned_data:
+            comment.parent = form.cleaned_data['parent']
+        comment.new_replies = 0
+        return comment
 
     def __unicode__(self):
-        return unicode(self.ring) + ' - ' + unicode(self.author)
+        return unicode(self.enterprise) + ' - ' + unicode(self.author)
     
     class Meta:
         app_label = 'bolsa_trabajo'

@@ -3,6 +3,8 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('bolsa_trabajo.views',
     (r'^search_tag$', 'search_tag'),
     (r'^offer$', 'offer'),
+    (r'^offer/(?P<offer_id>\d+)/$', 'offer_details'),
+    (r'^enterprise/(?P<enterprise_id>\d+)/$', 'enterprise_details'),
     (r'^$', 'index'))
     
 urlpatterns += patterns('bolsa_trabajo.views_account',

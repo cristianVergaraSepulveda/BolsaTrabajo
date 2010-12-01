@@ -6,4 +6,6 @@ from change_password_form import ChangePasswordForm
 from change_email_form import ChangeEmailForm
 from offer_form import OfferForm
 from offer_search_form import OfferSearchForm
+from offer_comment_form import OfferCommentForm
+from enterprise_comment_form import EnterpriseCommentForm
 from login_form import LoginForm

@@ -3,14 +3,43 @@
 
 <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Buscar ofertas laborales</a></div>
 
+    {% if not user.is_authenticated %}
+    <div class="notice">
+        <p>Si no está registrado no podrá ver todas las ofertas de trabajos y prácticas profesionales.</p>
+        <p><a href="{% url bolsa_trabajo.views_account.register %}">Registrarse</a> | <a href="{% url bolsa_trabajo.views_account.login %}">Iniciar sesión</a></p>
+    </div>
+    {% endif %}
+
     <h2>Resultados de la búsqueda</h2>
     <div class="content-separator"></div>
     {% if offers %}
-    <ul>
-        {% for offer in offers %}
-            <li>{{ offer.0 }} {% if offer.1 %}({{ offer.1 }}%){% endif %}
-        {% endfor %}
-    </ul>
+    {% for offer in offers %}
+        <ul>
+            <li>
+                <a href="{% url bolsa_trabajo.views.offer_details offer.id %}">{{ offer.title }}</a> {% if offer.affinity %}({{ offer.affinity }}%){% endif %}
+                <br />
+                <b>Descripción:</b> {{ offer.get_description_string|linebreaks }}
+                <b>Empresa:</b> <a href="">{{ offer.enterprise }}</a>
+                <br />
+                <b>Sueldo líquido:</b> {{ offer.get_salary_string }}
+                <br />
+                <b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}
+                <br />
+                <b>Nivel:</b> {{ offer.get_level_string }}
+                <br />
+                <b>Términos clave:</b> {{ offer.get_tags_string }}
+            </li>
+        </ul>
+    {% endfor %}
+        <div class="page_navigator">
+            {% for page in page_range %}
+                {% ifequal page page_number %}
+                    <b>{{ page }}</b>
+                {% else %}
+                    <a href="{{ paging_url }}&page_number={{ page }}">{{ page }}</a>
+                {% endifequal %}
+            {% endfor %}
+        </div>
     {% else %}
         <p>No se encontraron ofertas según sus criterios</p>
     {% endif %}

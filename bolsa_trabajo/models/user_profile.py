@@ -18,6 +18,22 @@ class UserProfile(models.Model):
     def __unicode__(self):  
         return 'Perfil de %s' % self.user
         
+    def can_reply(self, offer):
+        response = False
+        if self.user.is_authenticated() and self.user.is_active:
+            if self.is_student() or self.user.id == offer.enterprise.id:
+                response = True
+                
+        return response
+        
+    def can_reply_to_enterprise(self, enterprise):
+        response = False
+        if self.user.is_authenticated() and self.user.is_active:
+            if self.is_student() or self.user.id == enterprise.id:
+                response = True
+                
+        return response
+        
     class Meta:
         app_label = 'bolsa_trabajo'
         
@@ -65,6 +81,7 @@ class UserProfile(models.Model):
             return False
             
     def is_enterprise(self):
+        sek = self.user.id
         enterprises = Enterprise.objects.filter(pk = self.user.id)
         if enterprises:
             return True

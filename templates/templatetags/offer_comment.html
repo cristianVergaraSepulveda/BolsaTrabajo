@@ -1,0 +1,25 @@
+{% load offer_comment %}
+
+<li>
+    <b>
+        {% if comment.author.profile.is_enterprise %}
+            <span class="offer_author_commment">
+                {{ comment.author.get_full_name }}
+            </span>
+        {% else %}
+            {{ comment.author.get_full_name }}
+        {% endif %}
+    </b>
+    <br />
+    {{ comment.body|linebreaks }}
+    {% if user.can_reply %}
+        <div id="{{ comment.id }}"><a href="#" class="reply_comment_link">Responder</a></div>
+    {% endif %}
+    {% if comment.children %}
+    <ul>
+        {% for child in comment.children %}
+            {{ child|tree_comment:user }}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</li>

@@ -1,7 +1,6 @@
 from tag import Tag
 from student import Student
 from enterprise import Enterprise
-from enterprise_comment_ring import EnterpriseCommentRing
 from enterprise_comment import EnterpriseComment
 from offer_level import OfferLevel
 from offer import Offer

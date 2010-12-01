@@ -681,3 +681,23 @@ a#reject_link{
     font-size: 8px;
     font-weight: bold;
 }
+
+.comments ul {
+    list-style-type: none;
+}
+
+.comments li {
+    padding-top: 5px;
+}
+
+.comments p {
+    margin-bottom: 0px;
+}
+
+.reply_comment_link {
+    font-size: 8px;
+}
+
+.offer_author_commment {
+    color: #43B16C;
+}

@@ -1,0 +1,62 @@
+{% extends 'public/base.html' %}
+
+{% load offer_comment %}
+
+{% block header %}
+	<script type="text/javascript" src="/media/js/offer_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views.index %}">Empresas</a> &gt; <a href="{% url bolsa_trabajo.views.enterprise_details enterprise.id %}">{{ enterprise.name }}</a></div>
+
+<h2>{{ enterprise.name }}</h2>
+<div class="content-separator"></div>
+    <b>Sitio web:</b> <a href="{{ enterprise.website }}">{{ enterprise.website }}</a><br />
+    <b>Descripción:</b> {{ enterprise.description|linebreaks }}<br />
+<br />
+
+<h3>Comentarios</h3>
+<div class="content-separator"></div>
+
+{% if base_comments %}
+    <div class="comments">
+        <ul>
+            {% for base_comment in base_comments %}
+                {{ base_comment|tree_comment:user }}
+            {% endfor %}
+        </ul>
+    </div>
+{% else %}
+   <p>No hay comentarios para esta oferta</p>
+{% endif %}
+
+{% if user.can_reply %}
+    Deja tu comentario de esta oferta!
+    <form method="post">
+        {% csrf_token %}
+        {% if comment_form.body.errors %}
+            <span class="errorlist">{{ comment_form.body.errors.0 }}</span>
+        {% endif %}
+        <br />
+        {{ comment_form.body }}
+        <br />
+        <input type="submit" value="Enviar" /> 
+    </form>
+    
+    <ul id="js_form" style="display: none">
+        <li>
+            <div>
+                <form method="post">
+                    {% csrf_token %}
+                    <textarea name="body" cols="40" rows="5"></textarea>
+                    <br />
+                    <input type="hidden" id="parent_id" name="parent" value="">
+                    <input type="submit" value="Enviar" />
+                </form>
+            </div>
+        </li>
+    </ul>
+{% endif %}
+
+{% endblock %}

@@ -47,7 +47,7 @@ class Offer(models.Model):
         
     def get_salary_string(self):
         if self.liquid_salary == 0:
-            return 'Solicitar pretensión de salario'
+            return 'Se requiere enviar pretensión de salario'
         else:
             return pretty_price(self.liquid_salary)
             
@@ -65,9 +65,15 @@ class Offer(models.Model):
         tags = self.tags.all()
         return ', '.join(tag.name for tag in tags)
         
+    def get_description_string(self):
+        suffix = ''
+        if len(self.description) > 300:
+            suffix = ' ...'
+        return self.description[:300] + suffix
+        
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.objects.filter(closed = False)
+        offers = Offer.objects.filter(closed = False).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access = False)
         
@@ -85,15 +91,15 @@ class Offer(models.Model):
             if data['tags']:
                 tags = Tag.parse_string(data['tags'])
                 offers = offers.filter(tags__in = tags).distinct()
-                valued_offers = []
                 for offer in offers:
-                    valued_offers.append([offer, offer.get_affinity(tags)])
-                offers = valued_offers
-                offers = sorted(offers, key = lambda offer: offer[1], reverse = True)
+                    offer.affinity = offer.get_affinity(tags)
+                offers = sorted(offers, key = lambda offer: offer.affinity, reverse = True)
             else:
-                offers = [[offer, 0] for offer in offers]
+                for offer in offers:
+                    offer.affinity = 0
         else:
-            offers = [[offer, 0] for offer in offers]
+            for offer in offers:
+                offer.affinity = 0
         
         return offers
         
