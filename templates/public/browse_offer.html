@@ -16,7 +16,7 @@
     {% for offer in offers %}
         <ul>
             <li>
-                <a href="{% url bolsa_trabajo.views.offer_details offer.id %}">{{ offer.title }}</a> {% if offer.affinity %}({{ offer.affinity }}%){% endif %}
+                <a href="{% url bolsa_trabajo.views.offer_details offer.id %}">{{ offer.title }}</a> {% if offer.affinity %}<span class="affinity">({{ offer.affinity }}%)</span>{% endif %}
                 <br />
                 <b>Descripción:</b> {{ offer.get_description_string|linebreaks }}
                 <b>Empresa:</b> <a href="">{{ offer.enterprise }}</a>

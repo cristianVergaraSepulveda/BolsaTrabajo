@@ -41,17 +41,17 @@
         </ul>
     </div>
 {% else %}
-    No hay comentarios para esta oferta
+    <p>No hay comentarios para esta oferta</p>
 {% endif %}
 
 {% if user.can_reply %}
-    Deja tu comentario de esta oferta!
+    <p>Deja tu comentario de esta oferta!</p>
     <form method="post">
         {% csrf_token %}
         {% if comment_form.body.errors %}
             <span class="errorlist">{{ comment_form.body.errors.0 }}</span>
+            <br />
         {% endif %}
-        <br />
         {{ comment_form.body }}
         <br />
         <input type="submit" value="Enviar" /> 

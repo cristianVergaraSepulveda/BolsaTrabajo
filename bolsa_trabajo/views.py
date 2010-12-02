@@ -75,7 +75,6 @@ def student(request):
     page_range = [page for page in page_range if page > 0 and page <= num_pages]
     
     paging_url = form.generate_paging_url()
-    paging_url = ''
     
     return append_user_to_response(request, 'public/browse_student.html', {
         'search_form': form,
@@ -132,6 +131,9 @@ def offer_details(request, offer_id):
 
 def student_details(request, student_id):
     student = Student.objects.get(pk = student_id)
+    if not student.is_active:
+        url = reverse('bolsa_trabajo.views.student')
+        return HttpResponseRedirect(url)        
     if not request.user.is_authenticated() and student.profile.block_public_access:
         url = reverse('bolsa_trabajo.views.student')
         return HttpResponseRedirect(url)
@@ -141,54 +143,48 @@ def student_details(request, student_id):
     
 def offer_send_message(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
-    if not request.user.is_authenticated() and offer.enterprise.profile.block_public_access:
-        url = reverse('bolsa_trabajo.views.offer')
-        return HttpResponseRedirect(url)
-    if not request.user.is_active or not request.user.profile.is_student():
+    if request.user.is_authenticated() and request.user.profile.is_student() and request.user.is_active:        
+        if request.method == 'POST':
+            form = OfferMessageForm(request.POST)
+            if form.is_valid() and request.user.is_active and request.user.is_authenticated():
+                send_offer_message_email(request.user, offer, form.cleaned_data['title'], form.cleaned_data['body'])
+                
+                request.flash['message'] = 'Mensaje enviado exitosamente'
+                url = reverse('bolsa_trabajo.views.offer_details', args = [offer.id])
+                return HttpResponseRedirect(url)
+        else:
+            form = OfferMessageForm()
+        
+        return append_search_form_to_response(request, 'public/offer_send_message.html', {
+            'offer': offer,
+            'message_form': form
+        }) 
+    else:
         url = reverse('bolsa_trabajo.views.offer')
         return HttpResponseRedirect(url)        
-        
-    if request.method == 'POST':
-        form = OfferMessageForm(request.POST)
-        if form.is_valid() and request.user.is_active and request.user.is_authenticated():
-            send_offer_message_email(request.user, offer, form.cleaned_data['title'], form.cleaned_data['body'])
-            
-            request.flash['message'] = 'Mensaje enviado exitosamente'
-            url = reverse('bolsa_trabajo.views.offer_details', args = [offer.id])
-            return HttpResponseRedirect(url)
-    else:
-        form = OfferMessageForm()
-    
-    return append_search_form_to_response(request, 'public/offer_send_message.html', {
-        'offer': offer,
-        'message_form': form
-    }) 
     
 def student_send_message(request, student_id):
     student = Student.objects.get(pk = student_id)
-    if not request.user.is_authenticated() and student.profile.block_public_access:
-        url = reverse('bolsa_trabajo.views.student')
-        return HttpResponseRedirect(url)
-    if not request.user.is_active or not request.user.profile.is_enterprise():
-        url = reverse('bolsa_trabajo.views.student')
-        return HttpResponseRedirect(url)     
+    if request.user.is_authenticated() and request.user.profile.is_enterprise() and request.user.is_active:   
+        if request.method == 'POST':
+            form = OfferMessageForm(request.POST)
+            if form.is_valid() and request.user.is_active and request.user.is_authenticated():
+                enterprise = Enterprise.objects.get(pk = request.user.id)
+                send_student_message_email(enterprise, student, form.cleaned_data['title'], form.cleaned_data['body'])
+                
+                request.flash['message'] = 'Mensaje enviado exitosamente'
+                url = reverse('bolsa_trabajo.views.student_details', args = [student.id])
+                return HttpResponseRedirect(url)
+        else:
+            form = OfferMessageForm()
         
-    if request.method == 'POST':
-        form = OfferMessageForm(request.POST)
-        if form.is_valid() and request.user.is_active and request.user.is_authenticated():
-            enterprise = Enterprise.objects.get(pk = request.user.id)
-            send_student_message_email(enterprise, student, form.cleaned_data['title'], form.cleaned_data['body'])
-            
-            request.flash['message'] = 'Mensaje enviado exitosamente'
-            url = reverse('bolsa_trabajo.views.student_details', args = [student.id])
-            return HttpResponseRedirect(url)
+        return append_student_search_form_to_response(request, 'public/student_send_message.html', {
+            'student': student,
+            'message_form': form
+        })
     else:
-        form = OfferMessageForm()
-    
-    return append_student_search_form_to_response(request, 'public/student_send_message.html', {
-        'student': student,
-        'message_form': form
-    })
+        url = reverse('bolsa_trabajo.views.student')
+        return HttpResponseRedirect(url)        
     
 def contact(request):
     if request.method == 'POST':
@@ -210,6 +206,9 @@ def contact(request):
     
 def enterprise_details(request, enterprise_id):
     enterprise = Enterprise.objects.get(pk = enterprise_id)
+    if not enterprise.is_active:
+        url = reverse('bolsa_trabajo.views.index')
+        return HttpResponseRedirect(url)        
     if not request.user.is_authenticated() and enterprise.profile.block_public_access:
         url = reverse('bolsa_trabajo.views.index')
         return HttpResponseRedirect(url)

@@ -28,11 +28,11 @@
         </ul>
     </div>
 {% else %}
-   <p>No hay comentarios para esta oferta</p>
+   <p>No hay comentarios para esta empresa</p>
 {% endif %}
 
 {% if user.can_reply %}
-    Deja tu comentario de esta oferta!
+    <p>Deja tu comentario de esta empresa!</p>
     <form method="post">
         {% csrf_token %}
         {% if comment_form.body.errors %}

@@ -701,3 +701,13 @@ a#reject_link{
 .offer_author_commment {
     color: #43B16C;
 }
+
+.affinity {
+    color: #43B16C;
+    font-weight: bold;
+    font-size: 9px;
+}
+
+.page_navigator {
+    text-align: center;
+}

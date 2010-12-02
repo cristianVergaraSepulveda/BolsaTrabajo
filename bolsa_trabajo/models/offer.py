@@ -28,7 +28,7 @@ class Offer(models.Model):
         offer.liquid_salary = data['liquid_salary']
         offer.available_slots = data['available_slots']
         offer.save()
-        tags = Tag.parse_string(data['tags'])
+        tags = Tag.parse_string(data['tags'], True)
         for tag in tags:
             offer.tags.add(tag)
         offer.level = data['level']
@@ -40,7 +40,7 @@ class Offer(models.Model):
         self.description = data['description']
         self.liquid_salary = data['liquid_salary']
         self.available_slots = data['available_slots']
-        tags = Tag.parse_string(data['tags'])
+        tags = Tag.parse_string(data['tags'], True)
         self.tags.clear()
         for tag in tags:
             self.tags.add(tag)
@@ -91,15 +91,18 @@ class Offer(models.Model):
                 offers = offers.filter(level__in = data['level']).distinct()
             if data['tags']:
                 tags = Tag.parse_string(data['tags'])
-                offers = offers.filter(tags__in = tags).distinct()
-                for offer in offers:
-                    offer.affinity = offer.get_affinity(tags)
-                offers = sorted(offers, key = lambda offer: offer.affinity, reverse = True)
-            else:
-                for offer in offers:
-                    offer.affinity = 0
-        else:
-            for offer in offers:
+                if tags:
+                    offers = offers.filter(tags__in = tags).distinct()
+                    for offer in offers:
+                        offer.affinity = offer.get_affinity(tags)
+                    offers = sorted(offers, key = lambda offer: offer.affinity, reverse = True)
+                valid_tags_string = ', '.join([tag.name for tag in tags])
+                
+                copied_data = form.data.copy()
+                copied_data['tags'] = valid_tags_string
+                form.data = copied_data
+        for offer in offers:
+            if not 'affinity' in dir(offer):
                 offer.affinity = 0
         
         return offers

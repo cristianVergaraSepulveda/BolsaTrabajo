@@ -19,4 +19,4 @@ class StudentSearchForm(forms.Form):
         if self.cleaned_data['tags']:
             tags = Tag.parse_string(self.cleaned_data['tags'])
             url += '&tags=' + ', '.join([tag.name for tag in tags])
-        return urlquote(url)
+        return url

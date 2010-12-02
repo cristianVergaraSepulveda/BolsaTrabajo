@@ -8,7 +8,7 @@
     
     <ul>
         <li><b>Título:</b> {{ offer.title }}</li>
-        <li><b>Descripción:</b> {{ offer.description }}</li>
+        <li><b>Descripción:</b> {{ offer.description|linebreaks }}</li>
         <li><b>Sueldo líquido:</b> {{ offer.get_salary_string }}</li>
         <li><b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}</li>
         <li><b>Nivel:</b> {{ offer.get_level_string }}</li>

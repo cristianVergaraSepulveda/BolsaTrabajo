@@ -26,7 +26,7 @@ class Student(User):
     
     @staticmethod
     def get_from_form(form, include_hidden):
-        students = Student.objects.all()
+        students = Student.objects.filter(is_active = True)
         if not include_hidden:
             students = students.filter(profile__block_public_access = False)
         
@@ -38,17 +38,20 @@ class Student(User):
                 students = students.filter(level__in = data['level']).distinct()
             if data['tags']:
                 tags = Tag.parse_string(data['tags'])
-                students = students.filter(tags__in = tags).distinct()
-                for student in students:
-                    student.affinity = student.get_affinity(tags)
-                students = sorted(students, key = lambda student: student.affinity, reverse = True)
-            else:
-                for student in students:
-                    student.affinity = 0
-        else:
-            for student in students:
+                if tags:
+                    students = students.filter(tags__in = tags).distinct()
+                    for student in students:
+                        student.affinity = student.get_affinity(tags)
+                    students = sorted(students, key = lambda student: student.affinity, reverse = True)
+                valid_tags_string = ', '.join([tag.name for tag in tags])
+                
+                copied_data = form.data.copy()
+                copied_data['tags'] = valid_tags_string
+                form.data = copied_data
+                
+        for student in students:
+            if not 'affinity' in dir(student):
                 student.affinity = 0
-        
         return students
         
     def get_affinity(self, tags):
@@ -64,11 +67,12 @@ class Student(User):
     
     def update_from_form(self, form):
         self.resume = form.cleaned_data['resume']
+        self.level = form.cleaned_data['level']
         self.profile.block_public_access = form.cleaned_data['block_public_access']
         if 'cv' in form.cleaned_data and form.cleaned_data['cv']:
             self.has_cv = True
             self.store_cv(form.cleaned_data['cv'])
-        tags = Tag.parse_string(form.cleaned_data['tags'])
+        tags = Tag.parse_string(form.cleaned_data['tags'], True)
         self.tags.clear()
         for tag in tags:
             self.tags.add(tag)
@@ -109,6 +113,7 @@ class Student(User):
         student.email = data['email']
         student.set_password(data['password'])
         student.is_active = False
+        student.level = data['level']
         return student
         
     def save(self):

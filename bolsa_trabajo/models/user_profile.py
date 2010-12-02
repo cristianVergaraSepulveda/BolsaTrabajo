@@ -71,7 +71,7 @@ class UserProfile(models.Model):
             user.profile.send_new_register_mail()
             
     def send_new_register_mail(self):
-        subject = 'Bolsa de Trabajo - Nueva empresa solicita autorización'
+        subject = '[Bolsa Trabajo CaDCC] Nueva empresa solicita autorización'
 
         t = get_template('mails/new_enterprise_request.html')
 
@@ -84,7 +84,7 @@ class UserProfile(models.Model):
         self.send_confirmation_mail_from_template('mails/change_mail.html')    
         
     def send_confirmation_mail_from_template(self, template):
-        subject = 'Bolsa de Trabajo - Confirmación de correo electrónico'
+        subject = '[Bolsa Trabajo CaDCC] Confirmación de correo electrónico'
         user_digest = hashlib.sha224(settings.SECRET_KEY + self.user.username + self.user.email).hexdigest()
 
         t = get_template(template)

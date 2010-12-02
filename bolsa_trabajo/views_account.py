@@ -169,7 +169,8 @@ def validate_email(request):
         user.profile.validated_email = True;
         user.profile.save()
         
-        UserProfile.notify_staff_of_new_register()
+        if user.profile.is_enterprise():
+            UserProfile.notify_staff_of_new_register()
         
         if user.profile.is_student():
             user.is_active = True

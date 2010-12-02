@@ -17,7 +17,7 @@ class Tag(models.Model):
             raise ValidationError('No pueden existir dos tags con el mismo nombre')
             
     @staticmethod
-    def parse_string(string):
+    def parse_string(string, store_new_tags = False):
         tag_names = [name.strip() for name in string.split(',')]
         tags = set()
         for tag_name in tag_names:
@@ -25,11 +25,13 @@ class Tag(models.Model):
                 continue
             try:
                 tag = Tag.objects.get(name__iexact = tag_name)
+                tags.add(tag)
             except:
-                tag = Tag()
-                tag.name = tag_name
-                tag.save()
-            tags.add(tag)
+                if store_new_tags:
+                    tag = Tag()
+                    tag.name = tag_name
+                    tag.save()
+                    tags.add(tag)
         return list(tags)
 
     def __unicode__(self):

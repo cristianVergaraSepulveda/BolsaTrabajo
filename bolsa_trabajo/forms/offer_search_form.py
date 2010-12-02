@@ -5,7 +5,7 @@ from bolsa_trabajo.models import *
 from django.utils.http import urlquote
 
 class OfferSearchForm(forms.Form):
-    enterprise = forms.ModelChoiceField(queryset = Enterprise.objects.all(), empty_label = 'Cualquiera', required = False, label = 'Empresa')
+    enterprise = forms.ModelChoiceField(queryset = Enterprise.objects.filter(is_active = True), empty_label = 'Cualquiera', required = False, label = 'Empresa')
     level = forms.ModelMultipleChoiceField(queryset = OfferLevel.objects.all(), label = 'Nivel (no seleccione ninguno para incluir todos)', required = False)
     liquid_salary = forms.IntegerField(label = 'Sueldo líquido (0 si quiere mostrar todos)', required = False)
     include_unavailable_salaries = forms.BooleanField(label = '¿Incluir ofertas sin salario (i.e. "Enviar pretensiones de sueldo")?', required = False, initial = True)
@@ -25,4 +25,4 @@ class OfferSearchForm(forms.Form):
         if self.cleaned_data['tags']:
             tags = Tag.parse_string(self.cleaned_data['tags'])
             url += '&tags=' + ', '.join([tag.name for tag in tags])
-        return urlquote(url)
+        return url

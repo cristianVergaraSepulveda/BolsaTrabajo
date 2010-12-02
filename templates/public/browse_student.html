@@ -5,7 +5,7 @@
 
     {% if not user.is_authenticated %}
     <div class="notice">
-        <p>Si no está registrado no podrá ver todas las ofertas de trabajos y prácticas profesionales.</p>
+        <p>Si no está registrado no podrá ver todas las ofertas de profesionales.</p>
         <p><a href="{% url bolsa_trabajo.views_account.register %}">Registrarse</a> | <a href="{% url bolsa_trabajo.views_account.login %}">Iniciar sesión</a></p>
     </div>
     {% endif %}
@@ -16,7 +16,7 @@
     {% for student in students %}
         <ul>
             <li>
-                <a href="{% url bolsa_trabajo.views.student_details student.id %}">{{ student.get_full_name }}</a> {% if student.affinity %}({{ student.affinity }}%){% endif %}
+                <a href="{% url bolsa_trabajo.views.student_details student.id %}">{{ student.get_full_name }}</a> {% if student.affinity %}<span class="affinity">({{ student.affinity }}%)</span>{% endif %}
                 <br />
                 <b>Resumen:</b> {{ student.get_resume_string|linebreaks }}
                 <b>Nivel:</b> {{ student.level }}
