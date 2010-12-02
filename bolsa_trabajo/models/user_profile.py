@@ -7,7 +7,7 @@ from bolsa_trabajo.models import Tag
 from bolsa_trabajo.models import Student, Enterprise
 from django.template.loader import get_template
 from bolsa_trabajo.utils import *
-from bolsa_trabajo.models import Offer, OfferComment
+from . import Offer, OfferComment
 import settings
 from django.core.urlresolvers import reverse
 

@@ -1,6 +1,6 @@
 #-*- coding: UTF-8 -*-
 from django.db import models
-from bolsa_trabajo.models import Offer, Student
+from . import Offer, Student
 
 class OfferMessageRing(models.Model):
     offer = models.ForeignKey(Offer)

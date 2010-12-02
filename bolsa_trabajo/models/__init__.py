@@ -8,8 +8,4 @@ from offer import Offer
 from offer_comment import OfferComment
 from offer_message_ring import OfferMessageRing
 from offer_message import OfferMessage
-from application import Application
-from contract_feedback_evaluation import ContractFeedbackEvaluation
-from contract_feedback import ContractFeedback
-from contract import Contract
 from user_profile import UserProfile

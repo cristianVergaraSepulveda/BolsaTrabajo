@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from bolsa_trabajo.models import Student, Enterprise
+from . import Student, Enterprise
 
 class EnterpriseComment(models.Model):
     enterprise = models.ForeignKey(Enterprise, related_name = 'ent')
