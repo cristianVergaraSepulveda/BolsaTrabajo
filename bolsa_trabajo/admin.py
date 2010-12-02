@@ -1,4 +1,4 @@
-from bolsa_trabajo.models import *
+from BolsaTrabajo.bolsa_trabajo.models import *
 from django.contrib import admin
 
 admin.site.register(Enterprise)

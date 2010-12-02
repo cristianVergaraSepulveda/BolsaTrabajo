@@ -3,11 +3,9 @@ import hashlib
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from bolsa_trabajo.models import Tag
-from bolsa_trabajo.models import Student, Enterprise
 from django.template.loader import get_template
-from bolsa_trabajo.utils import *
-from . import Offer, OfferComment
+from BolsaTrabajo.bolsa_trabajo.utils import *
+from . import Offer, OfferComment, Student, Enterprise, Tag
 from BolsaTrabajo import settings
 from django.core.urlresolvers import reverse
 
