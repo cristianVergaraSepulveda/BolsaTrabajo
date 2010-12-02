@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
 from . import Tag, StudentLevel
-import settings
+from BolsaTrabajo import settings
 
 
 class Student(User):
