@@ -71,6 +71,57 @@ def reject_pending_enterprise_request(request, request_id):
     except:
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
+
+@staff_login_required
+def pending_offer_request(request):
+    return append_account_metadata_to_response(request, 'staff/pending_offer_request.html', {
+        'pending_requests': Offer.get_pending_requests()
+    })
+    
+@staff_login_required
+def pending_offer_request_details(request, request_id):
+    try:
+        offer = Offer.objects.get(pk = request_id)
+        if offer.validated:
+            raise Exception
+        return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
+        'offer': offer
+    })
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+        
+@staff_login_required
+def accept_pending_offer_request(request, request_id):
+    try:
+        offer = Offer.objects.get(pk = request_id)
+        if offer.validated:
+            raise Exception
+        offer.validated = True
+        offer.save()
+        offer.notify_acceptance()
+        request.flash['message'] = 'Oferta aceptada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_offer_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+    
+@staff_login_required
+def reject_pending_offer_request(request, request_id):
+    try:
+        offer = Offer.objects.get(pk = request_id)
+        if offer.validated:
+            raise Exception
+        offer.delete()
+        offer.notify_rejection()
+        request.flash['message'] = 'Solicitud rechazada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_offer_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
     
 @staff_login_required
 def new_enterprise(request):

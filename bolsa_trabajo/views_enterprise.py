@@ -30,17 +30,24 @@ def successful_enterprise_registration(request):
 @enterprise_login_required
 def offer(request):
     enterprise = Enterprise.objects.get(pk = request.user.id)
-    active_offers = enterprise.offer_set.filter(closed = False)
-    inactive_offers = enterprise.offer_set.filter(closed = True)
-    for inactive_offer in inactive_offers:
-        contracts = Contract.objects.filter(application__message__offer = inactive_offer)
-        if inactive_offer.available_slots != 0 and len(contracts) == inactive_offer.available_slots:
-            inactive_offer.motive = 'Totalidad de cupos rellenos'
+    
+    offers = enterprise.offer_set.all()
+    pending_offers = []
+    active_offers = []
+    closed_offers = []
+    
+    for offer in offers:
+        if not offer.validated:
+            pending_offers.append(offer)
+        elif not offer.closed:
+            active_offers.append(offer)
         else:
-            inactive_offer.motive = 'Cerrada manualmente'
+            closed_offers.append(offer)
+
     return append_user_to_response(request, 'enterprise/offer.html', {
+        'pending_offers': pending_offers,
         'active_offers': active_offers,
-        'inactive_offers': inactive_offers,
+        'closed_offers': closed_offers,
     })
     
 @enterprise_login_required
@@ -106,7 +113,9 @@ def add_offer(request):
             offer = Offer.create_from_form(enterprise, form)
             offer.save()
             
-            request.flash['message'] = 'Oferta creada exitosamente'
+            UserProfile.notify_staff_of_new_offer()
+            
+            request.flash['message'] = 'Oferta propuesta exitosamente, por favor espere a que un encargado la valide'
             url = reverse('bolsa_trabajo.views_account.index')
             return HttpResponseRedirect(url)
     else:

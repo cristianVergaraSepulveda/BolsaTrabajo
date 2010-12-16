@@ -131,12 +131,9 @@ def offer_details(request, offer_id):
 
 def student_details(request, student_id):
     student = Student.objects.get(pk = student_id)
-    if not student.is_active:
+    if not student.is_active or student.profile.block_public_access:
         url = reverse('bolsa_trabajo.views.student')
         return HttpResponseRedirect(url)        
-    if not request.user.is_authenticated() and student.profile.block_public_access:
-        url = reverse('bolsa_trabajo.views.student')
-        return HttpResponseRedirect(url)
     return append_student_search_form_to_response(request, 'public/student_details.html', {
         'student': student,
     }) 

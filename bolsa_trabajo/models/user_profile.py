@@ -68,10 +68,23 @@ class UserProfile(models.Model):
         for user in users:
             user.profile.send_new_register_mail()
             
+    @staticmethod
+    def notify_staff_of_new_offer():
+        users = User.objects.filter(is_staff = True).filter(is_superuser = False)
+        for user in users:
+            user.profile.send_new_offer_mail()
+            
     def send_new_register_mail(self):
         subject = '[Bolsa Trabajo CaDCC] Nueva empresa solicita autorización'
 
         t = get_template('mails/new_enterprise_request.html')
+
+        send_email(self.user, subject, t, {})
+        
+    def send_new_offer_mail(self):
+        subject = '[Bolsa Trabajo CaDCC] Autorización para nueva oferta laboral'
+
+        t = get_template('mails/new_offer_request.html')
 
         send_email(self.user, subject, t, {})
         

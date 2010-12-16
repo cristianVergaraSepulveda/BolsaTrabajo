@@ -21,7 +21,7 @@ class Enterprise(User):
         from bolsa_trabajo.utils import send_email
         
         t = get_template('mails/enterprise_acceptance.html')
-        subject = 'Bolsa de Trabajo - Solicitud aceptada'
+        subject = '[Bolsa Trabajo CaDCC] Solicitud aceptada'
 
         send_email(self, subject, t, {})
         
@@ -29,7 +29,7 @@ class Enterprise(User):
         from bolsa_trabajo.utils import send_email
         
         t = get_template('mails/enterprise_rejection.html')
-        subject = 'Bolsa de Trabajo - Solicitud rechazada'
+        subject = '[Bolsa Trabajo CaDCC] Solicitud rechazada'
 
         send_email(self, subject, t, {})
     

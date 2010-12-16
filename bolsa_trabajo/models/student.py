@@ -26,9 +26,7 @@ class Student(User):
     
     @staticmethod
     def get_from_form(form, include_hidden):
-        students = Student.objects.filter(is_active = True)
-        if not include_hidden:
-            students = students.filter(profile__block_public_access = False)
+        students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
         
         if form.is_valid():
             data = form.cleaned_data

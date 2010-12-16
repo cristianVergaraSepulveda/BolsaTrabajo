@@ -24,9 +24,13 @@
 			</li>
 			<li>
 		        {% if user.is_active %}
-		            <a href="{% url bolsa_trabajo.views_account.public_profile %}">Perfil público</a>
+		            {% if user.profile.is_student and user.profile.block_public_access %}
+		                Perfil público desactivado
+		            {% else %}
+		                <a href="{% url bolsa_trabajo.views_account.public_profile %}">Ver perfil público</a>
+	                {% endif %}
 		        {% else %}
-		            <span class="disabled">Perfil público</span>
+		            <span class="disabled">Ver perfil público</span>
 		        {% endif %}
 			</li>
 		</ul>

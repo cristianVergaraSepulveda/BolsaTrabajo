@@ -17,6 +17,7 @@ class Offer(models.Model):
     available_slots = models.IntegerField()
     closed = models.BooleanField(default = False)
     has_unread_comments = models.BooleanField(default = False)
+    validated = models.BooleanField(default = False)
     
     @staticmethod
     def create_from_form(enterprise, form):
@@ -27,6 +28,7 @@ class Offer(models.Model):
         offer.description = data['description']
         offer.liquid_salary = data['liquid_salary']
         offer.available_slots = data['available_slots']
+        offer.validated = False
         offer.save()
         tags = Tag.parse_string(data['tags'], True)
         for tag in tags:
@@ -45,6 +47,10 @@ class Offer(models.Model):
         for tag in tags:
             self.tags.add(tag)
         self.level = data['level']
+        
+    @staticmethod
+    def get_pending_requests():
+        return Offer.objects.filter(validated = False)
         
     def get_salary_string(self):
         if self.liquid_salary == 0:
@@ -74,7 +80,7 @@ class Offer(models.Model):
         
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.objects.filter(closed = False).order_by('-creation_date')
+        offers = Offer.objects.filter(closed = False).filter(validated = True).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access = False)
         
@@ -117,6 +123,22 @@ class Offer(models.Model):
                 num_hits += 1
                 
         return int(100 * num_hits / num_tags)
+        
+    def notify_acceptance(self):
+        from bolsa_trabajo.utils import send_email
+        
+        t = get_template('mails/offer_acceptance.html')
+        subject = '[Bolsa Trabajo CaDCC] Oferta aceptada'
+
+        send_email(self.enterprise, subject, t, {'offer': self})
+        
+    def notify_rejection(self):
+        from bolsa_trabajo.utils import send_email
+        
+        t = get_template('mails/offer_rejection.html')
+        subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
+
+        send_email(self.enterprise, subject, t, {'offer': self})
 
     def __unicode__(self):
         return unicode(self.title)

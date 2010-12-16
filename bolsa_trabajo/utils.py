@@ -16,6 +16,7 @@ def append_account_metadata_to_response(request, template, args = {}):
     args['template_suffix'] = template_suffix
     
     args['pending_enterprise_request_count'] = len(Enterprise.get_pending_requests())
+    args['pending_offer_request_count'] = len(Offer.get_pending_requests())
     
     return append_user_to_response(request, template, args)
 

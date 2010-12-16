@@ -1,0 +1,24 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_offer_request %}">Solicitudes de Ofertas Laborales</a></div>
+
+<h2>Solicitudes de Ofertas Laborales</h2>
+
+<div class="content-separator"></div>
+<p>
+    Desde acá se asignan los permisos para validar las solicitudes de publicación de ofertas laborales.
+</p>
+{% if pending_requests %}
+    <h5>Ofertas laborales con solicitudes pendientes</h5>
+    <ul>
+        {% for request in pending_requests %}
+            <li><a href="{% url bolsa_trabajo.views_staff.pending_offer_request_details request.id %}">{{ request }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <b>No hay solicitudes pendientes</b>
+{% endif %}
+
+{% endblock %}

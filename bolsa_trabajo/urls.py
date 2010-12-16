@@ -36,6 +36,10 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/$', 'pending_enterprise_request_details'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/accept/$', 'accept_pending_enterprise_request'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/reject/$', 'reject_pending_enterprise_request'),
+    (r'^account/pending_offer_request/$', 'pending_offer_request'),
+    (r'^account/pending_offer_request/(?P<request_id>\d+)/$', 'pending_offer_request_details'),
+    (r'^account/pending_offer_request/(?P<request_id>\d+)/accept/$', 'accept_pending_offer_request'),
+    (r'^account/pending_offer_request/(?P<request_id>\d+)/reject/$', 'reject_pending_offer_request'),
     (r'^account/new_enterprise/$', 'new_enterprise'),
     )
     

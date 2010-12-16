@@ -10,6 +10,9 @@
 	            <a href="{% url bolsa_trabajo.views_staff.pending_enterprise_request %}">Solicitudes de empresas {% if pending_enterprise_request_count %}({{ pending_enterprise_request_count }}){% endif %}</a>
 	        </li>
 	        <li>
+	            <a href="{% url bolsa_trabajo.views_staff.pending_offer_request %}">Solicitudes de ofertas laborales {% if pending_offer_request_count %}({{ pending_offer_request_count }}){% endif %}</a>
+	        </li>
+	        <li>
 	            <a href="{% url bolsa_trabajo.views_staff.new_enterprise %}">Ingresar empresa</a>
 	        </li>
 		</ul>
