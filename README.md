@@ -1,4 +1,4 @@
-ubuntu 10.10 bootstrapping instructions
+Ubuntu 10.10 Bootstrapping Instructions
 =============
 
 Python
@@ -69,3 +69,6 @@ Virtualenv
 
 ###Enter development site:
 	http://localhost:8000/
+
+###Windows 7 Bootstrapping Instructions
+	pending
