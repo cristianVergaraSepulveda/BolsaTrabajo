@@ -1,7 +1,7 @@
 Ubuntu 10.10 Bootstrapping Instructions
 =============
 
-	check [Ubuntu 10.10 bootstrapping instructions](https://github.com/vkhemlan/BolsaTrabajo/wiki/Ubuntu-10.10-Bootstrapping-Instructions)
+check [Ubuntu 10.10 bootstrapping instructions](https://github.com/vkhemlan/BolsaTrabajo/wiki/Ubuntu-10.10-Bootstrapping-Instructions)
 
 Python
 -------
