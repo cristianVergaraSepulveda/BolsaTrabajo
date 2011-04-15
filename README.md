@@ -4,16 +4,16 @@ ubuntu 10.10 bootstrapping instructions
 Python
 -------
 
-sudo apt-get install aptitude curl
-sudo aptitude install python2.7-dev python2.7-doc python2.7-examples
-curl -O https://github.com/pypa/pip/raw/master/contrib/get-pip.py
-sudo python get-pip.py
+	sudo apt-get install aptitude curl
+	sudo aptitude install python2.7-dev python2.7-doc python2.7-examples
+	curl -O https://github.com/pypa/pip/raw/master/contrib/get-pip.py
+	sudo python get-pip.py
 
 Virtualenv
 -------
-sudo pip install virtualenv
-sudo pip install virtualenvwrapper
-mkdir ~/.virtualenvs
+	sudo pip install virtualenv
+	sudo pip install virtualenvwrapper
+	mkdir ~/.virtualenvs
 
 ### Add this at the end of your ~/.bashrc:
 	#Python + Virtualenv
@@ -42,14 +42,30 @@ mkdir ~/.virtualenvs
 
 ###Create bolsa-trabajo virtualenv
 
-mkvirtualenv bolsa-trabajo
+	mkvirtualenv bolsa-trabajo
 
 ###Application Requirements
 
-curl http://code.djangoproject.com/export/16026/django/trunk/extras/django_bash_completion > .django_bash_completion
+	curl http://code.djangoproject.com/export/16026/django/trunk/extras/django_bash_completion > .django_bash_completion
 
-pip install --requirement=requirements.txt
+	pip install --requirement=requirements.txt
 
-###Django Configuration
+###Django Configuration file
 
-pending
+	ask for someone in the team for the settings.py file :)
+
+###Django Initialization
+	python manage.py syncdb
+*don't create a superuser!
+
+###Database Migrations
+	python manage.py migrate bolsa_trabajo
+
+###Create Superuser (whatever u want):
+	python manage.py createsuperuser
+
+###Run Django Server:
+	python manage.py runserver
+
+###Enter development site:
+	http://localhost:8000/
