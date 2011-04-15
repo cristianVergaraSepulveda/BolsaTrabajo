@@ -44,4 +44,12 @@ mkdir ~/.virtualenvs
 
 mkvirtualenv bolsa-trabajo
 
+###Application Requirements
+
+curl http://code.djangoproject.com/export/16026/django/trunk/extras/django_bash_completion > .django_bash_completion
+
 pip install --requirement=requirements.txt
+
+###Django Configuration
+
+pending
