@@ -1,6 +1,8 @@
 Ubuntu 10.10 Bootstrapping Instructions
 =============
 
+	check [[Ubuntu 10.10 bootstrapping instructions]]
+
 Python
 -------
 
