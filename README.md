@@ -74,3 +74,19 @@ Virtualenv
 
 ###Windows 7 Bootstrapping Instructions
 	pending
+	
+Server deployment
+----------------------
+
+The site is currently running on http://bolsatrabajo.cadcc.cl
+
+To update the production application you need to enter to the server via SSH and execute 
+
+    git pull
+    service apache2 restart
+    
+The server is currently running Ubuntu Server 10.10 and may be migrated to CentOS at some point
+
+The system does not execute any unit or integration tests.
+
+
