@@ -6,18 +6,20 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
+from models.enterprise import Enterprise
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+class OffersViewsTestCase(TestCase):
+  fixtures = ['offer_views_testdata.json']
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+  def test_offer(self):
+    enterprise = Enterprise(name="foobar")
+    enterprise.save()
+    enterprises = Enterprise.objects.all()
+    print(type(enterprises))
+    for e in enterprises:
+      print("record...")
+      print(e.name)
 
->>> 1 + 1 == 2
-True
-"""}
-
+    Enterprise.objects.get(name='pepito')
+    resp = self.client.get('/offer/')
+    self.assertEqual(resp.status_code, 200)
