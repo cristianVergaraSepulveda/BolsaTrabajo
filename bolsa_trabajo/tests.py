@@ -15,7 +15,6 @@ class NewEnterpriseTestCase(TestCase):
         self.client.login(username='test',password='test')
         resp = self.client.get('/account/new_enterprise/')
         self.assertEqual(200,resp.status_code)
-        #self.assertEqual(resp["Location"],'http://testserver/account/new_enterprise/')
 
     def test_new_enterprise_register(self):
         self.client.login(username='test',password='test')
