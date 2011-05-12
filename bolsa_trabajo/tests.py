@@ -24,20 +24,20 @@ class NewEnterpriseTestCase(TestCase):
         
     def test_new_enterprise_register(self):
         register_test_user()
-        #self.client.login
-
+        self.client.login(username='test',password='test')
+        
 class OffersViewsTestCase(TestCase):
-  fixtures = ['offer_views_testdata.json']
+    fixtures = ['offer_views_testdata.json']
 
-  def test_offer(self):
-    enterprise = Enterprise(name="foobar")
-    enterprise.save()
-    enterprises = Enterprise.objects.all()
-    print(type(enterprises))
-    for e in enterprises:
-      print("record...")
-      print(e.name)
+    def test_offer(self):
+        enterprise = Enterprise(name="foobar")
+        enterprise.save()
+        enterprises = Enterprise.objects.all()
+        print(type(enterprises))
+        for e in enterprises:
+            print("record...")
+            print(e.name)
 
-    Enterprise.objects.get(name='pepito')
-    resp = self.client.get('/offer/')
-    self.assertEqual(resp.status_code, 200)
+        Enterprise.objects.get(name='pepito')
+        resp = self.client.get('/offer/')
+        self.assertEqual(resp.status_code, 200)
