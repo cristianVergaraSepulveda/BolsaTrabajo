@@ -1,0 +1,11 @@
+[
+    {
+        "model": "auth.User",
+        "pk": 1001,
+        "fields": {
+                    "username": "test",
+                    "password": "sha1$ca67a$eb953a4c8a2b233a3b738a1774f785e3657566e5",
+                    "is_staff": True
+        }
+    }
+]

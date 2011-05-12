@@ -1,0 +1,16 @@
+[
+    {
+        "model": "bolsa_trabajo.offer_level",
+        "pk": 15,
+        "fields": {
+                    "name": "OfferLevel1"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer_level",
+        "pk": 16,
+        "fields": {
+                    "name": "OfferLevel2"
+        }
+    }
+]

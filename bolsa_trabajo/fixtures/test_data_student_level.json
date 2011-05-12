@@ -1,0 +1,18 @@
+[
+    {
+        "model": "bolsa_trabajo.student_level",
+        "pk": 23,
+        "fields": {
+                    "name": "StudentLevel1",
+                    "ordering": 1
+        }
+    },
+    {
+        "model": "bolsa_trabajo.student_level",
+        "pk": 24,
+        "fields": {
+                    "name": "StudentLevel2",
+                    "ordering": 2
+        }
+    }
+]

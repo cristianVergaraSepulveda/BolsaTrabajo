@@ -1,0 +1,42 @@
+[
+    {
+        "model": "bolsa_trabajo.user_profile",
+        "pk": 17,
+        "fields": {
+                    "validated_email": True,
+                    "user": "UserProfile1",
+                    "tags": "Tag1",
+                    "block_public_access": False
+        }
+    },
+    {
+        "model": "bolsa_trabajo.user_profile",
+        "pk": 18,
+        "fields": {
+                    "validated_email": True,
+                    "name": "UserProfile2",
+                    "tags": "Tag2",
+                    "block_public_access": False
+        }
+    },
+    {
+        "model": "bolsa_trabajo.user_profile",
+        "pk": 19,
+        "fields": {
+                    "validated_email": False,
+                    "name": "UserProfile3",
+                    "tags": "Tag2",
+                    "block_public_access": False
+        }
+    },
+    {
+        "model": "bolsa_trabajo.user_profile",
+        "pk": 20,
+        "fields": {
+                    "validated_email": True,
+                    "name": "UserProfile4",
+                    "tags": "Tag1",
+                    "block_public_access": True
+        }
+    }
+]
