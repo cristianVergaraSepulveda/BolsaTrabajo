@@ -5,7 +5,7 @@ from models.enterprise import Enterprise
 
 class NewEnterpriseTestCase(TestCase):
 
-    fixtures = ['new_enterprise_testdata.json','test_data_enterprise.json']
+    fixtures = ['NewEnterpriseTestCase_data.json']
 
     def test_index(self):
         resp = self.client.get("/")
@@ -41,19 +41,3 @@ class NewEnterpriseTestCase(TestCase):
     def test_data_enterprise_fixture(self):
         ent = Enterprise.objects.get(name='Enterprise1')
         self.assertEqual(ent.rut,'17.847.192-2')
-        
-class OffersViewsTestCase(TestCase):
-    fixtures = ['offer_views_testdata.json']
-
-    def test_offer(self):
-        enterprise = Enterprise(name="foobar")
-        enterprise.save()
-        enterprises = Enterprise.objects.all()
-        print(type(enterprises))
-        for e in enterprises:
-            print("record...")
-            print(e.name)
-
-        Enterprise.objects.get(name='pepito')
-        resp = self.client.get('/offer/')
-        self.assertEqual(resp.status_code, 200)
