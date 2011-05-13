@@ -6,8 +6,8 @@
                     "enterprise": 1,
                     "title": "Offer1",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
-                    "liquid_salary": 100000
-                    "tag": [1,2]
+                    "liquid_salary": 100000,
+                    "tags": [1,2]
         }
     },
     {
@@ -16,9 +16,9 @@
         "fields": {
                     "enterprise": 1,
                     "title": "Offer2",
-                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
-                    "liquid_salary": 200000
-                    "tag": [2,3]
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 200000,
+                    "tags": [2,3]
         }
     },
     {
@@ -27,9 +27,9 @@
         "fields": {
                     "enterprise": 2,
                     "title": "Offer3",
-                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
-                    "liquid_salary": 500000
-                    "tag": [3,4]
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 500000,
+                    "tags": [3,4]
         }
     },
     {
@@ -38,9 +38,9 @@
         "fields": {
                     "enterprise": 2,
                     "title": "Offer4",
-                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
-                    "liquid_salary": 75000
-                    "tag": [4,1]
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 75000,
+                    "tags": [4,1]
         }
     }
 ]
