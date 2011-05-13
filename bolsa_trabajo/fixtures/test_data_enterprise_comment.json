@@ -1,7 +1,7 @@
 [
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 7,
+        "pk": 200,
         "fields": {
                     "enterprise": "Enterprise1",
                     "author": "Author1",
@@ -10,7 +10,7 @@
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 8,
+        "pk": 201,
         "fields": {
                     "enterprise": "Enterprise1",
                     "author": "Author2",
@@ -19,7 +19,7 @@
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 9,
+        "pk": 202,
         "fields": {
                     "enterprise": "Enterprise2",
                     "author": "Author1",
@@ -28,7 +28,7 @@
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 10,
+        "pk": 203,
         "fields": {
                     "enterprise": "Enterprise2",
                     "author": "Author2",

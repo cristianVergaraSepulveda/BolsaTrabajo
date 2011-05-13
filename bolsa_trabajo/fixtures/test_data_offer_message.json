@@ -1,7 +1,7 @@
 [
     {
         "model": "bolsa_trabajo.offer_message",
-        "pk": 28,
+        "pk": 600,
         "fields": {
                     "ring": 27,
                     "author": 1001,

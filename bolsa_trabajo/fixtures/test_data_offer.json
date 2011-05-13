@@ -1,7 +1,7 @@
 [
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 3,
+        "pk": 300,
         "fields": {
                     "enterprise": "Enterprise1",
                     "title": "Offer1",
@@ -10,7 +10,7 @@
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 4,
+        "pk": 301,
         "fields": {
                     "enterprise": "Enterprise1",
                     "title": "Offer2",
@@ -19,7 +19,7 @@
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 5,
+        "pk": 302,
         "fields": {
                     "enterprise": "Enterprise2",
                     "title": "Offer3",
@@ -28,7 +28,7 @@
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 6,
+        "pk": 303,
         "fields": {
                     "enterprise": "Enterprise2",
                     "title": "Offer4",

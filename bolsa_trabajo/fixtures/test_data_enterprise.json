@@ -1,7 +1,7 @@
 [
     {
         "model": "bolsa_trabajo.enterprise",
-        "pk": 1,
+        "pk": 100,
         "fields": {
 					"name": "Enterprise1",
 					"rut": "17.847.192-2",
@@ -10,7 +10,7 @@
     },
     {
         "model": "bolsa_trabajo.enterprise",
-        "pk": 2,
+        "pk": 101,
         "fields": {
 					"name": "Enterprise2",
 					"rut": "16.333.777-5",

@@ -1,14 +1,14 @@
 [
     {
         "model": "bolsa_trabajo.tag",
-        "pk": 21,
+        "pk": 1000,
         "fields": {
                     "name": "Tag1"
         }
     },
     {
         "model": "bolsa_trabajo.tag",
-        "pk": 22,
+        "pk": 1001,
         "fields": {
                     "name": "Tag2"
         }
