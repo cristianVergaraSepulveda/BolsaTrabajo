@@ -3,7 +3,7 @@
         "model": "bolsa_trabajo.offer",
         "pk": 300,
         "fields": {
-                    "enterprise": "Enterprise1",
+                    "enterprise": 100,
                     "title": "Offer1",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
@@ -12,7 +12,7 @@
         "model": "bolsa_trabajo.offer",
         "pk": 301,
         "fields": {
-                    "enterprise": "Enterprise1",
+                    "enterprise": 100,
                     "title": "Offer2",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
@@ -21,7 +21,7 @@
         "model": "bolsa_trabajo.offer",
         "pk": 302,
         "fields": {
-                    "enterprise": "Enterprise2",
+                    "enterprise": 101,
                     "title": "Offer3",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
@@ -30,7 +30,7 @@
         "model": "bolsa_trabajo.offer",
         "pk": 303,
         "fields": {
-                    "enterprise": "Enterprise2",
+                    "enterprise": 101,
                     "title": "Offer4",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }

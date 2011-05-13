@@ -4,8 +4,8 @@
         "pk": 1200,
         "fields": {
                     "validated_email": True,
-                    "user": "UserProfile1",
-                    "tags": "Tag1",
+                    "user": 1100,
+                    "tags": 1000,
                     "block_public_access": False
         }
     },
@@ -14,8 +14,8 @@
         "pk": 1201,
         "fields": {
                     "validated_email": True,
-                    "name": "UserProfile2",
-                    "tags": "Tag2",
+                    "name": 1101,
+                    "tags": 1001,
                     "block_public_access": False
         }
     },
@@ -25,7 +25,7 @@
         "fields": {
                     "validated_email": False,
                     "name": "UserProfile3",
-                    "tags": "Tag2",
+                    "tags": 1001,
                     "block_public_access": False
         }
     },
@@ -35,7 +35,7 @@
         "fields": {
                     "validated_email": True,
                     "name": "UserProfile4",
-                    "tags": "Tag1",
+                    "tags": 1000,
                     "block_public_access": True
         }
     }

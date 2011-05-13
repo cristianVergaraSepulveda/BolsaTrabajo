@@ -7,5 +7,14 @@
                     "password": "sha1$ca67a$eb953a4c8a2b233a3b738a1774f785e3657566e5",
                     "is_staff": True
         }
+    },
+    {
+        "model": "auth.User",
+        "pk": 1101,
+        "fields": {
+                    "username": "test2",
+                    "password": "sha1$ca67a$eb953a4c8a2b233a3b738a1774f785e3657566e5",
+                    "is_staff": False
+        }
     }
 ]

@@ -3,8 +3,8 @@
         "model": "bolsa_trabajo.offer_comment",
         "pk": 400,
         "fields": {
-                    "offer": "Offer1",
-                    "author": "Author2",
+                    "offer": 300,
+                    "author": 1100,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -12,8 +12,8 @@
         "model": "bolsa_trabajo.offer_comment",
         "pk": 401,
         "fields": {
-                    "offer": "Offer2",
-                    "author": "Author2",
+                    "offer": 301,
+                    "author": 1100,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -21,8 +21,8 @@
         "model": "bolsa_trabajo.offer_comment",
         "pk": 402,
         "fields": {
-                    "offer": "Offer2",
-                    "author": "Author2",
+                    "offer": 301,
+                    "author": 1101,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -30,8 +30,8 @@
         "model": "bolsa_trabajo.offer_comment",
         "pk": 403,
         "fields": {
-                    "offer": "Offer4",
-                    "author": "Author2",
+                    "offer": 303,
+                    "author": 1101,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     }

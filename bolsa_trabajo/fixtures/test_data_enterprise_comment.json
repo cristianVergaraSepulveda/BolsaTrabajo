@@ -4,7 +4,7 @@
         "pk": 200,
         "fields": {
                     "enterprise": "Enterprise1",
-                    "author": "Author1",
+                    "author": 1100,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -13,7 +13,7 @@
         "pk": 201,
         "fields": {
                     "enterprise": "Enterprise1",
-                    "author": "Author2",
+                    "author": 1101,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -22,7 +22,7 @@
         "pk": 202,
         "fields": {
                     "enterprise": "Enterprise2",
-                    "author": "Author1",
+                    "author": 1100,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
@@ -31,7 +31,7 @@
         "pk": 203,
         "fields": {
                     "enterprise": "Enterprise2",
-                    "author": "Author2",
+                    "author": 1101,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     }
