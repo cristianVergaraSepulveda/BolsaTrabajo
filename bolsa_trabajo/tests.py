@@ -5,7 +5,7 @@ from models.enterprise import Enterprise
 
 class NewEnterpriseTestCase(TestCase):
 
-    fixtures = ['NewEnterpriseTestCase_data.json']
+    fixtures = ['users.json','enterprises.json']
 
     def test_index(self):
         resp = self.client.get("/")
