@@ -4,7 +4,7 @@
         "pk": 27,
         "fields": {
                     "offer": "Offer1",
-                    "student": "test",
+                    "student": 25,
                     "title": "TitleRingMessage1"
         }
     }
