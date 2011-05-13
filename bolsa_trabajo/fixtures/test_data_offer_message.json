@@ -1,0 +1,11 @@
+[
+    {
+        "model": "bolsa_trabajo.offer_message",
+        "pk": 28,
+        "fields": {
+                    "ring": 27,
+                    "author": 1001,
+                    "body": "Suspendisse non erat enim, at posuere mi. Quisque semper tristique eros, ac semper odio consectetur sit amet. Donec varius, nisi in lobortis blandit, augue nunc ullamcorper neque, in pellentesque sem."
+        }
+    }
+]
