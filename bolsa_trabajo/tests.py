@@ -41,3 +41,28 @@ class NewEnterpriseTestCase(TestCase):
     def test_data_enterprise_fixture(self):
         ent = Enterprise.objects.get(name='Enterprise1')
         self.assertEqual(ent.rut,'17.847.192-2')
+
+
+class OfferTestCase(TestCase):
+
+    fixtures = ['users.json', 'enterprises.json', 'tags.json', 'offers.json']
+
+    def test_search(self):
+        get_data = {
+            'enterprise':'Enterprise1',
+            'liquid_salary': '200000',
+            'include_unavailable_salaries':'on',
+            'tags':'Tag2',            
+            'level': ''}
+
+        resp = self.client.get('/offer/', get_data)
+        
+
+        self.assertEqual(200,resp.status_code)
+
+        
+
+
+
+
+
