@@ -1,0 +1,30 @@
+[
+    {
+        "model": "bolsa_trabajo.tag",
+        "pk": 1,
+        "fields": {
+                    "name": "Tag1"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.tag",
+        "pk": 2,
+        "fields": {
+                    "name": "Tag2"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.tag",
+        "pk": 3,
+        "fields": {
+                    "name": "Tag3"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.tag",
+        "pk": 4,
+        "fields": {
+                    "name": "Tag4"
+        }
+    }
+]
