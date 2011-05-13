@@ -5,7 +5,7 @@ from models.enterprise import Enterprise
 
 class NewEnterpriseTestCase(TestCase):
 
-    fixtures = ['new_enterprise_testdata.json']
+    fixtures = ['new_enterprise_testdata.json','test_data_enterprise.json']
 
     def test_index(self):
         resp = self.client.get("/")
@@ -37,6 +37,10 @@ class NewEnterpriseTestCase(TestCase):
         
         # when logging in using the new enterprise username and password, the login function should return True
         self.assertTrue(self.client.login(username='test-enterprise',password='test-enterprise'))
+    
+    def test_data_enterprise_fixture(self):
+        ent = Enterprise.objects.get(name='Enterprise1')
+        self.assertEqual(ent.rut,'17.847.192-2')
         
 class OffersViewsTestCase(TestCase):
     fixtures = ['offer_views_testdata.json']
