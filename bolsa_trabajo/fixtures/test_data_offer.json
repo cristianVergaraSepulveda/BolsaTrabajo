@@ -1,36 +1,36 @@
 [
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 300,
+        "pk": 1,
         "fields": {
-                    "enterprise": 100,
+                    "enterprise": 1,
                     "title": "Offer1",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 301,
+        "pk": 2,
         "fields": {
-                    "enterprise": 100,
+                    "enterprise": 1,
                     "title": "Offer2",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 302,
+        "pk": 3,
         "fields": {
-                    "enterprise": 101,
+                    "enterprise": 2,
                     "title": "Offer3",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }
     },
     {
         "model": "bolsa_trabajo.offer",
-        "pk": 303,
+        "pk": 4,
         "fields": {
-                    "enterprise": 101,
+                    "enterprise": 2,
                     "title": "Offer4",
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua."
         }

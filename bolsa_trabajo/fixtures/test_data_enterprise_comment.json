@@ -1,37 +1,37 @@
 [
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 200,
+        "pk": 1,
         "fields": {
                     "enterprise": "Enterprise1",
-                    "author": 1100,
+                    "author": 1,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 201,
+        "pk": 2,
         "fields": {
                     "enterprise": "Enterprise1",
-                    "author": 1101,
+                    "author": 2,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 202,
+        "pk": 3,
         "fields": {
                     "enterprise": "Enterprise2",
-                    "author": 1100,
+                    "author": 1,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     },
     {
         "model": "bolsa_trabajo.enterprise_comment",
-        "pk": 203,
+        "pk": 4,
         "fields": {
                     "enterprise": "Enterprise2",
-                    "author": 1101,
+                    "author": 2,
                     "body": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         }
     }

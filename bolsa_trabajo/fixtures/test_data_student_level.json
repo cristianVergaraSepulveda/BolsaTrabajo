@@ -1,7 +1,7 @@
 [
     {
         "model": "bolsa_trabajo.student_level",
-        "pk": 900,
+        "pk": 1,
         "fields": {
                     "name": "StudentLevel1",
                     "ordering": 1
@@ -9,7 +9,7 @@
     },
     {
         "model": "bolsa_trabajo.student_level",
-        "pk": 901,
+        "pk": 2,
         "fields": {
                     "name": "StudentLevel2",
                     "ordering": 2

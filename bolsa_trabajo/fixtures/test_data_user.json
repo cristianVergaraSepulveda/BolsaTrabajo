@@ -1,7 +1,7 @@
 [
     {
         "model": "auth.User",
-        "pk": 1100,
+        "pk": 1,
         "fields": {
                     "username": "test",
                     "password": "sha1$ca67a$eb953a4c8a2b233a3b738a1774f785e3657566e5",
@@ -10,7 +10,7 @@
     },
     {
         "model": "auth.User",
-        "pk": 1101,
+        "pk": 2,
         "fields": {
                     "username": "test2",
                     "password": "sha1$ca67a$eb953a4c8a2b233a3b738a1774f785e3657566e5",

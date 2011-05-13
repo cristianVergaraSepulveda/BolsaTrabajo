@@ -1,10 +1,10 @@
 [
     {
         "model": "bolsa_trabajo.offer_message_ring",
-        "pk": 700,
+        "pk": 1,
         "fields": {
-                    "offer": 300,
-                    "student": 800,
+                    "offer": 1,
+                    "student": 1,
                     "title": "TitleRingMessage1"
         }
     }

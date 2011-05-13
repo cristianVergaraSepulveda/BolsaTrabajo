@@ -1,42 +1,22 @@
 [
     {
         "model": "bolsa_trabajo.user_profile",
-        "pk": 1200,
+        "pk": 1,
         "fields": {
                     "validated_email": True,
-                    "user": 1100,
-                    "tags": 1000,
+                    "user": 1,
+                    "tags": 1,
                     "block_public_access": False
         }
     },
     {
         "model": "bolsa_trabajo.user_profile",
-        "pk": 1201,
+        "pk": 2,
         "fields": {
                     "validated_email": True,
-                    "name": 1101,
-                    "tags": 1001,
+                    "name": 2,
+                    "tags": 2,
                     "block_public_access": False
-        }
-    },
-    {
-        "model": "bolsa_trabajo.user_profile",
-        "pk": 1202,
-        "fields": {
-                    "validated_email": False,
-                    "name": "UserProfile3",
-                    "tags": 1001,
-                    "block_public_access": False
-        }
-    },
-    {
-        "model": "bolsa_trabajo.user_profile",
-        "pk": 1203,
-        "fields": {
-                    "validated_email": True,
-                    "name": "UserProfile4",
-                    "tags": 1000,
-                    "block_public_access": True
         }
     }
 ]
