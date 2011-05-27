@@ -1,0 +1,49 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+					"username": "test",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "True"
+        }
+    },
+
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+					"username": "Enterprise1",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec"
+        }
+    },
+
+    {
+        "model": "bolsa_trabajo.enterprise",
+        "pk": 2,
+        "fields": {
+					"name": "Enterprise1",
+					"rut": "17.847.192-2",
+					"description": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+        }
+    },
+
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+					"username": "Enterprise2",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec"
+        }
+    },
+
+    {
+        "model": "bolsa_trabajo.enterprise",
+        "pk": 3,
+        "fields": {
+					"name": "Enterprise2",
+					"rut": "16.333.777-5",
+					"description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur magna aliqua."
+        }
+    }
+]
