@@ -9,7 +9,19 @@
 	{% block header %}{% endblock %}
 	<title>{% block title %}Bolsa de Trabajo CaDCC{% endblock %}</title>
 </head>
+<script type="text/javascript">
 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23622587-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 <body id="top">
 
 <div id="header-wrapper">
@@ -30,10 +42,10 @@
 					<div id="help">
 
 						{% if user.is_authenticated %}
-						    <a href="{% url bolsa_trabajo.views_account.index %}">Panel de control {% if num_notifications %}({{ num_notifications }}){% endif %}</a> 
-						    <span class="text-separator">|</span>                       <a href="{% url bolsa_trabajo.views_account.logout %}">Salir</a> 
-					    {% else %} 
-					        <a href="{% url bolsa_trabajo.views_account.login %}?next={{ path }}">Entrar</a> 
+						    <a href="{% url bolsa_trabajo.views_account.index %}">Panel de control {% if num_notifications %}({{ num_notifications }}){% endif %}</a>
+						    <span class="text-separator">|</span>                       <a href="{% url bolsa_trabajo.views_account.logout %}">Salir</a>
+					    {% else %}
+					        <a href="{% url bolsa_trabajo.views_account.login %}?next={{ path }}">Entrar</a>
 				            <span class="text-separator">|</span>
 				            <a href="{% url bolsa_trabajo.views_account.register %}">Registrarse</a>                     {% endif %}
 
@@ -49,7 +61,7 @@
 <div id="navigation-wrapper">
 	<div id="navigation-wrapper-2">
 		<div class="center-wrapper">
-	
+
 			<div id="navigation">
 
 				<ul class="tabbed">
@@ -87,7 +99,7 @@
 			<div class="right">
 				<a href="#">Top ^</a>
 			</div>
-			
+
 			<div class="clearer">&nbsp;</div>
 
 		</div>
@@ -101,13 +113,13 @@
 	<div class="center-wrapper">
 
 		<div class="left">
-			&copy; 2010 CaDCC 2011 - Departamento de Ciencias de la Computación <span class="text-separator">|</span> <a href="/privacy">Políticas de privacidad</a> <span class="text-separator">|</span> <a href="/terms">Condiciones de uso</a> 
+			&copy; 2010 CaDCC 2011 - Departamento de Ciencias de la Computación <span class="text-separator">|</span> <a href="/privacy">Políticas de privacidad</a> <span class="text-separator">|</span> <a href="/terms">Condiciones de uso</a>
 		</div>
 
 		<div class="right">
-			<a href="http://templates.arcsin.se/">Website template</a> by <a href="http://arcsin.se/">Arcsin</a> 
+			<a href="http://templates.arcsin.se/">Website template</a> by <a href="http://arcsin.se/">Arcsin</a>
 		</div>
-		
+
 		<div class="clearer">&nbsp;</div>
 
 	</div>

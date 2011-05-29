@@ -9,7 +9,7 @@
                     <p>{{ flash.message }}</p>
                 </div>
             {% endif %}
-            
+
             {% if flash.error_message %}
                 <div id="error_message" class="error">
                     <p>{{ flash.error_message }}</p>
@@ -17,8 +17,8 @@
             {% endif %}
 	        <div class="left" style="width: 400px">
 
-	
-		        <h2><span>Bienvenido</span></h2>
+
+		        <h2><span>Bienvenidos</span></h2>
 
 		        <p class="large" style="margin-top: 10px;">Sistema de oferta y búsqueda de trabajos y prácticas profesionales para los alumnos de Ingeniería Civil en Computación de la Universidad de Chile.</p>
 
@@ -32,14 +32,14 @@
 
         </div>
     </div>
-    
+
     <div id="main">
         <div class="separator-vertical">
 
 	        <div class="col2 left">
 
 		        <h2 class="left">Para empresas</h2>
-		
+
 		        <div class="clearer">&nbsp;</div>
 
 		        <div class="content-separator"></div>
@@ -47,17 +47,17 @@
 		        <img src="/media/images/briefcase.png" width="64" height="64" alt="" class="left" />
 
 		        <h3><a href="{% url bolsa_trabajo.views_account.register_enterprise %}">Oferta de prácticas y trabajos</a></h3>
-		
+
 		        <p>Regístrese y publique sin costo sus ofertas de prácticas profesionales y trabajos de manera rápida y eficiente.</p>
 
 		        <div class="clearer">&nbsp;</div>
 
 		        <div class="content-separator"></div>
-		
+
 		        <img src="/media/images/tools.png" width="64" height="64" alt="" class="left" />
 
 		        <h3><a href="{% url bolsa_trabajo.views.student %}">Reclutamiento</a></h3>
-		
+
 		        <p>Use nuestro avanzado sistema de búsqueda para encontrar estudiantes y profesionales con las capacidades que necesita.</p>
 
 		        <div class="clearer">&nbsp;</div>
@@ -69,7 +69,7 @@
 	        <div class="col2 right">
 
 		        <h2 class="left">Para estudiantes y profesionales</h2>
-		
+
 		        <div class="clearer">&nbsp;</div>
 
 		        <div class="content-separator"></div>
@@ -77,21 +77,21 @@
 		        <img src="/media/images/map.png" width="64" height="64" alt="" class="left" />
 
 		        <h3><a href="{% url bolsa_trabajo.views.offer %}">Búsqueda de opciones laborales</a></h3>
-		
+
 		        <p>Navegue entre todas las ofertas laborales disponibles y encuentre la más favorable para sus necesidades.</p>
 
 		        <div class="clearer">&nbsp;</div>
-		
+
 		        <div class="content-separator"></div>
 
 		        <img src="/media/images/glass.png" width="64" height="64" alt="" class="left" />
 
 		        <h3><a href="{% url bolsa_trabajo.views.student %}">Investigación de empresas</a></h3>
-		
+
 		        <p>Verifique la reputación de la empresa en la que trabajará y los comentarios que ha recibido de otros alumnos.</p>
 
 		        <div class="clearer">&nbsp;</div>
-		
+
 		        <div class="content-separator"></div>
 	        </div>
 
