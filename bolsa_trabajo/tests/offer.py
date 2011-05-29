@@ -13,7 +13,7 @@ class OfferTestCase(TestCase):
         get_data = {
             'enterprise':3,
             'liquid_salary': 75000,
-            'include_unavailable_salaries':'on',
+            'include_unavailable_salaries':'off',
             'tags':'Tag1'}
 
         resp = self.client.get('/offer/',get_data)
