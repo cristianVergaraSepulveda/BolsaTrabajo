@@ -12,19 +12,18 @@
         "model": "auth.user",
         "pk": 2,
         "fields": {
-					"username": "test2",
+					"username": "test-enterprise1",
 					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
-					"is_staff": "True"
+					"is_staff": "False"
         }
     },
     {
         "model": "auth.user",
         "pk": 3,
         "fields": {
-					"username": "test3",
+					"username": "test-enterprise2",
 					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
-					"is_staff": "True",
-					"is_active": "True"
+					"is_staff": "False"
         }
     }
 ]
