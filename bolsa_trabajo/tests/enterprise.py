@@ -3,15 +3,14 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
+from bolsa_trabajo.models.user_profile import UserProfile
 from bolsa_trabajo.models.student_level import StudentLevel
+import settings
+import hashlib
 
 class NewEnterpriseTestCase(TestCase):
 
     fixtures = ['users.json','enterprises.json']
-
-    def test_index(self):
-        resp = self.client.get("/")
-        self.assertEqual(resp.status_code,200)
 
     def test_new_enterprise_view(self):
         self.client.login(username='test',password='test')
@@ -39,7 +38,54 @@ class NewEnterpriseTestCase(TestCase):
 
         # when logging in using the new enterprise username and password, the login function should return True
         self.assertTrue(self.client.login(username='test-enterprise',password='test-enterprise'))
-
+        
     def test_data_enterprise_fixture(self):
         ent = Enterprise.objects.get(name='Enterprise1')
         self.assertEqual(ent.rut,'17.847.192-2')
+
+class PublishEnterpriseTestCase(TestCase):
+
+    fixtures = ['users.json','enterprises.json']
+
+    def test_pending_enterprise_view(self):
+        # validate email
+        u1 = User.objects.get(username='test-enterprise3')
+        p = u1.profile
+        p.validated_email = True
+        u1.profile = p
+        p.save()
+        u1.save()
+        
+        # login as test staff user
+        self.client.login(username='test',password='test')
+        
+        # go to pending enterprise requests
+        resp = self.client.get('/account/pending_enterprise_request/')
+        
+        # Enterprise3 should be displayed
+        self.assertTrue('Enterprise3' in resp.content)
+        
+    def test_accept_pending_request(self):
+        # login as test staff user
+        self.client.login(username='test',password='test')
+        
+        # accept Enterprise3's request
+        resp = self.client.get('/account/pending_enterprise_request/4/accept/')
+        
+        self.client.logout()
+        
+        # Enterprise3 should be active
+        enterprise3 = Enterprise.objects.get(name='Enterprise3')
+        self.assertTrue(enterprise3.is_active)
+        
+    def test_reject_pending_request(self):
+        # login as test staff user
+        self.client.login(username='test',password='test')
+        
+        # reject Enterprise3's request
+        resp = self.client.get('/account/pending_enterprise_request/4/reject/')
+        
+        self.client.logout()
+        
+        # Enterprise3 should be deleted from the database
+        self.assertFalse(self.client.login(username='test-enterprise3',password='test'))
