@@ -25,5 +25,15 @@
 					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
 					"is_staff": "False"
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+					"username": "test-enterprise3",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "False",
+					"is_active": "False"
+        }
     }
 ]
