@@ -1,19 +1,32 @@
 [
     {
         "model": "bolsa_trabajo.student",
-        "pk": 1,
+        "pk": 2,
         "fields": {
                     "resume": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
                     "has_cv": True,
+                    "tag": 1,
                     "level": 1
         }
     },
     {
         "model": "bolsa_trabajo.student",
-        "pk": 2,
+        "pk": 3,
         "fields": {
                     "resume": "Sunt in culpa qui officia deserunt mollit anim id est laborum",
+                    "has_cv": True,
+                    "tag": 1,
                     "level": 2
+        }
+    },
+    {
+        "model": "bolsa_trabajo.student",
+        "pk": 4,
+        "fields": {
+                    "resume": "Lorem ipsum dolor sit amet, consectetur magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.  Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+                    "has_cv": True,
+                    "tag": 1,
+                    "level": 1
         }
     }
 ]

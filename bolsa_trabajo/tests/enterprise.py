@@ -32,6 +32,9 @@ class NewEnterpriseTestCase(TestCase):
 
         # assert that the Enterprise object has the expected username
         self.assertEqual(new_enterprise.username,'test-enterprise')
+        
+        # assert that the Enterprise object is active
+        self.assertEqual(new_enterprise.is_active,True)
 
         # logout
         self.client.logout()
