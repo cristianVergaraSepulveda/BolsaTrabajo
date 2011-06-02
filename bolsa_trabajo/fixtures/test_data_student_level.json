@@ -1,6 +1,6 @@
 [
     {
-        "model": "bolsa_trabajo.student_level",
+        "model": "bolsa_trabajo.studentLevel",
         "pk": 1,
         "fields": {
                     "name": "StudentLevel1",
@@ -8,7 +8,7 @@
         }
     },
     {
-        "model": "bolsa_trabajo.student_level",
+        "model": "bolsa_trabajo.studentLevel",
         "pk": 2,
         "fields": {
                     "name": "StudentLevel2",

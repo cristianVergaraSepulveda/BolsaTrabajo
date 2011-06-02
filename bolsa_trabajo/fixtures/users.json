@@ -35,5 +35,35 @@
 					"is_staff": "False",
 					"is_active": "False"
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+					"username": "test-student1",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "False",
+					"is_active": "True"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 6,
+        "fields": {
+					"username": "test-student2",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "False",
+					"is_active": "True"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 7,
+        "fields": {
+					"username": "test-student3",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "False",
+					"is_active": "True"
+        }
     }
 ]
