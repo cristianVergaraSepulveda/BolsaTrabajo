@@ -1,0 +1,26 @@
+[
+    {
+        "model": "bolsa_trabajo.student",
+        "pk": 5,
+        "fields": {
+                    "resume": "Lorem ipsumnderit",
+                    "level": 1
+        }
+    },
+    {
+        "model": "bolsa_trabajo.student",
+        "pk": 6,
+        "fields": {
+                    "resume": "Sunt in culpa qui officia deserunt mollit anim id est laborum",
+                    "level": 2
+        }
+    },
+    {
+        "model": "bolsa_trabajo.student",
+        "pk": 7,
+        "fields": {
+                    "resume": "Lorem ipsum dolor sit ametr",
+                    "level": 1
+        }
+    }
+]
