@@ -12,12 +12,12 @@ class StudentRegisterForm(forms.Form):
     username = forms.CharField(max_length = 80, label = 'Nombre de usuario para ingresar al sistema')
     password = forms.CharField(max_length = 80, label = 'Contraseña', widget = forms.PasswordInput())
     repeat_password = forms.CharField(max_length = 80, label = 'Repita la contraseña', widget = forms.PasswordInput())
-    
+
     def clean(self):
         cleaned_data = self.cleaned_data
         password = cleaned_data['password']
         repeat_password = cleaned_data['repeat_password']
         if password != repeat_password:
             raise ValidationError('Las contraseñas deben ser iguales')
-            
+
         return cleaned_data

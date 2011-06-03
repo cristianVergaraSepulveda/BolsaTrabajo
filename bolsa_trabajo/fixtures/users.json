@@ -66,5 +66,16 @@
 					"is_staff": "False",
 					"is_active": "False"
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 8,
+        "fields": {
+					"username": "pedrito",
+					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"is_staff": "False",
+					"is_active": "True",
+					"email": "pedrito@dcc.uchile.cl"
+        }
     }
 ]

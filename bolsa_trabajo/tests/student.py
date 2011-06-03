@@ -15,7 +15,6 @@ class NewStudentTestCase(TestCase):
         self.assertEqual(200,resp.status_code)
 
     def test_new_student_register(self):
-
         # create dictionary with new student info
         new_student_data = {'first_name':'Test', 'last_name':'Student', 'email':'dleytonddd@gmail.com', 'level':1, 'resume':'resumen alumno test 1', 'username':'test-student', 'password':'test-student', 'repeat_password':'test-student'}
 
@@ -28,6 +27,27 @@ class NewStudentTestCase(TestCase):
         # assert that the student object has the expected username
         self.assertEqual(new_student.first_name,'Test')
 
+        # assert that the Enterprise object is active
+        self.assertEqual(new_student.is_active,True)
+
+    def test_validate_first_accepted_mail_user_access(self):
+        '''
+        create new user with an accepted mail
+        use the validation url from the request mail
+        log in successfully
+        and check the right message
+        '''
+        #stu = Student.objects.get(username='pedrito')
+        stu = Student.objects.all()
+        print(stu)
+
+    def test_data_enterprise_fixture(self):
+        ent = Enterprise.objects.get(name='Enterprise1')
+        self.assertEqual(ent.rut,'17.847.192-2')
+'''
+        # logout
+        self.client.logout()
+
 		# assert that the student object is not active, the new user should not logging in, so the login function should return False
         self.assertFalse(self.client.login(username='test-student',password='test-student'))
 
@@ -37,8 +57,4 @@ class NewStudentTestCase(TestCase):
 
         # when logging in using the new student username and password, the login function should return True
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
-
-
-    def test_data_student_fixture(self):
-        ent = Student.objects.get(first_name='testName1')
-        self.assertEqual(ent.resume,'Lorem ipsumnderit')
+'''
