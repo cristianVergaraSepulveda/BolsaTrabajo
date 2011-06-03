@@ -4,7 +4,7 @@ from django.contrib import auth
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.student_level import StudentLevel
-'''
+
 class OfferTestCase(TestCase):
 
     fixtures = ['users.json', 'enterprises.json', 'tags.json', 'offers.json']
@@ -50,4 +50,3 @@ class OfferTestCase(TestCase):
 
         # the message 'No se encontraron ofertas' should be shown
         self.assertTrue('No se encontraron ofertas' in resp.content)
-'''

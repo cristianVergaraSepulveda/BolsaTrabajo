@@ -1,12 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.core.exceptions import ObjectDoesNotExist
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.user_profile import UserProfile
 from bolsa_trabajo.models.student_level import StudentLevel
-import settings
-import hashlib
 
 #Test to register a new enterprise from the admin's view
 class AdminNewEnterpriseTestCase(TestCase):
@@ -88,12 +87,10 @@ class PublishEnterpriseTestCase(TestCase):
 
     def test_pending_enterprise_view(self):
         # validate email
-        u1 = User.objects.get(username='test-enterprise3')
-        p = u1.profile
-        p.validated_email = True
-        u1.profile = p
-        p.save()
-        u1.save()
+        user = User.objects.get(username='test-enterprise3')
+        profile = user.profile
+        profile.validated_email = True
+        profile.save()
 
         # login as test staff user
         self.client.login(username='test',password='test')
@@ -126,5 +123,8 @@ class PublishEnterpriseTestCase(TestCase):
 
         self.client.logout()
 
-        # Enterprise3 should be deleted from the database
+        # Enterprise3 should not be able to login
         self.assertFalse(self.client.login(username='test-enterprise3',password='test'))
+
+        # Enterprise3 should be deleted from the database
+        self.assertRaises(ObjectDoesNotExist,Enterprise.objects.get,name='Enterprise3')
