@@ -42,6 +42,7 @@
         "fields": {
 					"username": "test-student1",
 					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
+					"first_name": "testName1",
 					"is_staff": "False",
 					"is_active": "True"
         }
@@ -63,7 +64,7 @@
 					"username": "test-student3",
 					"password": "sha1$011ee$bbce191e8563865c2260db4c91683b83ad98c2ec",
 					"is_staff": "False",
-					"is_active": "True"
+					"is_active": "False"
         }
     },
     {
