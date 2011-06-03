@@ -29,7 +29,7 @@ class NewStudentTestCase(TestCase):
         self.assertEqual(new_student.first_name,'Test')
         
         # assert that the Enterprise object is active
-        self.assertEqual(new_student.is_active,True)
+        self.assertEqual(new_student.is_active,False)
 '''
         # logout
         self.client.logout()
