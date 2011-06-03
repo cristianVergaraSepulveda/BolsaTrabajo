@@ -14,9 +14,9 @@ class NewStudentTestCase(TestCase):
         resp = self.client.get('/account/register/student/')
         self.assertEqual(200,resp.status_code)
 
-    def test_new_student_register(self):
+    def test_new_student_register_with_accepted_email(self):
         # create dictionary with new student info
-        new_student_data = {'first_name':'Test', 'last_name':'Student', 'email':'dleytonddd@gmail.com', 'level':1, 'resume':'resumen alumno test 1', 'username':'test-student', 'password':'test-student', 'repeat_password':'test-student'}
+        new_student_data = {'first_name':'Test', 'last_name':'Student', 'email':'dleytonddd@dcc.uchile.cl', 'level':1, 'resume':'resumen alumno test 1', 'username':'test-student', 'password':'test-student', 'repeat_password':'test-student'}
 
         # do a POST request including the new enterprise to be registered
         resp = self.client.post('/account/register/student/',new_student_data)
@@ -30,16 +30,15 @@ class NewStudentTestCase(TestCase):
         # assert that the Enterprise object is active
         self.assertEqual(new_student.is_active,True)
 
-    def test_validate_first_accepted_mail_user_access(self):
-        '''
-        create new user with an accepted mail
-        use the validation url from the request mail
-        log in successfully
-        and check the right message
-        '''
-        #stu = Student.objects.get(username='pedrito')
-        stu = Student.objects.all()
-        print(stu)
+        # go to the validation mail url
+        user_digest = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
+        resp2 = self.client.get('/account/validate_email/?validation_key'+str(user_digest))
+
+        # then the user logs in
+        self.assertTrue(self.client.login(username='test-student',password='test-student'))
+
+        # finally we check the right message is displayed
+        self.assertTrue('Cuenta de correo activada correctamente' in resp2.content)
 
     def test_data_enterprise_fixture(self):
         ent = Enterprise.objects.get(name='Enterprise1')
