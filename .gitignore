@@ -1,5 +1,6 @@
 *.pyc
 bolsa_trabajo.db
 settings.py
+settings/local.py
 *~
 *.swp
