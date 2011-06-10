@@ -88,14 +88,14 @@ class PublishEnterpriseTestCase(TestCase):
         # generate key that Enterprise3 got in their email
         user = User.objects.get(username='test-enterprise3')
         key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
-        
+
         # go to validation URL
         resp = self.client.get('/account/validate_email/',{'validation_key' : key})
-        
+
         # assert that the email account was validated
         enterprise = Enterprise.objects.get(username='test-enterprise3')
         self.assertTrue(enterprise.profile.validated_email and not enterprise.profile.approved)
-        
+
         # logout
         self.client.logout()
 
