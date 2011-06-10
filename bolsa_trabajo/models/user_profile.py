@@ -13,7 +13,8 @@ class UserProfile(models.Model):
     validated_email = models.BooleanField(default = False)
     user = models.OneToOneField(User, related_name = 'profile')
     tags = models.ManyToManyField(Tag, blank = True, null = True)
-    block_public_access = models.BooleanField(default = False)   
+    block_public_access = models.BooleanField(default = False)
+    approved = models.BooleanField(default = False)
 
     def __unicode__(self):  
         return 'Perfil de %s' % self.user

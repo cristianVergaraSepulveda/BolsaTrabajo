@@ -32,7 +32,7 @@ def pending_enterprise_request(request):
 def pending_enterprise_request_details(request, request_id):
     try:
         enterprise = Enterprise.objects.get(pk = request_id)
-        if enterprise.is_active:
+        if enterprise.profile.approved:
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_enterprise_request_details.html', {
         'enterprise': enterprise
@@ -47,10 +47,11 @@ def pending_enterprise_request_details(request, request_id):
 def accept_pending_enterprise_request(request, request_id):
     try:
         enterprise = Enterprise.objects.get(pk = request_id)
-        if enterprise.is_active:
+        if enterprise.profile.approved:
             raise Exception
-        enterprise.is_active = True
-        enterprise.save()
+        enterprise.profile.approved = True
+        enterprise.profile.save()
+        #enterprise.save()
         enterprise.notify_acceptance()
         request.flash['message'] = 'Empresa aceptada exitosamente'
         url = reverse('bolsa_trabajo.views_account.pending_enterprise_request')
@@ -62,7 +63,8 @@ def accept_pending_enterprise_request(request, request_id):
 def reject_pending_enterprise_request(request, request_id):
     try:
         enterprise = Enterprise.objects.get(pk = request_id)
-        if enterprise.is_active:
+        #if enterprise.is_active:
+        if enterprise.profile.approved:
             raise Exception
         enterprise.delete()
         enterprise.notify_rejection()
@@ -130,11 +132,12 @@ def new_enterprise(request):
         form = EnterpriseRegisterForm(request.POST) 
         if form.is_valid():
             enterprise = Enterprise.create_from_form(form)
-            enterprise.is_active = True
+            #enterprise.is_active = True
             try:
                 enterprise.save()
                 
                 enterprise.profile.validated_email = True
+                enterprise.profile.approved = True
                 enterprise.profile.save()
                 
                 request.flash['message'] = 'Empresa creada exitosamente'

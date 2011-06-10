@@ -48,7 +48,7 @@ class Enterprise(User):
         enterprise.username = data['username']
         enterprise.email = data['email']
         enterprise.set_password(data['password'])
-        enterprise.is_active = False
+        #enterprise.is_active = False
         return enterprise
         
     def update_from_form(self, form):
@@ -60,7 +60,8 @@ class Enterprise(User):
         
     @staticmethod
     def get_pending_requests():
-        return Enterprise.objects.filter(is_active = False).filter(profile__validated_email = True)
+        #return Enterprise.objects.filter(is_active = False).filter(profile__validated_email = True)
+        return Enterprise.objects.filter(profile__approved = False).filter(profile__validated_email = True)
         
     def save(self):
         same_username_users = User.objects.filter(username = self.username).filter(~Q(pk = self.id))

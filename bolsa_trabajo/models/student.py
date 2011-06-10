@@ -26,7 +26,8 @@ class Student(User):
     
     @staticmethod
     def get_from_form(form, include_hidden):
-        students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
+        #students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
+        students = Student.objects.filter(profile__approved = True).filter(profile__block_public_access = False)
         
         if form.is_valid():
             data = form.cleaned_data
@@ -110,7 +111,7 @@ class Student(User):
         student.username = data['username']
         student.email = data['email']
         student.set_password(data['password'])
-        student.is_active = False
+        #student.is_active = False
         student.level = data['level']
         return student
         
