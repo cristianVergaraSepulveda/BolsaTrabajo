@@ -1,3 +1,4 @@
+# coding: utf-8
 import settings
 import hashlib
 from django.test import TestCase
@@ -48,11 +49,23 @@ class AdminNewEnterpriseTestCase(TestCase):
         ent = Enterprise.objects.get(name='Enterprise1')
         self.assertEqual(ent.rut,'17.847.192-2')
 
-
-#Test to register a new enterprise from a new user's view
-class NewEnterpriseTestCase(TestCase):
+# enterprise registration from a new user's view
+class PublishEnterpriseTestCase(TestCase):
 
     fixtures = ['users.json','enterprises.json']
+
+    def assert_and_check_messages(self,user,email_assertion,approval_assertion,param_username,param_password):
+        self.client.login(username=param_username,password=param_password)
+        resp = self.client.get('/account/')
+        self.assertEqual(user.profile.validated_email,email_assertion)
+        self.assertEqual(user.profile.approved,approval_assertion)
+        if not email_assertion:
+            self.assertTrue('Su correo electrónico aún no ha sido verificado' in resp.content)
+        else:
+            self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
+            if not approval_assertion:
+                self.assertTrue('Su cuenta aún no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
+        self.client.logout()
 
     def test_new_enterprise_view(self):
         resp = self.client.get('/account/register/enterprise/')
@@ -71,17 +84,23 @@ class NewEnterpriseTestCase(TestCase):
 
         # assert that the enterprise object has the expected username
         self.assertEqual(new_enterprise.username,'test-enterprise')
+        
+        # the email account shouldn't be validated yet
+        self.assert_and_check_messages(new_enterprise,email_assertion=False,approval_assertion=False,param_username='test-enterprise',param_password='test-enterprise')
 
-        # when logging in using the new enterprise username and password, the login function should return True
-        self.assertTrue(self.client.login(username='test-enterprise',password='test-enterprise'))
+        '''
+        # the email account shouldn't be validated yet
+        self.assertFalse(new_enterprise.profile.validated_email)
 
+        # message about email validation should be shown to the user
+        self.client.login(username='test-enterprise',password='test-enterprise')
+        resp = self.client.get('/account/')
+        self.assertTrue('Su correo electrónico aún no ha sido verificado' in resp.content)
+        '''
 
-class PublishEnterpriseTestCase(TestCase):
+    def validate_enterprise3_email_and_check(self):
+        # utility method, validates the email account of test-enterprise3 defined in enterprises.json
 
-    fixtures = ['users.json','enterprises.json']
-
-    def test_pending_enterprise_view(self):
-        # validate email
         # login as Enterprise3
         self.client.login(username='test-enterprise3',password='test')
 
@@ -92,12 +111,26 @@ class PublishEnterpriseTestCase(TestCase):
         # go to validation URL
         resp = self.client.get('/account/validate_email/',{'validation_key' : key})
         
-        # assert that the email account was validated
-        enterprise = Enterprise.objects.get(username='test-enterprise3')
-        self.assertTrue(enterprise.profile.validated_email and not enterprise.profile.approved)
+        # assert that the email account was validated       
+        enterprise3 = Enterprise.objects.get(username='test-enterprise3')
+        self.assert_and_check_messages(enterprise3,email_assertion=True,approval_assertion=False,param_username='test-enterprise3',param_password='test')
         
-        # logout
-        self.client.logout()
+        '''
+        # the email account should be validated
+        self.assertTrue(new_enterprise.profile.validated_email)
+
+        # message about email validation should be shown to the user
+        self.client.login(username='test-enterprise',password='test-enterprise')
+        resp = self.client.get('/account/')
+        self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
+        
+        # message about account approval should be shown to the user
+        self.assertTrue('Su cuenta aún no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
+        '''
+
+    def test_pending_enterprise_view(self):
+        # validate email
+        self.validate_enterprise3_email_and_check()
 
         # login as test staff user
         self.client.login(username='test',password='test')
@@ -109,19 +142,28 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('Enterprise3' in resp.content)
 
     def test_accept_pending_request(self):
+        # validate email
+        self.validate_enterprise3_email_and_check()
+
         # login as test staff user
         self.client.login(username='test',password='test')
 
         # accept Enterprise3's request
         resp = self.client.get('/account/pending_enterprise_request/4/accept/')
 
+        # logout
         self.client.logout()
 
-        # Enterprise3 should be approved
+        # enterprise3 should be approved
         enterprise3 = Enterprise.objects.get(name='Enterprise3')
         self.assertTrue(enterprise3.profile.approved)
+        
+        # hay que probar que ahora enterprise3 pueda publicar ofertas, ver si sus ofertar fueron aprobadas, etc
 
     def test_reject_pending_request(self):
+        # validate email
+        self.validate_enterprise3_email_and_check()
+
         # login as test staff user
         self.client.login(username='test',password='test')
 

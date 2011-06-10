@@ -5,7 +5,8 @@ from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.student_level import StudentLevel
 from bolsa_trabajo.models.offer import Offer
-from bolsa_trabajo.models.offer import DoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
+#from bolsa_trabajo.models.offer import DoesNotExist
 
 class OfferTestCase(TestCase):
 
@@ -90,4 +91,4 @@ class OfferTestCase(TestCase):
         self.client.logout()
 
         # assert that the rejected Offer is now deleted
-        self.assertRaises(DoesNotExist,Offer.objects.get,"pk=5")
+        self.assertRaises(ObjectDoesNotExist,Offer.objects.get,"pk=5")

@@ -1,3 +1,4 @@
+# coding: utf-8
 import settings
 import hashlib
 from django.test import TestCase
@@ -12,6 +13,19 @@ class NewStudentTestCase(TestCase):
 
     fixtures = ['users.json','student_level.json','student.json']
 
+    def assert_and_check_messages(self,user,email_assertion,approval_assertion):
+        self.assertTrue(self.client.login(username='test-student',password='test-student'))
+        resp = self.client.get('/account/')
+        self.assertEqual(user.profile.validated_email,email_assertion)
+        self.assertEqual(user.profile.approved,approval_assertion)
+        if not email_assertion:
+            self.assertTrue('no ha sido verificado' in resp.content)
+        else:
+            self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
+            if not approval_assertion:
+                self.assertTrue('no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
+        self.client.logout()
+
     def test_new_student_view(self):
         resp = self.client.get('/account/register/student/')
         self.assertEqual(200,resp.status_code)
@@ -25,22 +39,35 @@ class NewStudentTestCase(TestCase):
 
         # get the new student object from the database
         new_student = Student.objects.get(username='test-student')
-
+        
         # assert that the student object has the expected username
         self.assertEqual(new_student.first_name,'Test')
+        
+        # assert that the account hasn't been approved yet
+        self.assert_and_check_messages(new_student,email_assertion=False,approval_assertion=False)
 
-        # assert that the Enterprise object is active
-        self.assertEqual(new_student.is_active,True)
-
-        # go to the validation mail url
-        user_digest = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
-        resp2 = self.client.get('/account/validate_email/?validation_key'+str(user_digest))
-
-        # then the user logs in
+        # login
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
 
-        # finally we check the right message is displayed
-        self.assertTrue('Cuenta de correo activada correctamente' in resp2.content)
+        # go to the validation mail url
+        key = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
+        resp2 = self.client.get('/account/validate_email/',{'validation_key' : key})
+
+        # get the new student object from the database
+        new_student = Student.objects.get(username='test-student')
+
+        # assert that the user's email has been validated and his/her account approved
+        self.assert_and_check_messages(new_student,email_assertion=True,approval_assertion=True)
+        
+        '''
+        # the email account should be validated
+        self.assertTrue(new_student.profile.validated_email)
+
+        # message about email validation should be shown to the user
+        self.client.login(username='test-student',password='test-student')
+        resp = self.client.get('/account/')
+        self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
+        '''
 
     def test_new_student_register_with_not_accepted_email(self):
         # create dictionary with new student info
@@ -55,36 +82,49 @@ class NewStudentTestCase(TestCase):
         # assert that the student object has the expected username
         self.assertEqual(new_student.first_name,'Test')
 
-        # assert that the Enterprise object is active
-        self.assertEqual(new_student.is_active,True)
+        # assert that the account hasn't been approved yet
+        self.assert_and_check_messages(new_student,email_assertion=False,approval_assertion=False)
 
-        # go to the validation mail url
-        user_digest = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
-        resp2 = self.client.get('/account/validate_email/?validation_key'+str(user_digest))
-
-        # then the user logs in
+        # login
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
 
-        # we check the right message is displayed
-        self.assertTrue('Cuenta de correo necesita ser aceptada' in resp2.content)
+        # go to the validation mail url
+        key = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
+        resp2 = self.client.get('/account/validate_email/',{'validation_key' : key})
+
+        # get the new student object from the database
+        new_student = Student.objects.get(username='test-student')
+
+        # assert that the user's email has been validated and his/her account approved
+        self.assert_and_check_messages(new_student,email_assertion=True,approval_assertion=False)
 
         # finally the user must be on hold
         self.assertTrue(new_student.accepted)
+        
+        '''
+        # the email account should be validated
+        self.assertTrue(new_student.profile.validated_email)
 
-    def test_data_enterprise_fixture(self):
-        ent = Enterprise.objects.get(name='Enterprise1')
-        self.assertEqual(ent.rut,'17.847.192-2')
-'''
-        # logout
-        self.client.logout()
+        # message about email validation should be shown to the user
+        self.client.login(username='test-enterprise',password='test-enterprise')
+        resp = self.client.get('/account/')
+        self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
+        
+        # message about account approval should be shown to the user
+        self.assertTrue('no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
+        '''
 
-		# assert that the student object is not active, the new user should not logging in, so the login function should return False
-        #self.assertFalse(self.client.login(username='test-student',password='test-student'))
 
-        #activate the new student object
-        #new_student.is_active = True
-        #new_student.save()
 
-        # when logging in using the new student username and password, the login function should return True
-        self.assertTrue(self.client.login(username='test-student',password='test-student'))
-'''
+
+
+
+
+
+
+
+
+
+
+
+
