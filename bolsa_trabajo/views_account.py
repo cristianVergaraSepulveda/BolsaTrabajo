@@ -157,8 +157,10 @@ def logout(request):
 def validate_email(request):
     try:
         user = request.user
-        if user.is_active:
+        #if user.profile.approved:
+        if user.profile.validated_email:
             request.flash['message'] = 'El correo ya está validado'
+            print 'El correo ya está validado'
             url = reverse('bolsa_trabajo.views.index')
             return HttpResponseRedirect(url)
         validation_key = request.GET['validation_key']
@@ -167,14 +169,16 @@ def validate_email(request):
             raise ValidationError('Error en código de validación')
 
         user.profile.validated_email = True;
-        user.profile.save()
         
         if user.profile.is_enterprise():
             UserProfile.notify_staff_of_new_register()
         
         if user.profile.is_student():
-            user.is_active = True
+            #user.is_active = True
+            user.profile.approved = True
             user.save()
+            
+        user.profile.save()
 
         request.flash['message'] = 'Cuenta de correo activada correctamente'
         url = reverse('bolsa_trabajo.views_account.index')
@@ -308,7 +312,8 @@ def change_email(request):
                 try:
                     user.email = form.cleaned_data['new_email']
                     if user.profile.is_student():
-                        user.is_active = False
+                        #user.is_active = False
+                        user.profile.approved = False
                         user.profile.validated_email = False
                         user.profile.send_change_mail_confirmation()
                     user.save()

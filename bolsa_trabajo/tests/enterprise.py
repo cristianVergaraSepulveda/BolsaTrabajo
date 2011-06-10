@@ -1,3 +1,5 @@
+import settings
+import hashlib
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -33,8 +35,8 @@ class AdminNewEnterpriseTestCase(TestCase):
         # assert that the Enterprise object has the expected username
         self.assertEqual(new_enterprise.username,'test-enterprise')
 
-        # assert that the Enterprise object is active
-        self.assertEqual(new_enterprise.is_active,True)
+        # assert that the Enterprise object is approved
+        self.assertEqual(new_enterprise.profile.approved,True)
 
         # logout
         self.client.logout()
@@ -70,13 +72,6 @@ class NewEnterpriseTestCase(TestCase):
         # assert that the enterprise object has the expected username
         self.assertEqual(new_enterprise.username,'test-enterprise')
 
-        # assert that the enterprise object is not active, the new user should not logging in, so the login function should return False
-        self.assertFalse(self.client.login(username='test-enterprise',password='test-enterprise'))
-
-        # activate the Enterprise object
-        new_enterprise.is_active = True
-        new_enterprise.save()
-
         # when logging in using the new enterprise username and password, the login function should return True
         self.assertTrue(self.client.login(username='test-enterprise',password='test-enterprise'))
 
@@ -87,10 +82,22 @@ class PublishEnterpriseTestCase(TestCase):
 
     def test_pending_enterprise_view(self):
         # validate email
+        # login as Enterprise3
+        self.client.login(username='test-enterprise3',password='test')
+
+        # generate key that Enterprise3 got in their email
         user = User.objects.get(username='test-enterprise3')
-        profile = user.profile
-        profile.validated_email = True
-        profile.save()
+        key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
+        
+        # go to validation URL
+        resp = self.client.get('/account/validate_email/',{'validation_key' : key})
+        
+        # assert that the email account was validated
+        enterprise = Enterprise.objects.get(username='test-enterprise3')
+        self.assertTrue(enterprise.profile.validated_email and not enterprise.profile.approved)
+        
+        # logout
+        self.client.logout()
 
         # login as test staff user
         self.client.login(username='test',password='test')
@@ -110,9 +117,9 @@ class PublishEnterpriseTestCase(TestCase):
 
         self.client.logout()
 
-        # Enterprise3 should be active
+        # Enterprise3 should be approved
         enterprise3 = Enterprise.objects.get(name='Enterprise3')
-        self.assertTrue(enterprise3.is_active)
+        self.assertTrue(enterprise3.profile.approved)
 
     def test_reject_pending_request(self):
         # login as test staff user

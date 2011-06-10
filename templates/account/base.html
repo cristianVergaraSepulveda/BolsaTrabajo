@@ -8,7 +8,7 @@
 		<ul class="nice-list">
 			{% if user.profile.is_enterprise %}
 			    <li>
-			        {% if user.is_active %}
+			        {% if user.is_active and user.profile.approved %}
 			            <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Avisos laborales</a>
 			        {% else %}
 			            <span class="disabled">Avisos laborales</span>
@@ -16,14 +16,14 @@
 		        </li>
 		    {% endif %}
 			<li>
-		        {% if user.is_active %}
+		        {% if user.is_active and user.profile.approved or user.is_active and user.is_staff %}
 		            <a href="{% url bolsa_trabajo.views_account.notification %}">Notificaciones {% if num_notifications %}({{ num_notifications }}){% endif %}</a>
 		        {% else %}
 		            <span class="disabled">Notificaciones</span>
 		        {% endif %}
 			</li>
 			<li>
-		        {% if user.is_active %}
+		        {% if user.is_active and user.profile.approved or user.is_active and user.is_staff %}
 		            {% if user.profile.is_student and user.profile.block_public_access %}
 		                Perfil público desactivado
 		            {% else %}

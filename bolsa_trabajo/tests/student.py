@@ -1,3 +1,5 @@
+import settings
+import hashlib
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -29,11 +31,11 @@ class NewStudentTestCase(TestCase):
         self.assertEqual(new_student.first_name,'Test')
 
 		# assert that the student object is not active, the new user should not logging in, so the login function should return False
-        self.assertFalse(self.client.login(username='test-student',password='test-student'))
+        #self.assertFalse(self.client.login(username='test-student',password='test-student'))
 
         #activate the new student object
-        new_student.is_active = True
-        new_student.save()
+        #new_student.is_active = True
+        #new_student.save()
 
         # when logging in using the new student username and password, the login function should return True
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
@@ -42,3 +44,18 @@ class NewStudentTestCase(TestCase):
     def test_data_student_fixture(self):
         ent = Student.objects.get(first_name='testName1')
         self.assertEqual(ent.resume,'Lorem ipsumnderit')
+        
+    def test_approve_student(self):
+        # login as student3
+        self.client.login(username='test-student3',password='test')
+
+        # generate key that student3 got in their email
+        user = User.objects.get(username='test-student3')
+        key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
+        
+        # go to validation URL
+        resp = self.client.get('/account/validate_email/',{'validation_key' : key})
+        
+        # assert that the email account was validated
+        student = Student.objects.get(username='test-student3')
+        self.assertTrue(student.profile.approved and student.profile.validated_email)

@@ -4,7 +4,7 @@
 
 <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a></div>
 
-{% if not user.is_active %}
+{% if not user.is_staff and not user.profile.approved %}
 	<div class="notice">
 	    {% if not user.profile.validated_email %}
 	        <p>Su correo electrónico aún no ha sido verificado, necesita hacer este paso para usar las herramientas del portal.</p>

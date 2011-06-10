@@ -131,7 +131,8 @@ def offer_details(request, offer_id):
 
 def student_details(request, student_id):
     student = Student.objects.get(pk = student_id)
-    if not student.is_active or student.profile.block_public_access:
+    #if not student.is_active or student.profile.block_public_access:
+    if not student.profile.approved or student.profile.block_public_access:
         url = reverse('bolsa_trabajo.views.student')
         return HttpResponseRedirect(url)        
     return append_student_search_form_to_response(request, 'public/student_details.html', {
@@ -140,10 +141,11 @@ def student_details(request, student_id):
     
 def offer_send_message(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
-    if request.user.is_authenticated() and request.user.profile.is_student() and request.user.is_active:        
+    #if request.user.is_authenticated() and request.user.profile.is_student() and request.user.is_active:        
+    if request.user.is_authenticated() and request.user.profile.is_student() and request.user.profile.approved:        
         if request.method == 'POST':
             form = OfferMessageForm(request.POST)
-            if form.is_valid() and request.user.is_active and request.user.is_authenticated():
+            if form.is_valid() and request.user.profile.approved and request.user.is_authenticated():
                 send_offer_message_email(request.user, offer, form.cleaned_data['title'], form.cleaned_data['body'])
                 
                 request.flash['message'] = 'Mensaje enviado exitosamente'
@@ -162,10 +164,12 @@ def offer_send_message(request, offer_id):
     
 def student_send_message(request, student_id):
     student = Student.objects.get(pk = student_id)
-    if request.user.is_authenticated() and request.user.profile.is_enterprise() and request.user.is_active:   
+    #if request.user.is_authenticated() and request.user.profile.is_enterprise() and request.user.is_active:   
+    if request.user.is_authenticated() and request.user.profile.is_enterprise() and request.user.profile.approved:   
         if request.method == 'POST':
             form = OfferMessageForm(request.POST)
-            if form.is_valid() and request.user.is_active and request.user.is_authenticated():
+            #if form.is_valid() and request.user.is_active and request.user.is_authenticated():
+            if form.is_valid() and request.user.profile.approved and request.user.is_authenticated():
                 enterprise = Enterprise.objects.get(pk = request.user.id)
                 send_student_message_email(enterprise, student, form.cleaned_data['title'], form.cleaned_data['body'])
                 
@@ -203,7 +207,8 @@ def contact(request):
     
 def enterprise_details(request, enterprise_id):
     enterprise = Enterprise.objects.get(pk = enterprise_id)
-    if not enterprise.is_active:
+    #if not enterprise.is_active:
+    if not enterprise.profile.approved:
         url = reverse('bolsa_trabajo.views.index')
         return HttpResponseRedirect(url)        
     if not request.user.is_authenticated() and enterprise.profile.block_public_access:
