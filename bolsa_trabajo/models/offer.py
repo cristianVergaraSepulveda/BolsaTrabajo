@@ -1,6 +1,10 @@
 #-*- coding: UTF-8 -*-
+
+from datetime import datetime
+
 from django.db.models import Q
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from . import Enterprise, OfferLevel, Tag
@@ -139,6 +143,10 @@ class Offer(models.Model):
         subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
 
         send_email(self.enterprise, subject, t, {'offer': self})
+
+    def has_expired(self):
+        difference = datetime.now() - self.creation_date
+        return difference.days > settings.OFFER_EXPIRATION_LIMIT
 
     def __unicode__(self):
         return unicode(self.title)
