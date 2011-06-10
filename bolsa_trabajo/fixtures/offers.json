@@ -50,5 +50,18 @@
                     "validated": "True",
                     "creation_date": "2010-01-01"
         }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 5,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Offer5",
+                    "description": "Trabajo en BEA Worhshop.",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "False",
+                    "creation_date": "2010-01-01"
+        }
     }
 ]

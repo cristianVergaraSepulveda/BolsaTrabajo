@@ -4,6 +4,8 @@ from django.contrib import auth
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.student_level import StudentLevel
+from bolsa_trabajo.models.offer import Offer
+from bolsa_trabajo.models.offer import DoesNotExist
 
 class OfferTestCase(TestCase):
 
@@ -50,3 +52,42 @@ class OfferTestCase(TestCase):
 
         # the message 'No se encontraron ofertas' should be shown
         self.assertTrue('No se encontraron ofertas' in resp.content)
+
+    def test_accept_offer(self):
+        # get the pending Offer object from the database
+        pending_offer = Offer.objects.get(pk=5)
+        self.assertEqual(pending_offer.validated,False)
+
+        # login as test staff user
+        self.client.login(username='test',password='test')
+
+        # do a get request without data for the accept page
+        resp = self.client.post('/account/pending_offer_request/5/accept/')
+        self.assertEqual(302,resp.status_code)
+
+        # logout
+        self.client.logout()
+
+        # get the accepted Offer object from the database
+        pending_offer = Offer.objects.get(pk=5)
+        
+        # assert that the Offer is now accepted
+        self.assertEqual(pending_offer.validated,True)
+
+    def test_reject_offer(self):
+        # get the pending Offer object from the database
+        pending_offer = Offer.objects.get(pk=5)
+        self.assertEqual(pending_offer.validated,False)
+
+        # login as test staff user
+        self.client.login(username='test',password='test')
+
+        # do a get request without data for the reject page
+        resp = self.client.post('/account/pending_offer_request/5/reject/')
+        self.assertEqual(302,resp.status_code)
+
+        # logout
+        self.client.logout()
+
+        # assert that the rejected Offer is now deleted
+        self.assertRaises(DoesNotExist,Offer.objects.get,"pk=5")

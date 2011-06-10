@@ -22,5 +22,13 @@
                     "resume": "Lorem ipsum dolor sit ametr",
                     "level": 1
         }
+    },
+    {
+        "model": "bolsa_trabajo.student",
+        "pk": 8,
+        "fields": {
+                    "resume": "Lorem ipsum dolor sit ametr",
+                    "level": 1
+        }
     }
 ]
