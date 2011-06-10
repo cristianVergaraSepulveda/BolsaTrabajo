@@ -107,7 +107,7 @@ class PublishEnterpriseTestCase(TestCase):
         # generate key that Enterprise3 got in their email
         user = User.objects.get(username='test-enterprise3')
         key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
-        
+
         # go to validation URL
         resp = self.client.get('/account/validate_email/',{'validation_key' : key})
         
@@ -123,14 +123,15 @@ class PublishEnterpriseTestCase(TestCase):
         self.client.login(username='test-enterprise',password='test-enterprise')
         resp = self.client.get('/account/')
         self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
-        
-        # message about account approval should be shown to the user
-        self.assertTrue('Su cuenta aún no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
         '''
 
     def test_pending_enterprise_view(self):
         # validate email
         self.validate_enterprise3_email_and_check()
+
+        # enterprise3 shouldn't be approved yet
+        enterprise = Enterprise.objects.get(username='test-enterprise3')
+        self.assertFalse(enterprise.profile.approved)
 
         # login as test staff user
         self.client.login(username='test',password='test')

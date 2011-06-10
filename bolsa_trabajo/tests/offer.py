@@ -6,7 +6,10 @@ from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.student_level import StudentLevel
 from bolsa_trabajo.models.offer import Offer
 from django.core.exceptions import ObjectDoesNotExist
+<<<<<<< HEAD
 #from bolsa_trabajo.models.offer import DoesNotExist
+=======
+>>>>>>> ffd6512b80d1de48b262a000b06aa90aba6c4365
 
 class OfferTestCase(TestCase):
 
@@ -71,7 +74,7 @@ class OfferTestCase(TestCase):
 
         # get the accepted Offer object from the database
         pending_offer = Offer.objects.get(pk=5)
-        
+
         # assert that the Offer is now accepted
         self.assertEqual(pending_offer.validated,True)
 
@@ -91,4 +94,8 @@ class OfferTestCase(TestCase):
         self.client.logout()
 
         # assert that the rejected Offer is now deleted
+<<<<<<< HEAD
         self.assertRaises(ObjectDoesNotExist,Offer.objects.get,"pk=5")
+=======
+        self.assertRaises(ObjectDoesNotExist,Offer.objects.get,pk="5")
+>>>>>>> ffd6512b80d1de48b262a000b06aa90aba6c4365
