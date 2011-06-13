@@ -173,7 +173,8 @@ def validate_email(request):
 
         if user.profile.is_student():
             #user.is_active = True
-            user.profile.approved = True
+            if user.profile.has_accepted_email():
+                user.profile.approved = True
             user.save()
 
         user.profile.save()

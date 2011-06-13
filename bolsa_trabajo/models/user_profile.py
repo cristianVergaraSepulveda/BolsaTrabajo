@@ -1,4 +1,5 @@
 #-*- coding: UTF-8 -*-
+import re
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
@@ -58,6 +59,10 @@ class UserProfile(models.Model):
                 response = True
 
         return response
+
+    def has_accepted_email(self):
+        email_provider = re.search('(.*)@(.*)',self.user.email).group(2)
+        return (email_provider == settings.ACCEPTED_EMAIL)
 
     class Meta:
         app_label = 'bolsa_trabajo'

@@ -13,22 +13,22 @@ class Student(User):
     has_cv = models.BooleanField(default = False)
     tags = models.ManyToManyField(Tag, blank = True, null = True)
     level = models.ForeignKey(StudentLevel)
-    
+
     def get_tags_string(self):
         tags = self.tags.all()
         return ', '.join(tag.name for tag in tags)
-        
+
     def get_resume_string(self):
         suffix = ''
         if len(self.resume) > 300:
             suffix = ' ...'
         return self.resume[:300] + suffix
-    
+
     @staticmethod
     def get_from_form(form, include_hidden):
         #students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
         students = Student.objects.filter(profile__approved = True).filter(profile__block_public_access = False)
-        
+
         if form.is_valid():
             data = form.cleaned_data
             if not data['include_unavailable_cv']:
@@ -43,16 +43,16 @@ class Student(User):
                         student.affinity = student.get_affinity(tags)
                     students = sorted(students, key = lambda student: student.affinity, reverse = True)
                 valid_tags_string = ', '.join([tag.name for tag in tags])
-                
+
                 copied_data = form.data.copy()
                 copied_data['tags'] = valid_tags_string
                 form.data = copied_data
-                
+
         for student in students:
             if not 'affinity' in dir(student):
                 student.affinity = 0
         return students
-        
+
     def get_affinity(self, tags):
         if not tags:
             return None
@@ -61,9 +61,9 @@ class Student(User):
         for tag in tags:
             if tag in self.tags.all():
                 num_hits += 1
-                
+
         return int(100 * num_hits / num_tags)
-    
+
     def update_from_form(self, form):
         self.resume = form.cleaned_data['resume']
         self.level = form.cleaned_data['level']
@@ -75,23 +75,23 @@ class Student(User):
         self.tags.clear()
         for tag in tags:
             self.tags.add(tag)
-    
+
     def store_cv(self, uploaded_file):
         filename = uploaded_file.name
-        
-        (file_name, extension) = os.path.splitext(filename)        
-        
+
+        (file_name, extension) = os.path.splitext(filename)
+
         print filename
         print file_name
         print extension
         if extension.lower() != '.pdf':
             raise Exception('Por favor seleccione un archivo PDF')
-        
+
         destination = open(os.path.join(settings.PROJECT_ROOT, 'media/cv/%d.pdf' % self.id), 'wb+')
         for chunk in uploaded_file.chunks():
             destination.write(chunk)
         destination.close()
-        
+
     def delete_cv(self):
         self.has_cv = False
         try:
@@ -114,7 +114,7 @@ class Student(User):
         #student.is_active = False
         student.level = data['level']
         return student
-        
+
     def save(self):
         same_username_users = User.objects.filter(username = self.username).filter(~Q(pk = self.id))
         if same_username_users:
