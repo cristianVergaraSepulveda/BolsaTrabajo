@@ -1,5 +1,6 @@
 #-*- coding: UTF-8 -*-
 import locale
+import hashlib
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from BolsaTrabajo import settings
@@ -81,3 +82,6 @@ def pretty_price(value, spacing = ' '):
     # Este utiliza otros strings de localizacion por ejemplo "enu_us"
     #locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
     return '$' + spacing + locale.format("%d", value, True).replace(',', '.')
+
+def generate_user_digest(username, email):
+    return hashlib.sha224(settings.SECRET_KEY + username + email).hexdigest()

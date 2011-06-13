@@ -1,5 +1,4 @@
 #-*- coding: UTF-8 -*-
-import hashlib
 from django.contrib import auth
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -32,21 +31,21 @@ def notification(request):
     return append_account_metadata_to_response(request, 'account/notifications.html', {
         'notifications': request.user.profile.get_notifications()
     })
-    
+
 @login_required
 def index(request):
     return append_account_metadata_to_response(request, 'account/index.html')
-    
-    
+
+
 @login_required
 def public_profile(request):
     if request.user.profile.is_student():
         url = reverse('bolsa_trabajo.views.student_details', args = [request.user.id])
     else:
         url = reverse('bolsa_trabajo.views.enterprise_details', args = [request.user.id])
-    
+
     return HttpResponseRedirect(url)
-        
+
 @login_required
 def send_register_mail(request):
     next = '/'
@@ -63,7 +62,7 @@ def login(request):
             next = '/account/'
     else:
         next = '/account'
-        
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -81,24 +80,24 @@ def login(request):
     return append_user_to_response(request, 'account/login.html', {
         'login_form': form
         })
-        
+
 def register(request):
     return append_user_to_response(request, 'account/register.html')
-    
+
 def register_enterprise(request):
     error = None
     if request.method == 'POST':
-        form = EnterpriseRegisterForm(request.POST) 
+        form = EnterpriseRegisterForm(request.POST)
         if form.is_valid():
             enterprise = Enterprise.create_from_form(form)
             try:
                 enterprise.save()
-                
+
                 user = auth.authenticate(username = enterprise.username, password = form.cleaned_data['password'])
                 if user:
                     auth.login(request, user)
                     user.profile.send_register_mail()
-                
+
                 url = reverse('bolsa_trabajo.views_enterprise.successful_enterprise_registration')
                 return HttpResponseRedirect(url)
             except ValidationError, e:
@@ -115,35 +114,35 @@ def register_enterprise(request):
 def register_student(request):
     error = None
     if request.method == 'POST':
-        form = StudentRegisterForm(request.POST) 
+        form = StudentRegisterForm(request.POST)
         if form.is_valid():
             student = Student.create_from_form(form)
             try:
                 student.save()
-                
+
                 user = auth.authenticate(username = student.username, password = form.cleaned_data['password'])
                 if user:
                     auth.login(request, user)
                     user.profile.send_register_mail()
-                
+
                 url = reverse('bolsa_trabajo.views_account.successful_student_registration')
                 return HttpResponseRedirect(url)
             except ValidationError, e:
                 error = 'El nombre de usuario ya está tomado'
             except Exception, e:
                 error = str(e)
-            
+
     else:
         form = StudentRegisterForm()
     return append_user_to_response(request, 'account/register_student.html',{
         'register_form': form,
         'error': error
     })
-    
+
 @student_login_required
 def successful_student_registration(request):
     return append_user_to_response(request, 'account/successful_student_response.html')
-    
+
 @login_required
 def logout(request):
     auth.logout(request)
@@ -152,7 +151,7 @@ def logout(request):
     if 'next' in request.GET:
         next_url = request.GET['next']
     return HttpResponseRedirect(next_url)
-    
+
 @login_required
 def validate_email(request):
     try:
@@ -160,24 +159,23 @@ def validate_email(request):
         #if user.profile.approved:
         if user.profile.validated_email:
             request.flash['message'] = 'El correo ya está validado'
-            print 'El correo ya está validado'
             url = reverse('bolsa_trabajo.views.index')
             return HttpResponseRedirect(url)
         validation_key = request.GET['validation_key']
-        orig_validation_key = hashlib.sha224(settings.SECRET_KEY + user.username + user.email).hexdigest()
+        orig_validation_key = generate_user_digest(user.username, user.email)
         if validation_key != orig_validation_key:
             raise ValidationError('Error en código de validación')
 
         user.profile.validated_email = True;
-        
+
         if user.profile.is_enterprise():
             UserProfile.notify_staff_of_new_register()
-        
+
         if user.profile.is_student():
             #user.is_active = True
             user.profile.approved = True
             user.save()
-            
+
         user.profile.save()
 
         request.flash['message'] = 'Cuenta de correo activada correctamente'
@@ -190,25 +188,25 @@ def validate_email(request):
     return append_user_to_response(request, 'account/validate_email.html', {
             'error': error,
         })
-        
+
 @login_required
 def edit_profile(request):
     if request.user.profile.is_enterprise():
         return edit_enterprise_profile(request)
     else:
         return edit_student_profile(request)
-        
+
 def edit_student_profile(request):
     error = None
     student = Student.objects.get(pk = request.user.id)
     if request.method == 'POST':
-        form = StudentProfileForm(request.POST, request.FILES) 
+        form = StudentProfileForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 student.update_from_form(form)
                 student.save()
                 student.profile.save()
-                
+
                 request.flash['message'] = 'Perfil actualizado exitosamente'
                 url = reverse('bolsa_trabajo.views_account.index')
                 return HttpResponseRedirect(url)
@@ -221,18 +219,18 @@ def edit_student_profile(request):
         'error': error,
         'student': student,
     })
-    
+
 def edit_enterprise_profile(request):
     error = None
     enterprise = Enterprise.objects.get(pk = request.user.id)
     if request.method == 'POST':
-        form = EnterpriseProfileForm(request.POST) 
+        form = EnterpriseProfileForm(request.POST)
         if form.is_valid():
             try:
                 enterprise.update_from_form(form)
                 enterprise.save()
                 enterprise.profile.save()
-                
+
                 request.flash['message'] = 'Perfil actualizado exitosamente'
                 url = reverse('bolsa_trabajo.views_account.index')
                 return HttpResponseRedirect(url)
@@ -245,7 +243,7 @@ def edit_enterprise_profile(request):
         'error': error,
         'enterprise': enterprise,
     })
-    
+
 def download_cv(request, student_id):
     try:
         students = Student.objects.filter(pk = student_id)
@@ -264,7 +262,7 @@ def download_cv(request, student_id):
         return response
     except:
         return HttpResponseRedirect('/')
-        
+
 @student_login_required
 def delete_cv(request):
     student = Student.objects.get(pk = request.user.id)
@@ -276,7 +274,7 @@ def delete_cv(request):
         request.flash['error'] = 'No se tiene currículum'
     url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
-    
+
 @login_required
 def change_password(request):
     error = None
@@ -300,7 +298,7 @@ def change_password(request):
         'password_form': form,
         'error': error,
     })
-    
+
 @login_required
 def change_email(request):
     user = request.user

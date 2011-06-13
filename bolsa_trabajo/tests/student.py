@@ -1,13 +1,11 @@
 # coding: utf-8
-import settings
-import hashlib
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
+from bolsa_trabajo.utils import generate_user_digest
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
 from bolsa_trabajo.models.student_level import StudentLevel
-
 
 class NewStudentTestCase(TestCase):
 
@@ -39,10 +37,10 @@ class NewStudentTestCase(TestCase):
 
         # get the new student object from the database
         new_student = Student.objects.get(username='test-student')
-        
+
         # assert that the student object has the expected username
         self.assertEqual(new_student.first_name,'Test')
-        
+
         # assert that the account hasn't been approved yet
         self.assert_and_check_messages(new_student,email_assertion=False,approval_assertion=False)
 
@@ -50,15 +48,15 @@ class NewStudentTestCase(TestCase):
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
 
         # go to the validation mail url
-        key = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
+        key = generate_user_digest(new_student.username, new_student.email)
         resp2 = self.client.get('/account/validate_email/',{'validation_key' : key})
 
-        # get the new student object from the database
+        # get the new student object from the database (again to reflect db changes)
         new_student = Student.objects.get(username='test-student')
 
         # assert that the user's email has been validated and his/her account approved
         self.assert_and_check_messages(new_student,email_assertion=True,approval_assertion=True)
-        
+
         '''
         # the email account should be validated
         self.assertTrue(new_student.profile.validated_email)
@@ -89,7 +87,7 @@ class NewStudentTestCase(TestCase):
         self.assertTrue(self.client.login(username='test-student',password='test-student'))
 
         # go to the validation mail url
-        key = hashlib.sha224(settings.SECRET_KEY + new_student.username + new_student.email).hexdigest()
+        key = generate_user_digest(new_student.username, new_student.email)
         resp2 = self.client.get('/account/validate_email/',{'validation_key' : key})
 
         # get the new student object from the database
@@ -100,7 +98,7 @@ class NewStudentTestCase(TestCase):
 
         # finally the user must be on hold
         self.assertTrue(new_student.accepted)
-        
+
         '''
         # the email account should be validated
         self.assertTrue(new_student.profile.validated_email)
@@ -109,22 +107,7 @@ class NewStudentTestCase(TestCase):
         self.client.login(username='test-enterprise',password='test-enterprise')
         resp = self.client.get('/account/')
         self.assertTrue('Cuenta de correo activada correctamente' in resp.content)
-        
+
         # message about account approval should be shown to the user
         self.assertTrue('no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
         '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
