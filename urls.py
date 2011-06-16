@@ -8,6 +8,5 @@ urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.MEDIA_ROOT}),
     (r'^admin/', include(admin.site.urls)),
-	(r'^appsettings/', include('appsettings.urls')),
     (r'^', include('bolsa_trabajo.urls')),
 )
