@@ -188,6 +188,9 @@ class PublishEnterpriseTestCase(TestCase):
         resp = self.client.get('/account/offer/add')
         self.assertEqual(200,resp.status_code)
 
+
+        self.assertTrue('Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas Profesionales" para obtener la informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.' in resp.content)
+
     def test_new_offer_regiter(self):
         self.test_accept_pending_request()
         self.assertTrue(self.client.login(username='test-enterprise3',password='test'))

@@ -13,8 +13,10 @@
     <h2>Formulario de creación de oferta laboral</h2>
     
     <p>Utilice el siguiente formulario para crear una nueva oferta laboral</p>
-   
-    <form method="post" action="">
+	<div class="notice">
+		<p>Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas Profesionales" para obtener la informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.<p>
+    </div>
+	<form method="post" action="">
         {% csrf_token %}
         {% if error %}
             <div class="errorlist">{{ error }}</div>
