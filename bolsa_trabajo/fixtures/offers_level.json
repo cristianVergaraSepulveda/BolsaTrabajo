@@ -1,0 +1,16 @@
+[
+    {
+        "model": "bolsa_trabajo.offerLevel",
+        "pk": 1,
+        "fields": {
+                    "name": "Practica1"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offerLevel",
+        "pk": 2,
+        "fields": {
+                    "name": "Practica2"
+        }
+    }
+]
