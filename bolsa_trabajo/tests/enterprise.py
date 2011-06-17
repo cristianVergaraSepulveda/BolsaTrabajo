@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.core.exceptions import ObjectDoesNotExist
 from bolsa_trabajo.models.enterprise import Enterprise
-from bolsa_trabajo.models.student import Student
-from bolsa_trabajo.models.user_profile import UserProfile
+from bolsa_trabajo.models.offer import Offer
 from bolsa_trabajo.models.student_level import StudentLevel
+from bolsa_trabajo.models.user_profile import UserProfile
 
 #Test to register a new enterprise from the admin's view
 class AdminNewEnterpriseTestCase(TestCase):
@@ -52,7 +52,7 @@ class AdminNewEnterpriseTestCase(TestCase):
 # enterprise registration from a new user's view
 class PublishEnterpriseTestCase(TestCase):
 
-    fixtures = ['users.json','enterprises.json']
+    fixtures = ['users.json','enterprises.json','offers.json','offers_level.json']
 
     def assert_and_check_messages(self,user,email_assertion,approval_assertion,param_username,param_password):
         self.client.login(username=param_username,password=param_password)
@@ -84,7 +84,7 @@ class PublishEnterpriseTestCase(TestCase):
 
         # assert that the enterprise object has the expected username
         self.assertEqual(new_enterprise.username,'test-enterprise')
-        
+
         # the email account shouldn't be validated yet
         self.assert_and_check_messages(new_enterprise,email_assertion=False,approval_assertion=False,param_username='test-enterprise',param_password='test-enterprise')
 
@@ -110,11 +110,11 @@ class PublishEnterpriseTestCase(TestCase):
 
         # go to validation URL
         resp = self.client.get('/account/validate_email/',{'validation_key' : key})
-        
-        # assert that the email account was validated       
+
+        # assert that the email account was validated
         enterprise3 = Enterprise.objects.get(username='test-enterprise3')
         self.assert_and_check_messages(enterprise3,email_assertion=True,approval_assertion=False,param_username='test-enterprise3',param_password='test')
-        
+
         '''
         # the email account should be validated
         self.assertTrue(new_enterprise.profile.validated_email)
@@ -158,7 +158,7 @@ class PublishEnterpriseTestCase(TestCase):
         # enterprise3 should be approved
         enterprise3 = Enterprise.objects.get(name='Enterprise3')
         self.assertTrue(enterprise3.profile.approved)
-        
+
         # hay que probar que ahora enterprise3 pueda publicar ofertas, ver si sus ofertar fueron aprobadas, etc
 
     def test_reject_pending_request(self):
@@ -178,3 +178,97 @@ class PublishEnterpriseTestCase(TestCase):
 
         # Enterprise3 should be deleted from the database
         self.assertRaises(ObjectDoesNotExist,Enterprise.objects.get,name='Enterprise3')
+
+
+    #Offers Tests
+
+    def test_new_offer_view(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+        resp = self.client.get('/account/offer/add')
+        self.assertEqual(200,resp.status_code)
+
+    def test_new_offer_regiter(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # create dictionary with new offer info
+        new_offer_data = {'title':'Oferta1', 'description':'oferta num 1', 'liquid_salary':'1111', 'available_slots':'2', 'level':1, 'tags':'SQL'}
+
+        # do a POST request including the new offer
+        resp = self.client.post('/account/offer/add',new_offer_data)
+
+        # get the new Offer object from the database
+        new_offer = Offer.objects.get(title='Oferta1')
+
+        # assert that the Offer object has the expected udescription
+        self.assertEqual(new_offer.description,'oferta num 1')
+
+        # assert that the Offer object is not validated
+        self.assertFalse(new_offer.validated)
+
+        # assert the message
+        resp = self.client.get('/account/')
+        self.assertTrue('Oferta propuesta exitosamente, por favor espere a que un encargado la valide' in resp.content)
+
+
+    def test_offer_view(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # verufy the status of the site
+        resp = self.client.get('/account/offer/')
+        self.assertEqual(200,resp.status_code)
+
+        # the page should show all offers defined in offers.json in their determinated sections
+        #Pending
+        self.assertTrue('<a href="/account/offer/5/edit">Offer5</a>' in resp.content)
+        #Active
+        self.assertTrue('<a href="/offer/6/">Offer6</a> (<a href="/account/offer/6/edit">Editar</a>)' in resp.content)
+        #Closed
+        self.assertTrue('<a href="/account/offer/7/">Offer7</a>' in resp.content)
+
+    def test_offer_details_view(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # verufy the status of the site
+        resp = self.client.get('/account/offer/5/')
+        self.assertEqual(200,resp.status_code)
+
+        # the page should show the offer's details
+        self.assertTrue('Offer5' in resp.content)
+        self.assertTrue('$ 1500000' in resp.content)
+
+
+    def test_offer_edit_view(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # verufy the status of the site
+        resp = self.client.get('/account/offer/6/edit')
+        self.assertEqual(200,resp.status_code)
+
+        # the page should show the offer's edit form
+        self.assertTrue('Offer6' in resp.content)
+        self.assertTrue('1500000' in resp.content)
+        self.assertFalse('$ 1500000' in resp.content)
+
+    def test_offer_close_offer(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # close the offert
+        resp = self.client.get('/account/offer/6/close/')
+        self.assertEqual(302,resp.status_code)
+
+        # verify the message
+        resp = self.client.get('/account/offer/')
+        self.assertTrue('Oferta cerrada exitosamente' in resp.content)
+
+        # verify that the offer object is closed
+        new_offer = Offer.objects.get(title='Offer6')
+        self.assertTrue(new_offer.closed)
+
+
+
