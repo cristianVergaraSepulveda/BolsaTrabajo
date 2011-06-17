@@ -114,6 +114,21 @@ def accept_pending_registration_request(request, request_id):
     return HttpResponseRedirect(url)
 
 @staff_login_required
+def reject_pending_registration_request(request, request_id):
+    try:
+        student = Student.objects.get(pk = request_id)
+        #if registration.is_active:
+        if student.profile.approved:
+            raise Exception
+        student.delete()
+        student.notify_rejection()
+        request.flash['message'] = 'Solicitud rechazada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_registration_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
+@staff_login_required
 def pending_offer_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_offer_request.html', {
         'pending_requests': Offer.get_pending_requests()
