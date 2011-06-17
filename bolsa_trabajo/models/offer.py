@@ -18,6 +18,7 @@ class Offer(models.Model):
     closed = models.BooleanField(default = False)
     has_unread_comments = models.BooleanField(default = False)
     validated = models.BooleanField(default = False)
+    status = models.CharField(max_length = 255, null = True)
 
     @staticmethod
     def create_from_form(enterprise, form):
