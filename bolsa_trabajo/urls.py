@@ -11,7 +11,7 @@ urlpatterns = patterns('bolsa_trabajo.views',
     (r'^student/(?P<student_id>\d+)/$', 'student_details'),
     (r'^student/(?P<student_id>\d+)/send_message$', 'student_send_message'),
     (r'^$', 'index'))
-    
+
 urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/$', 'index'),
     (r'^account/public_profile/$', 'public_profile'),
@@ -30,19 +30,22 @@ urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/delete_cv/$', 'delete_cv'),
     (r'^student/(?P<student_id>\d+)/download_cv$', 'download_cv'),
     )
-    
+
 urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/pending_enterprise_request/$', 'pending_enterprise_request'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/$', 'pending_enterprise_request_details'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/accept/$', 'accept_pending_enterprise_request'),
     (r'^account/pending_enterprise_request/(?P<request_id>\d+)/reject/$', 'reject_pending_enterprise_request'),
+    (r'^account/pending_registration_request/$', 'pending_registration_request'),
+    (r'^account/pending_registration_request/(?P<request_id>\d+)/$', 'pending_registration_request_details'),
+    (r'^account/pending_registration_request/(?P<request_id>\d+)/accept/$', 'accept_pending_registration_request'),
     (r'^account/pending_offer_request/$', 'pending_offer_request'),
     (r'^account/pending_offer_request/(?P<request_id>\d+)/$', 'pending_offer_request_details'),
     (r'^account/pending_offer_request/(?P<request_id>\d+)/accept/$', 'accept_pending_offer_request'),
     (r'^account/pending_offer_request/(?P<request_id>\d+)/reject/$', 'reject_pending_offer_request'),
     (r'^account/new_enterprise/$', 'new_enterprise'),
     )
-    
+
 urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
     (r'^account/offer/$', 'offer'),

@@ -1,0 +1,24 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_registration_request %}">Solicitudes de registros</a></div>
+
+<h2>Solicitudes de registros</h2>
+
+<div class="content-separator"></div>
+<p>
+		Desde acá se aceptan las solicitudes de registro de usuarios con mail no aceptado por el sistema.
+</p>
+{% if pending_requests %}
+    <h5>Registros con solicitudes pendientes</h5>
+    <ul>
+        {% for request in pending_requests %}
+				<li><a href="{% url bolsa_trabajo.views_staff.pending_registration_request_details request.id %}">{{ request.username }} ({{ request.email }})</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <b>No hay solicitudes pendientes</b>
+{% endif %}
+
+{% endblock %}

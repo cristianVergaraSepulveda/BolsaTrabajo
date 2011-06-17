@@ -7,7 +7,6 @@ from django.db.models import Q
 from . import Tag, StudentLevel
 from BolsaTrabajo import settings
 
-
 class Student(User):
     resume = models.TextField()
     has_cv = models.BooleanField(default = False)
@@ -114,6 +113,13 @@ class Student(User):
         #student.is_active = False
         student.level = data['level']
         return student
+
+    @staticmethod
+    def get_pending_requests():
+        #return Enterprise.objects.filter(is_active = False).filter(profile__validated_email = True)
+        #return Student.objects.filter(profile__accepted = False).filter(profile__validated_email = True)
+        #return Enterprise.objects.filter(profile__approved = False).filter(profile__validated_email = True)
+        return Student.objects.filter(profile__validated_email=True).filter(profile__approved=False)
 
     def save(self):
         same_username_users = User.objects.filter(username = self.username).filter(~Q(pk = self.id))
