@@ -1,0 +1,27 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_registration_request %}">Solicitudes de registros</a> &gt; <a href="{% url bolsa_trabajo.views_staff.pending_registration_request_details student.id %}">{{ student }}</a></div>
+
+<h2>{{ student }}</h2>
+
+<div class="content-separator"></div>
+
+<h5>Datos del Usuario</h5>
+    <ul>
+        <li><b>Nombre de Usuario:</b> {{ student.username }}</li>
+        <li><b>E-mail:</b> {{ student.email }}</li>
+    </ul>
+
+<div class="content-separator"></div>
+
+<h5>Opciones</h5>
+<p><a class="no_decoration" href="{% url bolsa_trabajo.views_staff.accept_pending_registration_request student.id %}">Aceptar la solicitud de registro</a></p>
+<p><a id="reject_link" class="no_decoration reject" href="">Rechazar la solicitud de registro</a></p>
+
+{% endblock %}

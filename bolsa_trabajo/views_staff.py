@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from forms import *
 from models import *
 from utils import *
-    
+
 def staff_login_required(f):
     def wrap(request, *args, **kwargs):
         if request.user.is_staff:
@@ -19,15 +19,15 @@ def staff_login_required(f):
             url = reverse('bolsa_trabajo.views_account.login')
             path = request.path
             return HttpResponseRedirect(url + '?next=' + path)
-            
+
     return wrap
-    
+
 @staff_login_required
 def pending_enterprise_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_enterprise_request.html', {
         'pending_requests': Enterprise.get_pending_requests()
     })
-    
+
 @staff_login_required
 def pending_enterprise_request_details(request, request_id):
     try:
@@ -42,7 +42,7 @@ def pending_enterprise_request_details(request, request_id):
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
-        
+
 @staff_login_required
 def accept_pending_enterprise_request(request, request_id):
     try:
@@ -58,7 +58,7 @@ def accept_pending_enterprise_request(request, request_id):
     except:
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
-    
+
 @staff_login_required
 def reject_pending_enterprise_request(request, request_id):
     try:
@@ -75,11 +75,65 @@ def reject_pending_enterprise_request(request, request_id):
     return HttpResponseRedirect(url)
 
 @staff_login_required
+def pending_registration_request(request):
+    return append_account_metadata_to_response(request, 'staff/pending_registration_request.html', {
+        'pending_requests': Student.get_pending_requests()
+    })
+
+@staff_login_required
+def pending_registration_request_details(request, request_id):
+    try:
+        student = Student.objects.get(pk = request_id)
+        #import ipdb; ipdb.set_trace();
+        if student.profile.approved:
+            raise Exception
+        return append_account_metadata_to_response(request, 'staff/pending_registration_request_details.html', {
+        'student': student
+    })
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+
+@staff_login_required
+def accept_pending_registration_request(request, request_id):
+    try:
+        registration = Student.objects.get(pk = request_id)
+        #import ipdb; ipdb.set_trace();
+        if registration.profile.approved:
+           raise Exception
+        registration.profile.approved = True
+        registration.profile.save()
+        #registration.save()
+        registration.notify_acceptance()
+        request.flash['message'] = 'Empresa aceptada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_registration_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
+@staff_login_required
+def reject_pending_registration_request(request, request_id):
+    try:
+        student = Student.objects.get(pk = request_id)
+        #if registration.is_active:
+        if student.profile.approved:
+            raise Exception
+        student.delete()
+        student.notify_rejection()
+        request.flash['message'] = 'Solicitud rechazada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_registration_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
+@staff_login_required
 def pending_offer_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_offer_request.html', {
         'pending_requests': Offer.get_pending_requests()
     })
-    
+
 @staff_login_required
 def pending_offer_request_details(request, request_id):
     try:
@@ -94,7 +148,7 @@ def pending_offer_request_details(request, request_id):
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
-        
+
 @staff_login_required
 def accept_pending_offer_request(request, request_id):
     try:
@@ -109,7 +163,7 @@ def accept_pending_offer_request(request, request_id):
     except:
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
-    
+
 @staff_login_required
 def reject_pending_offer_request(request, request_id):
     try:
@@ -124,22 +178,22 @@ def reject_pending_offer_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
-    
+
 @staff_login_required
 def new_enterprise(request):
     error = None
     if request.method == 'POST':
-        form = EnterpriseRegisterForm(request.POST) 
+        form = EnterpriseRegisterForm(request.POST)
         if form.is_valid():
             enterprise = Enterprise.create_from_form(form)
             #enterprise.is_active = True
             try:
                 enterprise.save()
-                
+
                 enterprise.profile.validated_email = True
                 enterprise.profile.approved = True
                 enterprise.profile.save()
-                
+
                 request.flash['message'] = 'Empresa creada exitosamente'
                 url = reverse('bolsa_trabajo.views_account.index')
                 return HttpResponseRedirect(url)
