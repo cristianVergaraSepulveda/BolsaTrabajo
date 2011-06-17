@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.core.exceptions import DoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from bolsa_trabajo.utils import generate_user_digest
 from bolsa_trabajo.models.enterprise import Enterprise
 from bolsa_trabajo.models.student import Student
@@ -112,17 +112,15 @@ class NewStudentTestCase(TestCase):
         # message about account approval should be shown to the user
         self.assertTrue('no ha sido validada personalmente por un encargado, por favor espere hasta ser contactado.' in resp.content)
         '''
-    def test_admin_accept_new_registration_with_not_accepted_email(self):
+    def admin_registration_manage(self, pending_student):
         # get the user staff record
         sandra = User.objects.get(username='sandra')
 
         # get the user record within a pending registration
-        pending_student = Student.objects.get(username='malito')
         accepted_student = Student.objects.get(username='pedrito')
 
         # check the integrity of that records
         self.assertEqual(sandra.username,'sandra')
-        self.assertEqual(pending_student.username,'malito')
         self.assertEqual(accepted_student.username,'pedrito')
 
         pending_student.profile.validated_email = True
@@ -156,6 +154,12 @@ class NewStudentTestCase(TestCase):
         self.assertTrue('malito' in resp3.content)
         self.assertTrue('Aceptar la solicitud de registro' in resp3.content)
         self.assertTrue('Rechazar la solicitud de registro' in resp3.content)
+
+    def test_admin_accept_new_registration_with_not_accepted_email(self):
+        pending_student = Student.objects.get(username='malito')
+        self.assertEqual(pending_student.username,'malito')
+
+        self.admin_registration_manage(pending_student)
 
         # accept pending registration
         self.client.get('/account/pending_registration_request/'+str(pending_student.id)+'/accept/')
@@ -168,52 +172,13 @@ class NewStudentTestCase(TestCase):
         self.assertEqual(old_pending_student.profile.approved,True)
 
     def test_admin_reject_new_registration_with_not_accepted_email(self):
-        # get the user staff record
-        sandra = User.objects.get(username='sandra')
-
-        # get the user record within a pending registration
         pending_student = Student.objects.get(username='malito')
-        accepted_student = Student.objects.get(username='pedrito')
-
-        # check the integrity of that records
-        self.assertEqual(sandra.username,'sandra')
         self.assertEqual(pending_student.username,'malito')
-        self.assertEqual(accepted_student.username,'pedrito')
 
-        pending_student.profile.validated_email = True
-        pending_student.profile.approved = False
-        pending_student.profile.save()
+        self.admin_registration_manage(pending_student)
 
-        accepted_student.profile.validated_email = True
-        accepted_student.profile.approved = True
-        accepted_student.profile.save()
-
-        self.assertEqual(pending_student.profile.validated_email,True)
-        self.assertEqual(pending_student.profile.approved,False)
-        self.assertTrue(pending_student.profile.is_student())
-
-        # log in as staff user
-        self.assertTrue(self.client.login(username='sandra',password='test'))
-
-        # check the content of the staff user account page
-        resp = self.client.get('/account/')
-        self.assertTrue('Solicitudes de registro' in resp.content)
-
-        # check the pending user is listed in the pending registrations
-        resp2 = self.client.get('/account/pending_registration_request/')
-        self.assertTrue('malito' in resp2.content)
-        self.assertTrue('malito@gmail.com' in resp2.content)
-        self.assertFalse('pedrito' in resp2.content)
-        self.assertFalse('@dcc.uchile.cl' in resp2.content)
-
-        # check the details of the pending registration
-        resp3 = self.client.get('/account/pending_registration_request/'+str(pending_student.id)+'/')
-        self.assertTrue('malito' in resp3.content)
-        self.assertTrue('Aceptar la solicitud de registro' in resp3.content)
-        self.assertTrue('Rechazar la solicitud de registro' in resp3.content)
-
-        # accept pending registration
+        # reject pending registration
         self.client.get('/account/pending_registration_request/'+str(pending_student.id)+'/reject/')
 
-        # get the updated pending student record
-        self.assertRaises(DoesNotExist, Student.objects.get(username='malito'))
+        # check that the record was deleted
+        self.assertRaises(ObjectDoesNotExist, Student.objects.get,username='malito')
