@@ -18,7 +18,7 @@ class Offer(models.Model):
     closed = models.BooleanField(default = False)
     has_unread_comments = models.BooleanField(default = False)
     validated = models.BooleanField(default = False)
-    status = models.CharField(max_length = 255, null = True)
+    status = models.CharField(max_length = 255, default = None, null = True, blank = True)
 
     @staticmethod
     def create_from_form(enterprise, form):
@@ -48,6 +48,13 @@ class Offer(models.Model):
         for tag in tags:
             self.tags.add(tag)
         self.level = data['level']
+
+    def change_status_from_form(self, form):
+        data = form.cleaned_data
+        if (data['status']=='None'):
+            self.status = None
+        else:
+            self.status = data['status']
 
     @staticmethod
     def get_pending_requests():

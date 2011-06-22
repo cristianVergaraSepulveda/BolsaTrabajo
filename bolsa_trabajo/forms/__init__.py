@@ -11,3 +11,4 @@ from offer_comment_form import OfferCommentForm
 from enterprise_comment_form import EnterpriseCommentForm
 from offer_message_form import OfferMessageForm
 from login_form import LoginForm
+from offer_status_form import OfferStatusForm

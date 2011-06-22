@@ -1,0 +1,35 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a>&gt; <a href="{% url bolsa_trabajo.views_staff.closed_offers enterprise.id%}">{{enterprise}}</a></div>
+
+<h2>Ofertas pasadas</h2>
+<p>Nombre de la empresa: <a href="{% url bolsa_trabajo.views.enterprise_details enterprise.id %}">{{enterprise}}</a></p>
+<p>Telefono: {{enterprise.phone}}</p>
+<p>Email: {{enterprise.email}}</p>
+<div class="content-separator"></div>
+
+{% if closed_offers %}
+    <ul>
+        {% for offer in closed_offers %}
+            <li><a href="{% url bolsa_trabajo.views_staff.change_offer_status offer.id %}"><b>{{offer}}</b>
+			{% if offer.status == None %}
+				(Feedback pendiente)
+			{% endif %}
+			</a>
+			{% if offer.status != None %}
+				: {{offer.status}}
+			{% endif %}
+			</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><b>No hay ofertas registradas</b></p>
+{% endif %}
+
+{% endblock %}
