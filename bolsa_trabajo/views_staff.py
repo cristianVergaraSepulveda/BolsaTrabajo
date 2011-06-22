@@ -75,6 +75,60 @@ def reject_pending_enterprise_request(request, request_id):
     return HttpResponseRedirect(url)
 
 @staff_login_required
+def pending_registration_request(request):
+    return append_account_metadata_to_response(request, 'staff/pending_registration_request.html', {
+        'pending_requests': Student.get_pending_requests()
+    })
+
+@staff_login_required
+def pending_registration_request_details(request, request_id):
+    try:
+        student = Student.objects.get(pk = request_id)
+        #import ipdb; ipdb.set_trace();
+        if student.profile.approved:
+            raise Exception
+        return append_account_metadata_to_response(request, 'staff/pending_registration_request_details.html', {
+        'student': student
+    })
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+
+@staff_login_required
+def accept_pending_registration_request(request, request_id):
+    try:
+        registration = Student.objects.get(pk = request_id)
+        #import ipdb; ipdb.set_trace();
+        if registration.profile.approved:
+           raise Exception
+        registration.profile.approved = True
+        registration.profile.save()
+        #registration.save()
+        registration.notify_acceptance()
+        request.flash['message'] = 'Empresa aceptada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_registration_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
+@staff_login_required
+def reject_pending_registration_request(request, request_id):
+    try:
+        student = Student.objects.get(pk = request_id)
+        #if registration.is_active:
+        if student.profile.approved:
+            raise Exception
+        student.delete()
+        student.notify_rejection()
+        request.flash['message'] = 'Solicitud rechazada exitosamente'
+        url = reverse('bolsa_trabajo.views_account.pending_registration_request')
+    except:
+        url = reverse('bolsa_trabajo.views_account.index')
+    return HttpResponseRedirect(url)
+
+@staff_login_required
 def pending_offer_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_offer_request.html', {
         'pending_requests': Offer.get_pending_requests()

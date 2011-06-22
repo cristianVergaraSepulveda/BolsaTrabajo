@@ -14,6 +14,8 @@
 	        </li>
 			<li>
 	            <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a>
+		    <li>
+	            <a href="{% url bolsa_trabajo.views_staff.pending_registration_request %}">Solicitudes de registro{% if pending_registration_request_count %}({{ pending_registration_request_count }}){% endif %}</a>
 	        </li>
 	        <li>
 	            <a href="{% url bolsa_trabajo.views_staff.new_enterprise %}">Ingresar empresa</a>
