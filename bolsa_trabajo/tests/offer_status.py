@@ -47,7 +47,7 @@ class OfferStatusTestCase(TestCase):
     def test_closed_offers_view(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        self.assertPendingOffersMessages('Feedback pendiente','Feedback pendiente','')
+        self.assertPendingOffersMessages('No se ha establecido una raz','No se ha establecido una raz','')
 
     def test_change_offers_view(self):
         # login as test staff user
@@ -63,10 +63,10 @@ class OfferStatusTestCase(TestCase):
     def test_change_offers(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        status = 'No se ha contratado a nadie'
+        status_name = 'No se ha contratado a nadie'
 
         # create dictionary with status info
-        new_offer_data = {'status':status}
+        new_offer_data = {'status':5}
 
         # do a POST request including the new status
         resp = self.client.post('/account/change_offer_status/7/',new_offer_data)
@@ -75,10 +75,10 @@ class OfferStatusTestCase(TestCase):
         new_offer = Offer.objects.get(title='Offer7')
 
         # assert that the Offer object has the expected status
-        self.assertEqual(new_offer.status,status)
+        self.assertEqual(new_offer.get_status_name(),status_name)
 
         # assert the message in closed offers site
-        self.assertPendingOffersMessages(status,'Feedback pendiente','Feedback editado exitosamente')
+        self.assertPendingOffersMessages(new_offer.get_status_name(),'No se ha establecido una raz','Feedback editado exitosamente')
 
         # test changes in pending offer site
         self.assertNumberPendingOffers('1')

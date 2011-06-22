@@ -110,7 +110,6 @@ def close_offer(request, offer_id):
         return HttpResponseRedirect(url)
 
     offer.closed = True
-    offer.status = None
     offer.save()
     request.flash['message'] = 'Oferta cerrada exitosamente'
 

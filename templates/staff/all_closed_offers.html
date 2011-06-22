@@ -1,14 +1,19 @@
-{% extends 'account/base.html' %}
+{% extends 'account/base_superuser.html' %}
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
 
 {% block main %}
 
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a></div>
+
 <div class="content-separator"></div>
 
-{% if closed_offers %}
+{% if enterprises_offers %}
     <ul>
-        {% for offer in closed_offers %}
+        {% for key, value in enterprises_offers.items %}
             <li>
-				hola
+				<a href="{% url bolsa_trabajo.views_staff.closed_offers value.1%}">{{key}} ({{value.0}} pendientes)</a>
 			</li>
         {% endfor %}
     </ul>

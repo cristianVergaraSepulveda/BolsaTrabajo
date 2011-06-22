@@ -208,7 +208,7 @@ class PublishEnterpriseTestCase(TestCase):
         # assert that the Offer object is not validated
         self.assertFalse(new_offer.validated)
         self.assertFalse(new_offer.closed)
-        self.assertTrue(new_offer.status==None)
+        self.assertTrue(int(new_offer.status)==1)
 
         # assert the message
         resp = self.client.get('/account/')
@@ -230,7 +230,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('<a href="/offer/6/">Offer6</a> (<a href="/account/offer/6/edit">Editar</a>)' in resp.content)
         #Closed
         self.assertTrue('<a href="/account/offer/7/">Offer7</a>' in resp.content)
-        self.assertTrue('(Feedback pendiente)' in resp.content)
+        self.assertTrue('No se ha establecido una raz' in resp.content)
 
 
     def test_offer_edit_view(self):
@@ -277,7 +277,7 @@ class PublishEnterpriseTestCase(TestCase):
         # verify that the offer object is closed
         new_offer = Offer.objects.get(title='Offer6')
         self.assertTrue(new_offer.closed)
-        self.assertTrue(new_offer.status==None)
+        self.assertTrue(int(new_offer.status)==1)
 
 
     def test_offer_details_view(self):
@@ -293,8 +293,8 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('$ 1500000' in resp.content)
 
         # create dictionary with status info
-        status = 'No se ha contratado a nadie'
-        new_offer_data = {'status':status}
+        status_name = 'No se ha contratado a nadie'
+        new_offer_data = {'status':5}
 
         # do a POST request including the new status
         resp = self.client.post('/account/offer/7/',new_offer_data)
@@ -303,7 +303,7 @@ class PublishEnterpriseTestCase(TestCase):
         new_offer = Offer.objects.get(title='Offer7')
 
         # assert that the Offer object has the expected status
-        self.assertEqual(new_offer.status,status)
+        self.assertEqual(new_offer.get_status_name(),status_name)
 
         # assert the message in the site
         resp = self.client.get('/account/offer/')
