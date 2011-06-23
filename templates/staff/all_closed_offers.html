@@ -10,11 +10,11 @@
 <h2>Ofertas laborales pasadas</h2>
 <div class="content-separator"></div>
 <p>
-    Aquí puede ver, por cada empresa, cuántas de sus ofertas fueron cerradas o concluídas sin especificar una razón.
+    Aquí puede ver las ofertas laborales pasadas de cada empresa, y cuántas de sus ofertas fueron cerradas o concluídas sin especificar una razón.
 </p>
 
 {% if enterprises_offers %}
-    <h5>Empresas con ofertas pendientes</h5>
+    <h5>Empresas</h5>
     <ul>
         {% for enterprise_name, offer_ent_pair in enterprises_offers.items %}
             <li>
