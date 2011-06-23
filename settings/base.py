@@ -25,7 +25,7 @@ SERVER_NAME = 'http://127.0.0.1:8000'
 
 MANAGERS = ADMINS
 
-AUTH_PROFILE_MODULE = 'bolsa_trabajo.UserProfile'
+AUTH_PROFILE_MODULE = 'bolsa_trabajo.models.UserProfile'
 
 DATABASES = {
     'default': {
@@ -99,7 +99,7 @@ INSTALLED_APPS = (
 )
 
 # Avoid migrating database when running tests
-SOUTH_TESTS_MIGRATE = False
+SOUTH_TESTS_MIGRATE = True
 
 # Application settings
 OFFER_EXPIRATION_LIMIT = 30 # in days
