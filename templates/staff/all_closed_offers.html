@@ -7,13 +7,18 @@
 
 <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a></div>
 
+<h2>Ofertas laborales pasadas</h2>
 <div class="content-separator"></div>
+<p>
+    Aquí puede ver, por cada empresa, cuántas de sus ofertas fueron cerradas o concluídas sin especificar una razón.
+</p>
 
 {% if enterprises_offers %}
+    <h5>Empresas con ofertas pendientes</h5>
     <ul>
-        {% for key, value in enterprises_offers.items %}
+        {% for enterprise_name, offer_ent_pair in enterprises_offers.items %}
             <li>
-				<a href="{% url bolsa_trabajo.views_staff.closed_offers value.1%}">{{key}} ({{value.0}} pendientes)</a>
+				<a href="{% url bolsa_trabajo.views_staff.closed_offers offer_ent_pair.1%}">{{enterprise_name}}</a> ({{offer_ent_pair.0}} pendientes)
 			</li>
         {% endfor %}
     </ul>
