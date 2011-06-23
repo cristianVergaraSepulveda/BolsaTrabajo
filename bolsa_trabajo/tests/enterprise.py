@@ -1,5 +1,5 @@
 # coding: utf-8
-import settings
+from django.conf import settings
 import hashlib
 from django.test import TestCase
 from django.contrib.auth.models import User

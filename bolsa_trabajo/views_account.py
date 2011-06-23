@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 import os, tempfile, zipfile
 from django.http import HttpResponse
 from django.core.servers.basehttp import FileWrapper
-import settings
+from django.conf import settings
 from forms import *
 from models import *
 from utils import *

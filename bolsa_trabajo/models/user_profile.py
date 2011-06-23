@@ -1,12 +1,12 @@
 #-*- coding: UTF-8 -*-
 import re
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.template.loader import get_template
 from BolsaTrabajo.bolsa_trabajo.utils import *
 from . import Offer, OfferComment, Student, Enterprise, Tag
-from BolsaTrabajo import settings
 from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):

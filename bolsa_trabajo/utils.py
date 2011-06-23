@@ -3,7 +3,7 @@ import locale
 import hashlib
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from BolsaTrabajo import settings
+from django.conf import settings
 from django.template import Context
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import get_template
