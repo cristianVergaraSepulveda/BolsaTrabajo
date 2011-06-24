@@ -8,8 +8,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 100000,
                     "tags": [1,2],
-                    "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "validated": "True"
         }
     },
     {
@@ -21,8 +20,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 200000,
                     "tags": [2,3],
-                    "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "validated": "True"
         }
     },
     {
@@ -34,8 +32,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 500000,
                     "tags": [3,4],
-                    "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "validated": "True"
         }
     },
     {
@@ -47,8 +44,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 75000,
                     "tags": [4,1],
-                    "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "validated": "True"
         }
     },
     {
@@ -60,8 +56,7 @@
                     "description": "Trabajo en BEA Worhshop.",
                     "liquid_salary": 1500000,
                     "tags": [4,1],
-                    "validated": "False",
-                    "creation_date": "2010-01-01"
+                    "validated": "False"
         }
     },
 	{
@@ -73,8 +68,7 @@
                     "description": "Trabajo en BEA Worhshop.",
                     "liquid_salary": 1500000,
                     "tags": [4,1],
-                    "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "validated": "True"
         }
     },
 	{
@@ -87,8 +81,7 @@
                     "liquid_salary": 1500000,
                     "tags": [4,1],
 					"validated": "True",
-                    "closed": "True",
-                    "creation_date": "2010-01-01"
+                    "closed": "True"
         }
     },
     {
@@ -101,8 +94,7 @@
                     "liquid_salary": 1500000,
                     "tags": [4,1],
                     "validated": "True",
-					"closed": "True",
-                    "creation_date": "2010-01-01"
+					"closed": "True"
         }
     }
 ]
