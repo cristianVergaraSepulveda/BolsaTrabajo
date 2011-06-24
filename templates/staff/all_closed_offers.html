@@ -1,0 +1,29 @@
+{% extends 'account/base_superuser.html' %}
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a></div>
+
+<h2>Ofertas laborales pasadas</h2>
+<div class="content-separator"></div>
+<p>
+    Aquí puede ver las ofertas laborales pasadas de cada empresa, y cuántas de sus ofertas fueron cerradas o concluídas sin especificar una razón.
+</p>
+
+{% if enterprises_offers %}
+    <h5>Empresas</h5>
+    <ul>
+        {% for enterprise_name, offer_ent_pair in enterprises_offers.items %}
+            <li>
+				<a href="{% url bolsa_trabajo.views_staff.closed_offers offer_ent_pair.1%}">{{enterprise_name}}</a> ({{offer_ent_pair.0}} pendientes)
+			</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><b>No hay ofertas registradas</b></p>
+{% endif %}
+
+{% endblock %}

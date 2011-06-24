@@ -159,8 +159,6 @@ class PublishEnterpriseTestCase(TestCase):
         enterprise3 = Enterprise.objects.get(name='Enterprise3')
         self.assertTrue(enterprise3.profile.approved)
 
-        # hay que probar que ahora enterprise3 pueda publicar ofertas, ver si sus ofertar fueron aprobadas, etc
-
     def test_reject_pending_request(self):
         # validate email
         self.validate_enterprise3_email_and_check()
@@ -189,7 +187,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertEqual(200,resp.status_code)
 
 
-        self.assertTrue('Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas Profesionales" para obtener la informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.' in resp.content)
+        self.assertTrue('Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas profesionales" para obtener informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.' in resp.content)
 
     def test_new_offer_regiter(self):
         self.test_accept_pending_request()
@@ -204,11 +202,13 @@ class PublishEnterpriseTestCase(TestCase):
         # get the new Offer object from the database
         new_offer = Offer.objects.get(title='Oferta1')
 
-        # assert that the Offer object has the expected udescription
+        # assert that the Offer object has the expected description
         self.assertEqual(new_offer.description,'oferta num 1')
 
         # assert that the Offer object is not validated
         self.assertFalse(new_offer.validated)
+        self.assertFalse(new_offer.closed)
+        self.assertTrue(int(new_offer.status)==1)
 
         # assert the message
         resp = self.client.get('/account/')
@@ -230,18 +230,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('<a href="/offer/6/">Offer6</a> (<a href="/account/offer/6/edit">Editar</a>)' in resp.content)
         #Closed
         self.assertTrue('<a href="/account/offer/7/">Offer7</a>' in resp.content)
-
-    def test_offer_details_view(self):
-        self.test_accept_pending_request()
-        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
-
-        # verufy the status of the site
-        resp = self.client.get('/account/offer/5/')
-        self.assertEqual(200,resp.status_code)
-
-        # the page should show the offer's details
-        self.assertTrue('Offer5' in resp.content)
-        self.assertTrue('$ 1500000' in resp.content)
+        self.assertTrue('No se ha establecido una raz' in resp.content)
 
 
     def test_offer_edit_view(self):
@@ -257,7 +246,23 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('1500000' in resp.content)
         self.assertFalse('$ 1500000' in resp.content)
 
-    def test_offer_close_offer(self):
+        # create dictionary to edit the offer
+        new_offer_data = {'title':'Oferta1', 'description':'oferta num 1', 'liquid_salary':'1111', 'available_slots':'2', 'level':1, 'tags':'SQL'}
+
+        # do a POST request including the new offer info
+        resp = self.client.post('/account/offer/6/edit',new_offer_data)
+
+        # get the edited Offer object from the database
+        new_offer = Offer.objects.get(title='Oferta1')
+
+        # assert that the Offer object has the expected description
+        self.assertEqual(new_offer.liquid_salary, 1111)
+
+        resp = self.client.get('/account/offer/6/')
+        self.assertTrue('Oferta editada exitosamente' in resp.content)
+
+
+    def test_close_offer(self):
         self.test_accept_pending_request()
         self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
 
@@ -272,6 +277,35 @@ class PublishEnterpriseTestCase(TestCase):
         # verify that the offer object is closed
         new_offer = Offer.objects.get(title='Offer6')
         self.assertTrue(new_offer.closed)
+        self.assertTrue(int(new_offer.status)==1)
 
 
+    def test_offer_details_view(self):
+        self.test_accept_pending_request()
+        self.assertTrue(self.client.login(username='test-enterprise3',password='test'))
+
+        # verufy the status of the site
+        resp = self.client.get('/account/offer/7/')
+        self.assertEqual(200,resp.status_code)
+
+        # the page should show the offer's details
+        self.assertTrue('Offer7' in resp.content)
+        self.assertTrue('$ 1500000' in resp.content)
+
+        # create dictionary with status info
+        status_name = 'No se ha contratado a nadie'
+        new_offer_data = {'status':5}
+
+        # do a POST request including the new status
+        resp = self.client.post('/account/offer/7/',new_offer_data)
+
+        # get the new Offer object from the database
+        new_offer = Offer.objects.get(title='Offer7')
+
+        # assert that the Offer object has the expected status
+        self.assertEqual(new_offer.get_status_name(),status_name)
+
+        # assert the message in the site
+        resp = self.client.get('/account/offer/')
+        self.assertTrue('Feedback editado exitosamente' in resp.content)
 

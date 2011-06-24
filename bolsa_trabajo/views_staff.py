@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 from forms import *
 from models import *
 from utils import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def staff_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -141,7 +142,8 @@ def pending_offer_request_details(request, request_id):
         if offer.validated:
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
-        'offer': offer
+        'offer': offer,
+        'pending_status': len(Offer.objects.filter(enterprise=offer.enterprise.id).filter(status=1).filter(closed=True))
     })
     except Exception, e:
         print str(e)
@@ -203,7 +205,77 @@ def new_enterprise(request):
                 error = 'Error desconocido'
     else:
         form = EnterpriseRegisterForm()
-    return append_user_to_response(request, 'staff/new_enterprise.html',{
+    return append_account_metadata_to_response(request, 'staff/new_enterprise.html',{
         'register_form': form,
         'error': error
     })
+
+@staff_login_required
+def closed_offers(request, request_id):
+    try:
+        enterprise = Enterprise.objects.get(pk = request_id)
+        offers = enterprise.offer_set.all()
+        closed_offers = []
+        for offer in offers:
+            if offer.closed:
+                closed_offers.append(offer)
+
+        return append_account_metadata_to_response(request, 'staff/closed_offers.html',{
+            'closed_offers': closed_offers,
+            'enterprise': enterprise,
+            'pending_requests': Enterprise.get_pending_requests()
+        })
+
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+
+
+@staff_login_required
+def change_offer_status(request, offer_id):
+    offer = Offer.objects.get(pk = offer_id)
+
+    if not offer.closed:
+        url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
+        return HttpResponseRedirect(url)
+
+    if request.method == 'POST':
+        form = OfferStatusForm(request.POST)
+        if form.is_valid():
+            offer.change_status_from_form(form)
+            offer.save()
+
+            request.flash['message'] = 'Feedback editado exitosamente'
+            url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
+            return HttpResponseRedirect(url)
+    else:
+        form = OfferStatusForm.create_from_offer(offer)
+
+    return append_account_metadata_to_response(request, 'staff/change_offer_status.html',{
+        'offer_form': form,
+        'offer': offer,
+        'pending_requests': Enterprise.get_pending_requests()
+    })
+
+@staff_login_required
+def all_closed_offers(request):
+    try:
+        closed_offers = Offer.objects.filter(status=1).filter(closed=True)
+        enterprises = Enterprise.objects.all()
+        enterprises_offers = {}
+        for enterprise in enterprises:
+            enterprises_offers[enterprise.name]=[0,enterprise.id]
+
+        for closed_offer in closed_offers:
+            enterprises_offers[closed_offer.enterprise.name][0] += 1
+
+        return append_account_metadata_to_response(request, 'staff/all_closed_offers.html', {
+        'enterprises_offers': enterprises_offers
+    })
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)

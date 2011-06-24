@@ -37,7 +37,7 @@
 {% if closed_offers %}
     <ul>
         {% for offer in closed_offers %}
-            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a></li>
+            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a>: {{offer.get_status_name}}</li>
         {% endfor %}
     </ul>
 {% else %}

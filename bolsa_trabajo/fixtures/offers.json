@@ -90,5 +90,19 @@
                     "closed": "True",
                     "creation_date": "2010-01-01"
         }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 8,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Offer8",
+                    "description": "Trabajo en BEA Worhshop8.",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+					"closed": "True",
+                    "creation_date": "2010-01-01"
+        }
     }
 ]

@@ -1,0 +1,38 @@
+{% extends 'account/base_superuser.html' %}
+
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a>&gt; <a href="{% url bolsa_trabajo.views_staff.closed_offers offer.enterprise.id%}">{{offer.enterprise}}</a> &gt; <a href="{% url bolsa_trabajo.views_staff.change_offer_status offer.id %}">{{ offer }}</a></div>
+
+    <h2>{{offer}}</h2>
+	<div class="content-separator"></div>
+	<ul>
+        <li><b>Empresa:</b> <a href="{% url bolsa_trabajo.views.enterprise_details offer.enterprise.id %}">{{ offer.enterprise }}</a></li>
+		<li><b>Descripción:</b> {{ offer.description|linebreaks }}</li>
+        <li><b>Sueldo líquido:</b> {{ offer.get_salary_string }}</li>
+        <li><b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}</li>
+        <li><b>Nivel:</b> {{ offer.get_level_string }}</li>
+        <li><b>Términos clave:</b> {{ offer.get_tags_string }}</li>
+    </ul>
+	
+	
+	<div class="content-separator"></div>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ offer_form.as_table }}
+        </table>
+        <input type="submit" value="Guardar cambios" />
+    </form>
+    
+<br />
+
+{% endblock %}

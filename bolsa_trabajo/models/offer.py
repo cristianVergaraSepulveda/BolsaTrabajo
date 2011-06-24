@@ -9,6 +9,15 @@ from . import Enterprise, OfferLevel, Tag
 from BolsaTrabajo.bolsa_trabajo.utils import *
 
 class Offer(models.Model):
+
+    STATUS_CHOICES = (
+        (1,'No se ha establecido una razón'),
+        (2,'Se contrató a más de un postulante utilizando este medio'),
+        (3,'Se contrató sólo a un estudiante utilizando este medio'),
+        (4,'Se contrató sólo postulantes fuera de este medio'),
+        (5,'No se ha contratado a nadie'),
+    )
+
     enterprise = models.ForeignKey(Enterprise)
     title = models.CharField(max_length = 255)
     description = models.TextField()
@@ -20,6 +29,7 @@ class Offer(models.Model):
     closed = models.BooleanField(default = False)
     has_unread_comments = models.BooleanField(default = False)
     validated = models.BooleanField(default = False)
+    status = models.IntegerField(choices=STATUS_CHOICES, default = 1)
 
     @staticmethod
     def create_from_form(enterprise, form):
@@ -49,6 +59,10 @@ class Offer(models.Model):
         for tag in tags:
             self.tags.add(tag)
         self.level = data['level']
+
+    def change_status_from_form(self, form):
+        data = form.cleaned_data
+        self.status = data['status']
 
     @staticmethod
     def get_pending_requests():
@@ -141,6 +155,9 @@ class Offer(models.Model):
         subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
 
         send_email(self.enterprise, subject, t, {'offer': self})
+
+    def get_status_name(self):
+        return self.STATUS_CHOICES[int(self.status)-1][1]
 
     def __unicode__(self):
         return unicode(self.title)

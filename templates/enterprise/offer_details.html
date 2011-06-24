@@ -13,11 +13,23 @@
         <li><b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}</li>
         <li><b>Nivel:</b> {{ offer.get_level_string }}</li>
         <li><b>Términos clave:</b> {{ offer.get_tags_string }}</li>
-    </ul>    
+    </ul>
+	
 <br />
     
 {% if not offer.closed %}
     <p><a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar la oferta</a></p>
+{% else %}
+	<form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ offer_form.as_table }}
+        </table>
+        <input type="submit" value="Guardar cambios" />
+    </form>
 {% endif %}
 
 {% endblock %}
