@@ -111,7 +111,7 @@ class Offer(models.Model):
 
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.objects.filter(closed = False).filter(validated = True).order_by('-creation_date')
+        offers = Offer.get_unexpired_offers().filter(closed = False).filter(validated = True).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access = False)
 
