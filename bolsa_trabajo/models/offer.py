@@ -1,5 +1,8 @@
 #-*- coding: UTF-8 -*-
 
+from datetime import datetime
+from datetime import timedelta
+
 from django.db.models import Q
 from django.db import models
 from django.conf import settings
@@ -67,6 +70,18 @@ class Offer(models.Model):
     @staticmethod
     def get_pending_requests():
         return Offer.objects.filter(validated = False)
+
+    @staticmethod
+    def get_unexpired_offers():
+        now = datetime.now()
+        delta = now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
+        return Offer.objects.filter(validated = True).filter(creation_date__gte=delta)
+
+    @staticmethod
+    def get_expired_offers():
+        now = datetime.now()
+        delta = now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
+        return Offer.objects.filter(validated = True).filter(creation_date__lte=delta)
 
     def get_salary_string(self):
         if self.liquid_salary == 0:
