@@ -1,0 +1,43 @@
+{% extends 'account/base_superuser.html' %}
+{% block header %}
+	<script type="text/javascript" src="/media/js/pending_request_details.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.concreted_offers %}">Ofertas concretadas</a></div>
+
+<h2>Ofertas concretadas</h2>
+<div class="content-separator"></div>
+<p>
+    Aquí puede ver el número de ofertas concretadas por cada empresa.
+</p>
+
+{% if enterprises_offers %}
+    <table class="data-table">
+        <tr>
+            <td><b>Total de ofertas:</b></td>
+            <td>{{ number_concreted_offers }} Concretada(s)</td>
+            <td>{{ number_not_concreted_offers }} No Concretada(s)</td>
+        </tr>
+    </table>
+    
+    <table class="data-table">
+        <tr>
+            <td><b>Empresas</b></td>
+            <td><b>Ofertas concretadas</b></td>
+            <td><b>Ofertas no concretadas</b></td>
+        </tr>
+        {% for enterprise_name, concreted_offers_pair in enterprises_offers.items %}
+            <tr>
+                <td>{{enterprise_name}}</td>
+                <td>{{concreted_offers_pair.0}}</td>
+                <td>{{concreted_offers_pair.1}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p><b>No hay ofertas en el sistema</b></p>
+{% endif %}
+
+{% endblock %}

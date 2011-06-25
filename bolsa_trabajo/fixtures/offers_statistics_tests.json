@@ -1,0 +1,54 @@
+[
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 1,
+        "fields": {
+                    "enterprise": 2,
+                    "title": "Offer1",
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 100000,
+                    "tags": [1,2],
+                    "validated": "True",
+                    "closed": "True",
+                    "status": 2
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 2,
+        "fields": {
+                    "enterprise": 2,
+                    "title": "Offer2",
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 200000,
+                    "tags": [2,3],
+                    "validated": "True",
+                    "closed": "True",
+                    "status": 3
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 3,
+        "fields": {
+                    "enterprise": 3,
+                    "title": "Offer3",
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 500000,
+                    "tags": [3,4],
+                    "validated": "True"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 4,
+        "fields": {
+                    "enterprise": 3,
+                    "title": "Offer4",
+                    "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
+                    "liquid_salary": 75000,
+                    "tags": [4,1],
+                    "validated": "True"
+        }
+    }
+]
