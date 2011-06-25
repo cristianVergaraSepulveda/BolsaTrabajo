@@ -48,6 +48,7 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/all_closed_offers/$', 'all_closed_offers'),
     (r'^account/closed_offers/(?P<request_id>\d+)/$', 'closed_offers'),
     (r'^account/change_offer_status/(?P<offer_id>\d+)/$', 'change_offer_status'),
+    (r'^account/statistics/$', 'concreted_offers'),
     )
 
 urlpatterns += patterns('bolsa_trabajo.views_enterprise',

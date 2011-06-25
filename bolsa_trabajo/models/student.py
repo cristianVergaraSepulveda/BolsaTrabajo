@@ -1,11 +1,11 @@
 #-*- coding: UTF-8 -*-
 import os
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
 from . import Tag, StudentLevel
-from BolsaTrabajo import settings
 
 class Student(User):
     resume = models.TextField()

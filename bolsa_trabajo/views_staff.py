@@ -283,3 +283,32 @@ def all_closed_offers(request):
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
+        
+@staff_login_required
+def concreted_offers(request):
+    try:        
+        concreted_offers = Offer.objects.exclude(status=1).exclude(status=4).exclude(status=5)
+        not_concreted_offers = Offer.objects.exclude(status=2).exclude(status=3)
+        
+        enterprises = Enterprise.objects.all()
+        enterprises_offers = {}
+        
+        for enterprise in enterprises:
+            enterprises_offers[enterprise.name]=[0,0] 
+
+        for concreted_offer in concreted_offers:
+            enterprises_offers[concreted_offer.enterprise.name][0] += 1
+
+        for not_concreted_offer in not_concreted_offers:
+            enterprises_offers[not_concreted_offer.enterprise.name][1] += 1
+
+        return append_account_metadata_to_response(request, 'staff/stats.html', {
+        'enterprises_offers': enterprises_offers,
+        'number_concreted_offers': len(concreted_offers),
+        'number_not_concreted_offers': len(not_concreted_offers)
+    })
+    except Exception, e:
+        print str(e)
+        raise Exception
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)

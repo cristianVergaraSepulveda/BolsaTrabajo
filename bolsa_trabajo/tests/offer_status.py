@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -29,8 +30,8 @@ class OfferStatusTestCase(TestCase):
 
         # test messages
         self.assertTrue("Enterprise3" in resp.content)
-        self.assertTrue("Telefono: 222" in resp.content)
-        self.assertTrue("Email: test@example.com" in resp.content)
+        self.assertTrue("<b>Teléfono:</b> 222" in resp.content)
+        self.assertTrue("<b>Email:</b> test@example.com" in resp.content)
         self.assertTrue("Offer7" in resp.content)
         self.assertTrue(message1 in resp.content)
         self.assertTrue("Offer8" in resp.content)
@@ -90,5 +91,5 @@ class OfferStatusTestCase(TestCase):
         resp = self.client.get('/account/all_closed_offers/')
         self.assertEqual(200,resp.status_code)
         # assert that messages are correct
-        self.assertTrue('Enterprise3 (3 pendiente(s))' in resp.content)
+        self.assertTrue('Enterprise3</a> (3 pendiente(s))' in resp.content)
 

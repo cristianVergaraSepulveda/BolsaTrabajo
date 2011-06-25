@@ -6,12 +6,16 @@
 
 {% block main %}
 
-<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a>&gt; <a href="{% url bolsa_trabajo.views_staff.closed_offers enterprise.id%}">{{enterprise}}</a></div>
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_staff.all_closed_offers %}">Ofertas laborales pasadas</a> &gt; <a href="{% url bolsa_trabajo.views_staff.closed_offers enterprise.id%}">{{enterprise}}</a></div>
 
-<h2>Ofertas pasadas</h2>
-<p>Nombre de la empresa: <a href="{% url bolsa_trabajo.views.enterprise_details enterprise.id %}">{{enterprise}}</a></p>
-<p>Telefono: {{enterprise.phone}}</p>
-<p>Email: {{enterprise.email}}</p>
+<h2>Ofertas laborales pasadas</h2>
+<div class="content-separator"></div>
+<h5>Datos de la empresa</h5>
+<ul>
+    <li><b>Nombre de la empresa:</b> <a href="{% url bolsa_trabajo.views.enterprise_details enterprise.id %}">{{enterprise}}</a></li>
+    <li><b>Teléfono:</b> {{enterprise.phone}}</li>
+    <li><b>Email:</b> {{enterprise.email}}</li>
+</ul>
 <div class="content-separator"></div>
 
 <h4>Ofertas caducadas</h4>

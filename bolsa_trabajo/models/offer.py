@@ -1,6 +1,7 @@
 #-*- coding: UTF-8 -*-
 from django.db.models import Q
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from . import Enterprise, OfferLevel, Tag
@@ -73,6 +74,21 @@ class Offer(models.Model):
     def get_pending_requests():
         return Offer.objects.filter(validated = False).filter(creation_date__gte=Offer.get_delta())
 
+    @staticmethod
+    def get_unexpired_offers():
+        return Offer.objects.filter(validated = True).filter(creation_date__gte=Offer.get_delta())
+
+    @staticmethod
+    def get_expired_offers():
+        return Offer.objects.filter(validated = True).filter(creation_date__lte=Offer.get_delta())
+
+    @staticmethod
+    def get_pendings_feedback_offers(enterpriseId = None):
+        delta = Offer.get_delta()
+        if (enterpriseId):
+            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)) )
+        return Offer.objects.filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)))
+
     def get_salary_string(self):
         if self.liquid_salary == 0:
             return 'Se requiere enviar pretensión de salario'
@@ -101,7 +117,7 @@ class Offer(models.Model):
 
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.objects.filter(closed = False).filter(validated = True).order_by('-creation_date')
+        offers = Offer.get_unexpired_offers().filter(closed = False).filter(validated = True).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access = False)
 
@@ -161,17 +177,8 @@ class Offer(models.Model):
 
         send_email(self.enterprise, subject, t, {'offer': self})
 
-
-
     def expired(self):
         return self.creation_date <= Offer.get_delta() and self.validated
-
-    @staticmethod
-    def get_pendings_feedback_offers(enterpriseId = None):
-        delta = Offer.get_delta()
-        if (enterpriseId):
-            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)) )
-        return Offer.objects.filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)))
 
     def get_status_name(self):
         return self.STATUS_CHOICES[int(self.status)-1][1]

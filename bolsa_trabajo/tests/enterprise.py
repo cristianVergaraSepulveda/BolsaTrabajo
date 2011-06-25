@@ -1,5 +1,5 @@
 # coding: utf-8
-import settings
+from django.conf import settings
 import hashlib
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -187,7 +187,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertEqual(200,resp.status_code)
 
 
-        self.assertTrue('Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas Profesionales" para obtener la informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.' in resp.content)
+        self.assertTrue('Haga click <a href="http://www.dcc.uchile.cl/node/230" target="_blank">aqu&iacute;</a> e ingrese a la secci&oacute;n "Recomendaciones para pr&aacute;cticas profesionales" para obtener informaci&oacute;n sobre los distintos requerimientos de cada nivel de pr&aacute;tica.' in resp.content)
 
     def test_new_offer_regiter(self):
         self.test_accept_pending_request()
