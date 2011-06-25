@@ -11,6 +11,7 @@ from forms import *
 from models import *
 from utils import *
 
+
 def enterprise_login_required(f):
     def wrap(request, *args, **kwargs):
         uid = request.user.id
@@ -30,22 +31,25 @@ def successful_enterprise_registration(request):
 @enterprise_login_required
 def offer(request):
     enterprise = Enterprise.objects.get(pk = request.user.id)
-
     offers = enterprise.offer_set.all()
     pending_offers = []
     active_offers = []
     closed_offers = []
+    expired_offers = []
 
     for offer in offers:
-        if not offer.validated:
-            pending_offers.append(offer)
-        elif not offer.closed:
+        if offer.closed:
+            closed_offers.append(offer)
+        elif offer.expired():
+            expired_offers.append(offer)
+        elif (offer.validated):
             active_offers.append(offer)
         else:
-            closed_offers.append(offer)
+            pending_offers.append(offer)
 
     return append_user_to_response(request, 'enterprise/offer.html', {
         'pending_offers': pending_offers,
+        'expired_offers': expired_offers,
         'active_offers': active_offers,
         'closed_offers': closed_offers,
     })
@@ -59,8 +63,9 @@ def offer_details(request, offer_id):
         return HttpResponseRedirect(url)
 
     form = None
-
-    if offer.closed:
+    close_or_expired = False
+    if (offer.closed  or offer.expired()):
+        close_or_expired = True
         if request.method == 'POST':
             form = OfferStatusForm(request.POST)
             if form.is_valid():
@@ -75,7 +80,8 @@ def offer_details(request, offer_id):
 
     return append_user_to_response(request, 'enterprise/offer_details.html',{
         'offer_form': form,
-        'offer': offer
+        'offer': offer,
+        'close_or_expired': close_or_expired
     })
 
 @enterprise_login_required

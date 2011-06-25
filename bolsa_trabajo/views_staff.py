@@ -10,7 +10,8 @@ from django.http import HttpResponseRedirect
 from forms import *
 from models import *
 from utils import *
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+
 
 def staff_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -143,7 +144,7 @@ def pending_offer_request_details(request, request_id):
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
         'offer': offer,
-        'pending_status': len(Offer.objects.filter(enterprise=offer.enterprise.id).filter(status=1).filter(closed=True))
+        'pending_status': len(Offer.get_pendings_feedback_offers(offer.enterprise.id))
     })
     except Exception, e:
         print str(e)
@@ -216,12 +217,16 @@ def closed_offers(request, request_id):
         enterprise = Enterprise.objects.get(pk = request_id)
         offers = enterprise.offer_set.all()
         closed_offers = []
+        expired_offers = []
         for offer in offers:
             if offer.closed:
                 closed_offers.append(offer)
+            elif offer.expired():
+                expired_offers.append(offer)
 
         return append_account_metadata_to_response(request, 'staff/closed_offers.html',{
             'closed_offers': closed_offers,
+            'expired_offers': expired_offers,
             'enterprise': enterprise,
             'pending_requests': Enterprise.get_pending_requests()
         })
@@ -236,8 +241,7 @@ def closed_offers(request, request_id):
 @staff_login_required
 def change_offer_status(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
-
-    if not offer.closed:
+    if (not (offer.closed or offer.expired() )):
         url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
         return HttpResponseRedirect(url)
 
@@ -262,7 +266,7 @@ def change_offer_status(request, offer_id):
 @staff_login_required
 def all_closed_offers(request):
     try:
-        closed_offers = Offer.objects.filter(status=1).filter(closed=True)
+        closed_offers = Offer.get_pendings_feedback_offers()
         enterprises = Enterprise.objects.all()
         enterprises_offers = {}
         for enterprise in enterprises:

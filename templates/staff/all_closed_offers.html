@@ -13,7 +13,7 @@
     <ul>
         {% for key, value in enterprises_offers.items %}
             <li>
-				<a href="{% url bolsa_trabajo.views_staff.closed_offers value.1%}">{{key}} ({{value.0}} pendientes)</a>
+				<a href="{% url bolsa_trabajo.views_staff.closed_offers value.1%}">{{key}} ({{value.0}} pendiente(s))</a>
 			</li>
         {% endfor %}
     </ul>

@@ -9,7 +9,7 @@
                     "liquid_salary": 100000,
                     "tags": [1,2],
                     "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
     {
@@ -22,7 +22,7 @@
                     "liquid_salary": 200000,
                     "tags": [2,3],
                     "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
     {
@@ -35,7 +35,7 @@
                     "liquid_salary": 500000,
                     "tags": [3,4],
                     "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
     {
@@ -48,7 +48,7 @@
                     "liquid_salary": 75000,
                     "tags": [4,1],
                     "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
     {
@@ -61,7 +61,7 @@
                     "liquid_salary": 1500000,
                     "tags": [4,1],
                     "validated": "False",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
 	{
@@ -74,7 +74,7 @@
                     "liquid_salary": 1500000,
                     "tags": [4,1],
                     "validated": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
 	{
@@ -88,7 +88,7 @@
                     "tags": [4,1],
 					"validated": "True",
                     "closed": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
         }
     },
     {
@@ -102,7 +102,21 @@
                     "tags": [4,1],
                     "validated": "True",
 					"closed": "True",
-                    "creation_date": "2010-01-01"
+                    "creation_date": "2012-01-01"
+        }
+    },
+	{
+        "model": "bolsa_trabajo.offer",
+        "pk": 9,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Offer9",
+                    "description": "Trabajo en BEA Worhshop9.",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+                    "creation_date": "2010-06-22"
         }
     }
+	
 ]

@@ -41,7 +41,7 @@ class OfferStatusTestCase(TestCase):
     def test_view(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        self.assertNumberPendingOffers('2')
+        self.assertNumberPendingOffers('3')
 
 
     def test_closed_offers_view(self):
@@ -81,6 +81,14 @@ class OfferStatusTestCase(TestCase):
         self.assertPendingOffersMessages(new_offer.get_status_name(),'No se ha establecido una raz','Feedback editado exitosamente')
 
         # test changes in pending offer site
-        self.assertNumberPendingOffers('1')
+        self.assertNumberPendingOffers('2')
 
+
+    def test_view_all_closed_offers(self):
+        # login as test staff user
+        self.client.login(username='test',password='test')
+        resp = self.client.get('/account/all_closed_offers/')
+        self.assertEqual(200,resp.status_code)
+        # assert that messages are correct
+        self.assertTrue('Enterprise3 (3 pendiente(s))' in resp.content)
 

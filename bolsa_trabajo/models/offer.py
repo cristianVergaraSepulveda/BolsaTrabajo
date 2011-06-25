@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from . import Enterprise, OfferLevel, Tag
 from BolsaTrabajo.bolsa_trabajo.utils import *
+from datetime import datetime
+from datetime import timedelta
 
 class Offer(models.Model):
 
@@ -63,8 +65,13 @@ class Offer(models.Model):
         self.status = data['status']
 
     @staticmethod
+    def get_delta():
+        now = datetime.now()
+        return now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
+
+    @staticmethod
     def get_pending_requests():
-        return Offer.objects.filter(validated = False)
+        return Offer.objects.filter(validated = False).filter(creation_date__gte=Offer.get_delta())
 
     def get_salary_string(self):
         if self.liquid_salary == 0:
@@ -153,6 +160,18 @@ class Offer(models.Model):
         subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
 
         send_email(self.enterprise, subject, t, {'offer': self})
+
+
+
+    def expired(self):
+        return self.creation_date <= Offer.get_delta() and self.validated
+
+    @staticmethod
+    def get_pendings_feedback_offers(enterpriseId = None):
+        delta = Offer.get_delta()
+        if (enterpriseId):
+            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)) )
+        return Offer.objects.filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)))
 
     def get_status_name(self):
         return self.STATUS_CHOICES[int(self.status)-1][1]
