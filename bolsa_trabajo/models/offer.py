@@ -72,7 +72,7 @@ class Offer(models.Model):
 
     @staticmethod
     def get_pending_requests():
-        return Offer.objects.filter(validated = False).filter(creation_date__gte=Offer.get_delta())
+        return Offer.objects.filter(validated = False).filter(creation_date__gte=Offer.get_delta()).filter(closed=False)
 
     @staticmethod
     def get_unexpired_offers():
