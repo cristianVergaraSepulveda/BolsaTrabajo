@@ -2,12 +2,17 @@
 from django.db.models import Q
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from . import Enterprise, OfferLevel, Tag
 from BolsaTrabajo.bolsa_trabajo.utils import *
 from datetime import datetime
 from datetime import timedelta
+
+def get_delta():
+    """
+    Returns the date before now in settings.OFFER_EXPIRATION_LIMIT days
+    """
+    now = datetime.now()
+    return now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
 
 class Offer(models.Model):
 
@@ -66,25 +71,20 @@ class Offer(models.Model):
         self.status = data['status']
 
     @staticmethod
-    def get_delta():
-        now = datetime.now()
-        return now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
-
-    @staticmethod
     def get_pending_requests():
-        return Offer.objects.filter(validated = False).filter(creation_date__gte=Offer.get_delta()).filter(closed=False)
+        return Offer.objects.filter(validated = False).filter(creation_date__gte=get_delta()).filter(closed=False)
 
     @staticmethod
     def get_unexpired_offers():
-        return Offer.objects.filter(validated = True).filter(creation_date__gte=Offer.get_delta())
+        return Offer.objects.filter(validated = True).filter(closed=False).filter(creation_date__gte=get_delta())
 
     @staticmethod
     def get_expired_offers():
-        return Offer.objects.filter(validated = True).filter(creation_date__lte=Offer.get_delta())
+        return Offer.objects.filter(validated=True).filter(closed=False).filter(creation_date__lte=get_delta())
 
     @staticmethod
     def get_pendings_feedback_offers(enterpriseId = None):
-        delta = Offer.get_delta()
+        delta = get_delta()
         if (enterpriseId):
             return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)) )
         return Offer.objects.filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)))
@@ -178,7 +178,7 @@ class Offer(models.Model):
         send_email(self.enterprise, subject, t, {'offer': self})
 
     def expired(self):
-        return self.creation_date <= Offer.get_delta() and self.validated
+        return self.creation_date <= get_delta() and self.validated
 
     def get_status_name(self):
         return self.STATUS_CHOICES[int(self.status)-1][1]

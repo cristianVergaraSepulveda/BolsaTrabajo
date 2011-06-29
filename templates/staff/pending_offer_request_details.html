@@ -26,11 +26,11 @@
 
 <h5>Opciones</h5>
 <p><a class="no_decoration" href="{% url bolsa_trabajo.views_staff.closed_offers offer.enterprise.id %}">Ver ofertas pasadas de esta empresa ({{pending_status}} pendiente(s))</a></p>
-<p> {% if pending_status == 0 %}
+<p> {% if pending_status == 1 %}
 		<a class="no_decoration" href="{% url bolsa_trabajo.views_staff.accept_pending_offer_request offer.id %}">
 	{% endif %}	
 	Aceptar la publicación de la oferta laboral
-	{% if pending_status == 0 %}
+	{% if pending_status == 1 %}
 		</a>
 	{% endif %}
 	</p>
