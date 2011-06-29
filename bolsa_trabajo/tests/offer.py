@@ -1,15 +1,12 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.contrib import auth
-from bolsa_trabajo.models.enterprise import Enterprise
-from bolsa_trabajo.models.student import Student
-from bolsa_trabajo.models.student_level import StudentLevel
+
 from bolsa_trabajo.models.offer import Offer
+
+from django.test import TestCase
 from django.core.exceptions import ObjectDoesNotExist
 
 class OfferTestCase(TestCase):
 
-    fixtures = ['users.json', 'enterprises.json', 'tags.json', 'offers.json']
+    fixtures = ['users.json', 'enterprises.json', 'tags.json', 'offers.json', 'offers_expiration.json']
 
     def test_empty_search_form(self):
         # do a get request with no data for the search form

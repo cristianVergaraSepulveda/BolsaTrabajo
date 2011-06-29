@@ -64,7 +64,7 @@
                     "creation_date": "2012-01-01"
         }
     },
-	{
+    {
         "model": "bolsa_trabajo.offer",
         "pk": 6,
         "fields": {
@@ -77,7 +77,7 @@
                     "creation_date": "2012-01-01"
         }
     },
-	{
+    {
         "model": "bolsa_trabajo.offer",
         "pk": 7,
         "fields": {
@@ -86,7 +86,7 @@
                     "description": "Trabajo en BEA Worhshop.",
                     "liquid_salary": 1500000,
                     "tags": [4,1],
-					"validated": "True",
+                    "validated": "True",
                     "closed": "True",
                     "creation_date": "2012-01-01"
         }
@@ -101,11 +101,11 @@
                     "liquid_salary": 1500000,
                     "tags": [4,1],
                     "validated": "True",
-					"closed": "True",
+                    "closed": "True",
                     "creation_date": "2012-01-01"
         }
     },
-	{
+    {
         "model": "bolsa_trabajo.offer",
         "pk": 9,
         "fields": {
@@ -118,5 +118,4 @@
                     "creation_date": "2010-06-22"
         }
     }
-	
 ]

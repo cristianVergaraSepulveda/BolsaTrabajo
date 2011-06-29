@@ -1,0 +1,56 @@
+[
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 100,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Oferta No Expirada No Cerrada",
+                    "description": "Oferta No Expirada No Cerrada",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+                    "creation_date": "2010-06-22"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 101,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Oferta Expirada No Cerrada",
+                    "description": "Oferta Expirada No Cerrada",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+                    "creation_date": "2010-06-22"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 102,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Oferta No Expirada Cerrada",
+                    "description": "Oferta No Expirada Cerrada",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+                    "closed": "True",
+                    "creation_date": "2010-06-22"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.offer",
+        "pk": 103,
+        "fields": {
+                    "enterprise": 4,
+                    "title": "Oferta Expirada Cerrada",
+                    "description": "Oferta Expirada Cerrada",
+                    "liquid_salary": 1500000,
+                    "tags": [4,1],
+                    "validated": "True",
+                    "closed": "True",
+                    "creation_date": "2010-06-22"
+        }
+    }
+]
