@@ -68,8 +68,8 @@ def reject_pending_enterprise_request(request, request_id):
         #if enterprise.is_active:
         if enterprise.profile.approved:
             raise Exception
-        enterprise.delete()
         enterprise.notify_rejection()
+        enterprise.delete()
         request.flash['message'] = 'Solicitud rechazada exitosamente'
         url = reverse('bolsa_trabajo.views_account.pending_enterprise_request')
     except:
@@ -173,8 +173,8 @@ def reject_pending_offer_request(request, request_id):
         offer = Offer.objects.get(pk = request_id)
         if offer.validated:
             raise Exception
-        offer.delete()
         offer.notify_rejection()
+        offer.delete()
         request.flash['message'] = 'Solicitud rechazada exitosamente'
         url = reverse('bolsa_trabajo.views_account.pending_offer_request')
     except:
