@@ -8,7 +8,8 @@ from django.conf import settings
 from django.template import Context
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import get_template
-from models import *
+
+from bolsa_trabajo.models import *
 
 def append_account_metadata_to_response(request, template, args = {}):
     template_suffix = 'account/base.html'

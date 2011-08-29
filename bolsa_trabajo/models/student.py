@@ -5,7 +5,10 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
-from . import Tag, StudentLevel
+
+from bolsa_trabajo.utils import *
+from bolsa_trabajo.models import Tag
+from bolsa_trabajo.models import StudentLevel
 
 class Student(User):
     resume = models.TextField()
@@ -99,6 +102,14 @@ class Student(User):
             os.remove(filename)
         except:
             pass
+
+    def notify_rejection(self):
+        from bolsa_trabajo.utils import send_email
+
+        t = get_template('mails/user_rejection.html')
+        subject = '[Bolsa Trabajo CaDCC] Registro rechazado'
+
+        send_email(self, subject, t, {})
 
     @staticmethod
     def create_from_form(form):

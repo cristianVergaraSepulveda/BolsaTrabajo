@@ -122,8 +122,8 @@ def reject_pending_registration_request(request, request_id):
         #if registration.is_active:
         if student.profile.approved:
             raise Exception
-        student.delete()
         student.notify_rejection()
+        student.delete()
         request.flash['message'] = 'Solicitud rechazada exitosamente'
         url = reverse('bolsa_trabajo.views_account.pending_registration_request')
     except:
