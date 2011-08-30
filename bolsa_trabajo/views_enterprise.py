@@ -38,18 +38,15 @@ def offer(request):
     expired_offers = []
 
     for offer in offers:
-        if offer.closed:
+        if offer.is_closed():
             closed_offers.append(offer)
-        elif offer.expired():
-            expired_offers.append(offer)
-        elif (offer.validated):
+        elif offer.is_open():
             active_offers.append(offer)
         else:
             pending_offers.append(offer)
 
     return append_user_to_response(request, 'enterprise/offer.html', {
         'pending_offers': pending_offers,
-        'expired_offers': expired_offers,
         'active_offers': active_offers,
         'closed_offers': closed_offers,
     })
@@ -63,9 +60,7 @@ def offer_details(request, offer_id):
         return HttpResponseRedirect(url)
 
     form = None
-    close_or_expired = False
-    if (offer.closed  or offer.expired()):
-        close_or_expired = True
+    if offer.is_closed():
         if request.method == 'POST':
             form = OfferStatusForm(request.POST)
             if form.is_valid():
@@ -81,7 +76,6 @@ def offer_details(request, offer_id):
     return append_user_to_response(request, 'enterprise/offer_details.html',{
         'offer_form': form,
         'offer': offer,
-        'close_or_expired': close_or_expired
     })
 
 @enterprise_login_required
@@ -111,11 +105,11 @@ def edit_offer(request, offer_id):
 def close_offer(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
     enterprise = Enterprise.objects.get(pk = request.user.id)
-    if offer.closed or offer.enterprise != enterprise:
+    if offer.is_closed() or offer.enterprise != enterprise:
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
 
-    offer.closed = True
+    offer.close()
     offer.save()
     request.flash['message'] = 'Oferta cerrada exitosamente'
 

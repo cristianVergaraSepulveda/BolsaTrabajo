@@ -53,7 +53,7 @@ class OfferTestCase(TestCase):
     def test_accept_offer(self):
         # get the pending Offer object from the database
         pending_offer = Offer.objects.get(pk=5)
-        self.assertEqual(pending_offer.validated,False)
+        self.assertEqual(pending_offer.status,1)
 
         # login as test staff user
         self.client.login(username='test',password='test')
@@ -69,12 +69,12 @@ class OfferTestCase(TestCase):
         pending_offer = Offer.objects.get(pk=5)
 
         # assert that the Offer is now accepted
-        self.assertEqual(pending_offer.validated,True)
+        self.assertEqual(pending_offer.status,2)
 
     def test_reject_offer(self):
         # get the pending Offer object from the database
         pending_offer = Offer.objects.get(pk=5)
-        self.assertEqual(pending_offer.validated,False)
+        self.assertEqual(pending_offer.status,1)
 
         # login as test staff user
         self.client.login(username='test',password='test')

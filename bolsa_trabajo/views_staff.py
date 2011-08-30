@@ -138,33 +138,25 @@ def pending_offer_request(request):
 
 @staff_login_required
 def pending_offer_request_details(request, request_id):
-    try:
-        offer = Offer.objects.get(pk = request_id)
-        if offer.validated:
-            raise Exception
-        return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
+    offer = Offer.objects.get(pk = request_id)
+    if not offer.is_waiting_validation():
+        return HttpResponseRedirect(reverse('bolsa_trabajo.views_account.index'))
+    return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
         'offer': offer,
         'pending_status': len(Offer.get_pendings_feedback_offers(offer.enterprise.id))
     })
-    except Exception, e:
-        print str(e)
-        raise Exception
-        url = reverse('bolsa_trabajo.views_account.index')
-        return HttpResponseRedirect(url)
+        
 
 @staff_login_required
 def accept_pending_offer_request(request, request_id):
-    try:
-        offer = Offer.objects.get(pk = request_id)
-        if offer.validated:
-            raise Exception
-        offer.validated = True
-        offer.save()
-        offer.notify_acceptance()
-        request.flash['message'] = 'Oferta aceptada exitosamente'
-        url = reverse('bolsa_trabajo.views_account.pending_offer_request')
-    except:
-        url = reverse('bolsa_trabajo.views_account.index')
+    offer = Offer.objects.get(pk = request_id)
+    if not offer.is_waiting_validation():
+        return HttpResponseRedirect(reverse('bolsa_trabajo.views_account.index'))
+    offer.open()
+    offer.save()
+    offer.notify_acceptance()
+    request.flash['message'] = 'Oferta aceptada exitosamente'
+    url = reverse('bolsa_trabajo.views_staff.pending_offer_request')
     return HttpResponseRedirect(url)
 
 @staff_login_required
@@ -176,7 +168,7 @@ def reject_pending_offer_request(request, request_id):
         offer.notify_rejection()
         offer.delete()
         request.flash['message'] = 'Solicitud rechazada exitosamente'
-        url = reverse('bolsa_trabajo.views_account.pending_offer_request')
+        url = reverse('bolsa_trabajo.views_staff.pending_offer_request')
     except:
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
@@ -217,16 +209,12 @@ def closed_offers(request, request_id):
         enterprise = Enterprise.objects.get(pk = request_id)
         offers = enterprise.offer_set.all()
         closed_offers = []
-        expired_offers = []
         for offer in offers:
-            if offer.closed:
+            if offer.is_closed():
                 closed_offers.append(offer)
-            elif offer.expired():
-                expired_offers.append(offer)
 
         return append_account_metadata_to_response(request, 'staff/closed_offers.html',{
             'closed_offers': closed_offers,
-            'expired_offers': expired_offers,
             'enterprise': enterprise,
             'pending_requests': Enterprise.get_pending_requests()
         })
@@ -241,7 +229,7 @@ def closed_offers(request, request_id):
 @staff_login_required
 def change_offer_status(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
-    if (not (offer.closed or offer.expired() )):
+    if not offer.is_closed():
         url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
         return HttpResponseRedirect(url)
 

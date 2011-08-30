@@ -32,18 +32,6 @@
     <p><b>No hay ofertas activas</b></p>
 {% endif %}
 
-<h4>Ofertas caducadas</h4>
-
-{% if expired_offers %}
-    <ul>
-        {% for offer in expired_offers %}
-            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a>: {{offer.get_status_name}}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p><b>No hay ofertas registradas</b></p>
-{% endif %}
-
 <h4>Ofertas cerradas</h4>
 
 {% if closed_offers %}

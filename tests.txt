@@ -1,0 +1,128 @@
+........F.FFF..F........F.F..
+======================================================================
+FAIL: test_change_offers (bolsa_trabajo.tests.offer_status.OfferStatusTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 81, in test_change_offers
+    self.assertEqual(new_offer.get_closure_reason_name(),status_name)
+AssertionError: u'No se especific\xf3 un raz\xf3n' != 'La oferta de trabajo ya no aplica'
+
+======================================================================
+FAIL: test_closed_offers_view (bolsa_trabajo.tests.offer_status.OfferStatusTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 53, in test_closed_offers_view
+    self.assertPendingOffersMessages('No se ha establecido una raz','No se ha establecido una raz','')
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 38, in assertPendingOffersMessages
+    self.assertTrue(message1 in resp.content)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_view (bolsa_trabajo.tests.offer_status.OfferStatusTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 47, in test_view
+    self.assertNumberPendingOffers('3')
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 25, in assertNumberPendingOffers
+    self.assertTrue('Ver ofertas pasadas de esta empresa ('+num+' pendiente(s))' in resp.content)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_view_all_closed_offers (bolsa_trabajo.tests.offer_status.OfferStatusTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer_status.py", line 96, in test_view_all_closed_offers
+    self.assertTrue('Enterprise3</a> (3 pendiente(s))' in resp.content)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_reject_offer (bolsa_trabajo.tests.offer.OfferTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/offer.py", line 90, in test_reject_offer
+    self.assertRaises(ObjectDoesNotExist,Offer.objects.get,pk="5")
+AssertionError: ObjectDoesNotExist not raised
+
+======================================================================
+FAIL: test_offer_details_view (bolsa_trabajo.tests.enterprise.PublishEnterpriseTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/enterprise.py", line 303, in test_offer_details_view
+    self.assertEqual(new_offer.get_closure_reason_name(),status_name)
+AssertionError: u'No se especific\xf3 un raz\xf3n' != 'La oferta de trabajo ya no aplica'
+
+======================================================================
+FAIL: test_offer_view (bolsa_trabajo.tests.enterprise.PublishEnterpriseTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/vkhemlan/BolsaTrabajo/bolsa_trabajo/tests/enterprise.py", line 231, in test_offer_view
+    self.assertTrue('No se ha establecido una raz' in resp.content)
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 29 tests in 10.806s
+
+FAILED (failures=7)
+Creating test database 'default'...
+Syncing...
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_user_permissions
+Creating table auth_user_groups
+Creating table auth_user
+Creating table auth_message
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+Creating table django_admin_log
+Creating table south_migrationhistory
+Installing index for auth.Permission model
+Installing index for auth.Group_permissions model
+Installing index for auth.User_user_permissions model
+Installing index for auth.User_groups model
+Installing index for auth.Message model
+Installing index for admin.LogEntry model
+Migrating...
+Running migrations for bolsa_trabajo:
+ - Migrating forwards to 0023_auto__del_field_offer_validated__del_field_offer_closed__add_field_off.
+ > bolsa_trabajo:0001_initial
+ > bolsa_trabajo:0002_auto__add_field_userprofile_block_public_access__add_field_offer_close
+ > bolsa_trabajo:0003_auto__add_field_enterprise_phone__add_field_enterprise_address__add_fi
+ > bolsa_trabajo:0004_auto__del_field_student_birth_date
+ > bolsa_trabajo:0005_auto__add_field_userprofile_validated_email
+ > bolsa_trabajo:0006_auto__del_field_enterprise_accepted
+ > bolsa_trabajo:0007_auto
+ > bolsa_trabajo:0008_auto__del_field_offercomment_Offer__add_field_offercomment_offer
+ > bolsa_trabajo:0009_auto__chg_field_offercomment_parent
+ > bolsa_trabajo:0010_auto__del_enterprisecommentring__del_field_enterprisecomment_unread_re
+ > bolsa_trabajo:0011_auto__add_field_offer_has_unread_comments
+ > bolsa_trabajo:0012_auto__del_field_offercomment_new_replies__add_field_offercomment_has_r
+ > bolsa_trabajo:0013_auto__del_field_enterprisecomment_new_replies__add_field_enterprisecom
+ > bolsa_trabajo:0014_auto__add_studentlevel__add_field_student_level
+ > bolsa_trabajo:0015_auto__add_field_studentlevel_ordering
+ > bolsa_trabajo:0016_auto__del_application__del_contractfeedback__del_contractfeedbackevalu
+ > bolsa_trabajo:0017_auto__add_field_offer_validated
+ > bolsa_trabajo:0018_auto__add_field_enterprise_approved__add_field_student_approved
+ > bolsa_trabajo:0019_auto__del_field_enterprise_approved__add_field_userprofile_approved__d
+ > bolsa_trabajo:0020_auto__add_field_offer_status
+ > bolsa_trabajo:0021_auto__chg_field_offer_status
+ > bolsa_trabajo:0022_auto__del_field_offer_status__add_field_offer_closure_reason
+ > bolsa_trabajo:0023_auto__del_field_offer_validated__del_field_offer_closed__add_field_off
+ - Loading initial data for bolsa_trabajo.
+No fixtures found.
+
+Synced:
+ > django.contrib.auth
+ > django.contrib.contenttypes
+ > django.contrib.sessions
+ > django.contrib.sites
+ > django.contrib.messages
+ > django.contrib.admin
+ > south
+ > django_extensions
+
+Migrated:
+ - BolsaTrabajo.bolsa_trabajo
+No fixtures found.
+Destroying test database 'default'...

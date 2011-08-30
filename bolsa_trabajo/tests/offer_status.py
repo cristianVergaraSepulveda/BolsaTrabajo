@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*-
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -65,22 +66,25 @@ class OfferStatusTestCase(TestCase):
     def test_change_offers(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        status_name = 'No se ha contratado a nadie'
+        status_name = 'La oferta de trabajo ya no aplica'
 
         # create dictionary with status info
-        new_offer_data = {'status':5}
+        new_offer_data = {'closure_reason':2}
 
         # do a POST request including the new status
         resp = self.client.post('/account/change_offer_status/7/',new_offer_data)
 
         # get the new Offer object from the database
         new_offer = Offer.objects.get(title='Offer7')
+        
+        import ipdb
+        ipdb.set_trace()
 
         # assert that the Offer object has the expected status
-        self.assertEqual(new_offer.get_status_name(),status_name)
+        self.assertEqual(new_offer.get_closure_reason_name(),status_name)
 
         # assert the message in closed offers site
-        self.assertPendingOffersMessages(new_offer.get_status_name(),'No se ha establecido una raz','Feedback editado exitosamente')
+        self.assertPendingOffersMessages(new_offer.get_closure_reason_name(),'La oferta de trabajo ya no aplica','Feedback editado exitosamente')
 
         # test changes in pending offer site
         self.assertNumberPendingOffers('2')

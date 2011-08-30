@@ -8,9 +8,8 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 100000,
                     "tags": [1,2],
-                    "validated": "True",
-                    "closed": "True",
-                    "status": 2
+                    "status": 3,
+                    "closure_reason": 2
         }
     },
     {
@@ -22,9 +21,8 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 200000,
                     "tags": [2,3],
-                    "validated": "True",
-                    "closed": "True",
-                    "status": 3
+                    "status": 3,
+                    "closure_reason": 3
         }
     },
     {
@@ -36,7 +34,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 500000,
                     "tags": [3,4],
-                    "validated": "True"
+                    "status": 2
         }
     },
     {
@@ -48,7 +46,7 @@
                     "description": "Lorem ipsum dolor sit amet, consectetur magna aliqua.",
                     "liquid_salary": 75000,
                     "tags": [4,1],
-                    "validated": "True"
+                    "status": 2
         }
     }
 ]
