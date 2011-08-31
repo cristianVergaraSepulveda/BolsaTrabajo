@@ -1,41 +1,38 @@
-#-*- coding: UTF-8 -*-
+#-*- coding: utf-8 -*-
+
 from django.db.models import Q
 from django.db import models
-from django.conf import settings
-from . import Enterprise, OfferLevel, Tag
-from BolsaTrabajo.bolsa_trabajo.utils import *
-from datetime import datetime
-from datetime import timedelta
+from django.template.loader import get_template
 
-def get_delta():
-    """
-    Returns the date before now in settings.OFFER_EXPIRATION_LIMIT days
-    """
-    now = datetime.now()
-    return now - timedelta(days=settings.OFFER_EXPIRATION_LIMIT)
+from . import Tag
+from . import Enterprise
+from . import OfferLevel
+from .utils import get_delta
+from .utils import pretty_price
+from ..email import send_email
+
 
 class Offer(models.Model):
-
     STATUS_CHOICES = (
-        (1,'No se ha establecido una razón'),
-        (2,'Se contrató a más de un postulante utilizando este medio'),
-        (3,'Se contrató sólo a un estudiante utilizando este medio'),
-        (4,'Se contrató sólo postulantes fuera de este medio'),
-        (5,'No se ha contratado a nadie'),
-    )
+        (1, 'No se ha establecido una razón'),
+        (2, 'Se contrató a más de un postulante utilizando este medio'),
+        (3, 'Se contrató sólo a un estudiante utilizando este medio'),
+        (4, 'Se contrató sólo postulantes fuera de este medio'),
+        (5, 'No se ha contratado a nadie'),
+        )
 
     enterprise = models.ForeignKey(Enterprise)
-    title = models.CharField(max_length = 255)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    tags = models.ManyToManyField(Tag, blank = True, null = True)
+    tags = models.ManyToManyField(Tag, blank=True, null=True)
     liquid_salary = models.IntegerField()
     level = models.ManyToManyField(OfferLevel)
-    creation_date = models.DateTimeField(auto_now_add = True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     available_slots = models.IntegerField()
-    closed = models.BooleanField(default = False)
-    has_unread_comments = models.BooleanField(default = False)
-    validated = models.BooleanField(default = False)
-    status = models.IntegerField(choices=STATUS_CHOICES, default = 1)
+    closed = models.BooleanField(default=False)
+    has_unread_comments = models.BooleanField(default=False)
+    validated = models.BooleanField(default=False)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=1)
 
     @staticmethod
     def create_from_form(enterprise, form):
@@ -72,22 +69,23 @@ class Offer(models.Model):
 
     @staticmethod
     def get_pending_requests():
-        return Offer.objects.filter(validated = False).filter(creation_date__gte=get_delta()).filter(closed=False)
+        return Offer.objects.filter(validated=False).filter(creation_date__gte=get_delta()).filter(closed=False)
 
     @staticmethod
-    def get_unexpired_offers():
-        return Offer.objects.filter(validated = True).filter(closed=False).filter(creation_date__gte=get_delta())
+    def get_unexpired():
+        return Offer.objects.filter(validated=True).filter(closed=False).filter(creation_date__gte=get_delta())
 
     @staticmethod
-    def get_expired_offers():
+    def get_expired():
         return Offer.objects.filter(validated=True).filter(closed=False).filter(creation_date__lte=get_delta())
 
     @staticmethod
-    def get_pendings_feedback_offers(enterpriseId = None):
+    def get_pendings_feedback_offers(enterpriseId=None):
         delta = get_delta()
         if (enterpriseId):
-            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)) )
-        return Offer.objects.filter(status=1).filter(Q(closed = True) | (Q(creation_date__lte=delta) & Q(validated=True)))
+            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(
+                Q(closed=True) | (Q(creation_date__lte=delta) & Q(validated=True)))
+        return Offer.objects.filter(status=1).filter(Q(closed=True) | (Q(creation_date__lte=delta) & Q(validated=True)))
 
     def get_salary_string(self):
         if self.liquid_salary == 0:
@@ -117,28 +115,28 @@ class Offer(models.Model):
 
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.get_unexpired_offers().filter(closed = False).filter(validated = True).order_by('-creation_date')
+        offers = Offer.get_unexpired().filter(closed=False).filter(validated=True).order_by('-creation_date')
         if not include_hidden:
-            offers = offers.filter(enterprise__profile__block_public_access = False)
+            offers = offers.filter(enterprise__profile__block_public_access=False)
 
         if form.is_valid():
             data = form.cleaned_data
             if data['enterprise']:
-                offers = offers.filter(enterprise = data['enterprise'])
+                offers = offers.filter(enterprise=data['enterprise'])
             if data['liquid_salary']:
                 #print data['liquid_salary']
-                offers = offers.filter(Q(liquid_salary__gte = data['liquid_salary']) | Q(liquid_salary = 0))
+                offers = offers.filter(Q(liquid_salary__gte=data['liquid_salary']) | Q(liquid_salary=0))
             if not data['include_unavailable_salaries']:
-                offers = offers.filter(liquid_salary__gt = 0)
+                offers = offers.filter(liquid_salary__gt=0)
             if data['level']:
-                offers = offers.filter(level__in = data['level']).distinct()
+                offers = offers.filter(level__in=data['level']).distinct()
             if data['tags']:
                 tags = Tag.parse_string(data['tags'])
                 if tags:
-                    offers = offers.filter(tags__in = tags).distinct()
+                    offers = offers.filter(tags__in=tags).distinct()
                     for offer in offers:
                         offer.affinity = offer.get_affinity(tags)
-                    offers = sorted(offers, key = lambda offer: offer.affinity, reverse = True)
+                    offers = sorted(offers, key=lambda offer: offer.affinity, reverse=True)
                 valid_tags_string = ', '.join([tag.name for tag in tags])
 
                 copied_data = form.data.copy()
@@ -162,16 +160,12 @@ class Offer(models.Model):
         return int(100 * num_hits / num_tags)
 
     def notify_acceptance(self):
-        from bolsa_trabajo.utils import send_email
-
         t = get_template('mails/offer_acceptance.html')
         subject = '[Bolsa Trabajo CaDCC] Oferta aceptada'
 
         send_email(self.enterprise, subject, t, {'offer': self})
 
     def notify_rejection(self):
-        from bolsa_trabajo.utils import send_email
-
         t = get_template('mails/offer_rejection.html')
         subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
 
@@ -181,7 +175,7 @@ class Offer(models.Model):
         return self.creation_date <= get_delta() and self.validated
 
     def get_status_name(self):
-        return self.STATUS_CHOICES[int(self.status)-1][1]
+        return self.STATUS_CHOICES[int(self.status) - 1][1]
 
     def __unicode__(self):
         return unicode(self.title)

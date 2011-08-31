@@ -1,16 +1,11 @@
-#-*- coding: UTF-8 -*-
-import hashlib
-from django.contrib import auth
-from django.template import RequestContext
+#-*- coding: utf-8 -*-
+
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
-from forms import *
-from models import *
-from utils import *
-from django.db.models import Q
+
+from .forms import *
+from .utils import *
 
 
 def staff_login_required(f):
@@ -24,31 +19,34 @@ def staff_login_required(f):
 
     return wrap
 
+
 @staff_login_required
 def pending_enterprise_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_enterprise_request.html', {
         'pending_requests': Enterprise.get_pending_requests()
     })
 
+
 @staff_login_required
 def pending_enterprise_request_details(request, request_id):
     try:
-        enterprise = Enterprise.objects.get(pk = request_id)
+        enterprise = Enterprise.objects.get(pk=request_id)
         if enterprise.profile.approved:
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_enterprise_request_details.html', {
-        'enterprise': enterprise
-    })
+            'enterprise': enterprise
+        })
     except Exception, e:
         print str(e)
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def accept_pending_enterprise_request(request, request_id):
     try:
-        enterprise = Enterprise.objects.get(pk = request_id)
+        enterprise = Enterprise.objects.get(pk=request_id)
         if enterprise.profile.approved:
             raise Exception
         enterprise.profile.approved = True
@@ -61,10 +59,11 @@ def accept_pending_enterprise_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def reject_pending_enterprise_request(request, request_id):
     try:
-        enterprise = Enterprise.objects.get(pk = request_id)
+        enterprise = Enterprise.objects.get(pk=request_id)
         #if enterprise.is_active:
         if enterprise.profile.approved:
             raise Exception
@@ -76,35 +75,36 @@ def reject_pending_enterprise_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def pending_registration_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_registration_request.html', {
         'pending_requests': Student.get_pending_requests()
     })
 
+
 @staff_login_required
 def pending_registration_request_details(request, request_id):
     try:
-        student = Student.objects.get(pk = request_id)
-        #import ipdb; ipdb.set_trace();
+        student = Student.objects.get(pk=request_id)
         if student.profile.approved:
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_registration_request_details.html', {
-        'student': student
-    })
+            'student': student
+        })
     except Exception, e:
         print str(e)
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def accept_pending_registration_request(request, request_id):
     try:
-        registration = Student.objects.get(pk = request_id)
-        #import ipdb; ipdb.set_trace();
+        registration = Student.objects.get(pk=request_id)
         if registration.profile.approved:
-           raise Exception
+            raise Exception
         registration.profile.approved = True
         registration.profile.save()
         #registration.save()
@@ -115,10 +115,11 @@ def accept_pending_registration_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def reject_pending_registration_request(request, request_id):
     try:
-        student = Student.objects.get(pk = request_id)
+        student = Student.objects.get(pk=request_id)
         #if registration.is_active:
         if student.profile.approved:
             raise Exception
@@ -130,32 +131,35 @@ def reject_pending_registration_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def pending_offer_request(request):
     return append_account_metadata_to_response(request, 'staff/pending_offer_request.html', {
         'pending_requests': Offer.get_pending_requests()
     })
 
+
 @staff_login_required
 def pending_offer_request_details(request, request_id):
     try:
-        offer = Offer.objects.get(pk = request_id)
+        offer = Offer.objects.get(pk=request_id)
         if offer.validated:
             raise Exception
         return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
-        'offer': offer,
-        'pending_status': len(Offer.get_pendings_feedback_offers(offer.enterprise.id))
-    })
+            'offer': offer,
+            'pending_status': len(Offer.get_pendings_feedback_offers(offer.enterprise.id))
+        })
     except Exception, e:
         print str(e)
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def accept_pending_offer_request(request, request_id):
     try:
-        offer = Offer.objects.get(pk = request_id)
+        offer = Offer.objects.get(pk=request_id)
         if offer.validated:
             raise Exception
         offer.validated = True
@@ -167,10 +171,11 @@ def accept_pending_offer_request(request, request_id):
         url = reverse('bolsa_trabajo.views_account.index')
     return HttpResponseRedirect(url)
 
+
 @staff_login_required
 def reject_pending_offer_request(request, request_id):
     try:
-        offer = Offer.objects.get(pk = request_id)
+        offer = Offer.objects.get(pk=request_id)
         if offer.validated:
             raise Exception
         offer.notify_rejection()
@@ -206,15 +211,16 @@ def new_enterprise(request):
                 error = 'Error desconocido'
     else:
         form = EnterpriseRegisterForm()
-    return append_account_metadata_to_response(request, 'staff/new_enterprise.html',{
+    return append_account_metadata_to_response(request, 'staff/new_enterprise.html', {
         'register_form': form,
         'error': error
     })
 
+
 @staff_login_required
 def closed_offers(request, request_id):
     try:
-        enterprise = Enterprise.objects.get(pk = request_id)
+        enterprise = Enterprise.objects.get(pk=request_id)
         offers = enterprise.offer_set.all()
         closed_offers = []
         expired_offers = []
@@ -224,7 +230,7 @@ def closed_offers(request, request_id):
             elif offer.expired():
                 expired_offers.append(offer)
 
-        return append_account_metadata_to_response(request, 'staff/closed_offers.html',{
+        return append_account_metadata_to_response(request, 'staff/closed_offers.html', {
             'closed_offers': closed_offers,
             'expired_offers': expired_offers,
             'enterprise': enterprise,
@@ -240,9 +246,9 @@ def closed_offers(request, request_id):
 
 @staff_login_required
 def change_offer_status(request, offer_id):
-    offer = Offer.objects.get(pk = offer_id)
+    offer = Offer.objects.get(pk=offer_id)
     if (not (offer.closed or offer.expired() )):
-        url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
+        url = reverse('bolsa_trabajo.views_staff.closed_offers', args=[offer.enterprise.id])
         return HttpResponseRedirect(url)
 
     if request.method == 'POST':
@@ -252,16 +258,17 @@ def change_offer_status(request, offer_id):
             offer.save()
 
             request.flash['message'] = 'Feedback editado exitosamente'
-            url = reverse('bolsa_trabajo.views_staff.closed_offers', args = [offer.enterprise.id])
+            url = reverse('bolsa_trabajo.views_staff.closed_offers', args=[offer.enterprise.id])
             return HttpResponseRedirect(url)
     else:
         form = OfferStatusForm.create_from_offer(offer)
 
-    return append_account_metadata_to_response(request, 'staff/change_offer_status.html',{
+    return append_account_metadata_to_response(request, 'staff/change_offer_status.html', {
         'offer_form': form,
         'offer': offer,
         'pending_requests': Enterprise.get_pending_requests()
     })
+
 
 @staff_login_required
 def all_closed_offers(request):
@@ -270,31 +277,32 @@ def all_closed_offers(request):
         enterprises = Enterprise.objects.all()
         enterprises_offers = {}
         for enterprise in enterprises:
-            enterprises_offers[enterprise.name]=[0,enterprise.id]
+            enterprises_offers[enterprise.name] = [0, enterprise.id]
 
         for closed_offer in closed_offers:
             enterprises_offers[closed_offer.enterprise.name][0] += 1
 
         return append_account_metadata_to_response(request, 'staff/all_closed_offers.html', {
-        'enterprises_offers': enterprises_offers
-    })
+            'enterprises_offers': enterprises_offers
+        })
     except Exception, e:
         print str(e)
         raise Exception
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
-        
+
+
 @staff_login_required
 def concreted_offers(request):
-    try:        
+    try:
         concreted_offers = Offer.objects.exclude(status=1).exclude(status=4).exclude(status=5)
         not_concreted_offers = Offer.objects.exclude(status=2).exclude(status=3)
-        
+
         enterprises = Enterprise.objects.all()
         enterprises_offers = {}
-        
+
         for enterprise in enterprises:
-            enterprises_offers[enterprise.name]=[0,0] 
+            enterprises_offers[enterprise.name] = [0, 0]
 
         for concreted_offer in concreted_offers:
             enterprises_offers[concreted_offer.enterprise.name][0] += 1
@@ -303,10 +311,10 @@ def concreted_offers(request):
             enterprises_offers[not_concreted_offer.enterprise.name][1] += 1
 
         return append_account_metadata_to_response(request, 'staff/stats.html', {
-        'enterprises_offers': enterprises_offers,
-        'number_concreted_offers': len(concreted_offers),
-        'number_not_concreted_offers': len(not_concreted_offers)
-    })
+            'enterprises_offers': enterprises_offers,
+            'number_concreted_offers': len(concreted_offers),
+            'number_not_concreted_offers': len(not_concreted_offers)
+        })
     except Exception, e:
         print str(e)
         raise Exception

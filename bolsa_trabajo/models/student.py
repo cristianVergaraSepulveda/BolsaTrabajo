@@ -1,19 +1,23 @@
-#-*- coding: UTF-8 -*-
+#-*- coding: utf-8 -*-
+
 import os
+
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.template.loader import get_template
 
-from bolsa_trabajo.utils import *
-from bolsa_trabajo.models import Tag
-from bolsa_trabajo.models import StudentLevel
+from . import Tag
+from . import StudentLevel
+from ..email import send_email
+
 
 class Student(User):
     resume = models.TextField()
-    has_cv = models.BooleanField(default = False)
-    tags = models.ManyToManyField(Tag, blank = True, null = True)
+    has_cv = models.BooleanField(default=False)
+    tags = models.ManyToManyField(Tag, blank=True, null=True)
     level = models.ForeignKey(StudentLevel)
 
     def get_tags_string(self):
@@ -29,21 +33,21 @@ class Student(User):
     @staticmethod
     def get_from_form(form, include_hidden):
         #students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
-        students = Student.objects.filter(profile__approved = True).filter(profile__block_public_access = False)
+        students = Student.objects.filter(profile__approved=True).filter(profile__block_public_access=False)
 
         if form.is_valid():
             data = form.cleaned_data
             if not data['include_unavailable_cv']:
-                students = students.filter(has_cv = True)
+                students = students.filter(has_cv=True)
             if data['level']:
-                students = students.filter(level__in = data['level']).distinct()
+                students = students.filter(level__in=data['level']).distinct()
             if data['tags']:
                 tags = Tag.parse_string(data['tags'])
                 if tags:
-                    students = students.filter(tags__in = tags).distinct()
+                    students = students.filter(tags__in=tags).distinct()
                     for student in students:
                         student.affinity = student.get_affinity(tags)
-                    students = sorted(students, key = lambda student: student.affinity, reverse = True)
+                    students = sorted(students, key=lambda student: student.affinity, reverse=True)
                 valid_tags_string = ', '.join([tag.name for tag in tags])
 
                 copied_data = form.data.copy()
@@ -104,8 +108,6 @@ class Student(User):
             pass
 
     def notify_rejection(self):
-        from bolsa_trabajo.utils import send_email
-
         t = get_template('mails/user_rejection.html')
         subject = '[Bolsa Trabajo CaDCC] Registro rechazado'
 
@@ -133,7 +135,7 @@ class Student(User):
         return Student.objects.filter(profile__validated_email=True).filter(profile__approved=False)
 
     def save(self):
-        same_username_users = User.objects.filter(username = self.username).filter(~Q(pk = self.id))
+        same_username_users = User.objects.filter(username=self.username).filter(~Q(pk=self.id))
         if same_username_users:
             raise ValidationError('')
         super(Student, self).save()

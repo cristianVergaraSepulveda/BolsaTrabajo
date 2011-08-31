@@ -4,3 +4,7 @@ distribute==0.6.15
 django-flash==1.8
 wsgiref==0.1.2
 django-extensions==0.6
+celery==2.3.1
+django-celery==2.3.3
+django-kombu==0.9.4
+

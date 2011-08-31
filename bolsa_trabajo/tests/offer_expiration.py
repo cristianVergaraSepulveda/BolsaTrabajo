@@ -1,14 +1,15 @@
+# coding: utf-8
 
 from datetime import datetime
 from datetime import timedelta
 
-from bolsa_trabajo.models.offer import Offer
+from ..models import Offer
 
 from django.conf import settings
 from django.test import TestCase
 
-class OfferExpirationTestCase(TestCase):
 
+class OfferExpirationTestCase(TestCase):
     fixtures = ['users.json', 'enterprises.json', 'tags.json', 'test_offers_expiration.json']
 
     def test_offers_expiration(self):
@@ -29,8 +30,8 @@ class OfferExpirationTestCase(TestCase):
         expired_closed_offer.save()
 
         # should discard closed offers
-        unexpired_offers = Offer.get_unexpired_offers().order_by('id')
-        expired_offers = Offer.get_expired_offers().order_by('id')
+        unexpired_offers = Offer.get_unexpired().order_by('id')
+        expired_offers = Offer.get_expired().order_by('id')
 
         self.assertSequenceEqual([unexpired_open_offer], unexpired_offers.order_by('id'))
         self.assertSequenceEqual([expired_open_offer], expired_offers.order_by('id'))

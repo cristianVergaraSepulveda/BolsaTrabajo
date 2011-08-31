@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('bolsa_trabajo.views',
@@ -29,7 +31,7 @@ urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/change_password/$', 'change_password'),
     (r'^account/delete_cv/$', 'delete_cv'),
     (r'^student/(?P<student_id>\d+)/download_cv$', 'download_cv'),
-    )
+                        )
 
 urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/pending_enterprise_request/$', 'pending_enterprise_request'),
@@ -49,7 +51,7 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/closed_offers/(?P<request_id>\d+)/$', 'closed_offers'),
     (r'^account/change_offer_status/(?P<offer_id>\d+)/$', 'change_offer_status'),
     (r'^account/statistics/$', 'concreted_offers'),
-    )
+                        )
 
 urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
@@ -58,4 +60,4 @@ urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/offer/(?P<offer_id>\d+)/edit$', 'edit_offer'),
     (r'^account/offer/(?P<offer_id>\d+)/close/$', 'close_offer'),
     (r'^account/offer/add$', 'add_offer'),
-    )
+                        )

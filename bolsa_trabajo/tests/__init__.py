@@ -1,6 +1,6 @@
-from bolsa_trabajo.tests.enterprise import *
-from bolsa_trabajo.tests.offer import *
-from bolsa_trabajo.tests.offer_expiration import *
-from bolsa_trabajo.tests.student import *
-from bolsa_trabajo.tests.offer_status import *
-from bolsa_trabajo.tests.offer_statistics import*
+from .enterprise import *
+from .offer import *
+from .offer_expiration import *
+from .student import *
+from .offer_status import *
+from .offer_statistics import *

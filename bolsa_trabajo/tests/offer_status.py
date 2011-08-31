@@ -1,11 +1,10 @@
+# coding: utf-8
+
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.contrib import auth
-from bolsa_trabajo.models.enterprise import Enterprise
-from bolsa_trabajo.models.student import Student
-from bolsa_trabajo.models.student_level import StudentLevel
-from bolsa_trabajo.models.offer import Offer
-from django.core.exceptions import ObjectDoesNotExist
+
+from ..models.offer import Offer
+
 
 class OfferStatusTestCase(TestCase):
     fixtures = ['users.json', 'enterprises.json', 'tags.json', 'offers.json']
@@ -18,14 +17,14 @@ class OfferStatusTestCase(TestCase):
 
     def assertNumberPendingOffers(self, num):
         resp = self.client.get('/account/pending_offer_request/5/')
-        self.assertEqual(200,resp.status_code)
+        self.assertEqual(200, resp.status_code)
 
         # test messages
-        self.assertTrue('Ver ofertas pasadas de esta empresa ('+num+' pendiente(s))' in resp.content)
+        self.assertTrue('Ver ofertas pasadas de esta empresa (' + num + ' pendiente(s))' in resp.content)
 
     def assertPendingOffersMessages(self, message1, message2, message3):
         resp = self.client.get('/account/closed_offers/4/')
-        self.assertEqual(200,resp.status_code)
+        self.assertEqual(200, resp.status_code)
 
         #print resp.content
 
@@ -42,21 +41,21 @@ class OfferStatusTestCase(TestCase):
 
     def test_view(self):
         # login as test staff user
-        self.client.login(username='test',password='test')
+        self.client.login(username='test', password='test')
         self.assertNumberPendingOffers('3')
 
 
     def test_closed_offers_view(self):
         # login as test staff user
-        self.client.login(username='test',password='test')
-        self.assertPendingOffersMessages('No se ha establecido una raz','No se ha establecido una raz','')
+        self.client.login(username='test', password='test')
+        self.assertPendingOffersMessages('No se ha establecido una raz', 'No se ha establecido una raz', '')
 
     def test_change_offers_view(self):
         # login as test staff user
-        self.client.login(username='test',password='test')
+        self.client.login(username='test', password='test')
 
         resp = self.client.get('/account/change_offer_status/7/')
-        self.assertEqual(200,resp.status_code)
+        self.assertEqual(200, resp.status_code)
 
         # test messages
         self.assertTrue('Offer7' in resp.content)
@@ -64,23 +63,24 @@ class OfferStatusTestCase(TestCase):
 
     def test_change_offers(self):
         # login as test staff user
-        self.client.login(username='test',password='test')
+        self.client.login(username='test', password='test')
         status_name = 'No se ha contratado a nadie'
 
         # create dictionary with status info
-        new_offer_data = {'status':5}
+        new_offer_data = {'status': 5}
 
         # do a POST request including the new status
-        resp = self.client.post('/account/change_offer_status/7/',new_offer_data)
+        resp = self.client.post('/account/change_offer_status/7/', new_offer_data)
 
         # get the new Offer object from the database
         new_offer = Offer.objects.get(title='Offer7')
 
         # assert that the Offer object has the expected status
-        self.assertEqual(new_offer.get_status_name(),status_name)
+        self.assertEqual(new_offer.get_status_name(), status_name)
 
         # assert the message in closed offers site
-        self.assertPendingOffersMessages(new_offer.get_status_name(),'No se ha establecido una raz','Feedback editado exitosamente')
+        self.assertPendingOffersMessages(new_offer.get_status_name(), 'No se ha establecido una raz',
+                                         'Feedback editado exitosamente')
 
         # test changes in pending offer site
         self.assertNumberPendingOffers('2')
@@ -88,9 +88,9 @@ class OfferStatusTestCase(TestCase):
 
     def test_view_all_closed_offers(self):
         # login as test staff user
-        self.client.login(username='test',password='test')
+        self.client.login(username='test', password='test')
         resp = self.client.get('/account/all_closed_offers/')
-        self.assertEqual(200,resp.status_code)
+        self.assertEqual(200, resp.status_code)
         # assert that messages are correct
         self.assertTrue('Enterprise3</a> (3 pendiente(s))' in resp.content)
 
