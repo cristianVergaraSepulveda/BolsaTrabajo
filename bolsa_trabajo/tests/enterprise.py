@@ -228,7 +228,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue('<a href="/offer/6/">Offer6</a> (<a href="/account/offer/6/edit">Editar</a>)' in resp.content)
         #Closed
         self.assertTrue('<a href="/account/offer/7/">Offer7</a>' in resp.content)
-        self.assertTrue('No se ha establecido una raz' in resp.content)
+        self.assertTrue('No se especific' in resp.content)
 
 
     def test_offer_edit_view(self):

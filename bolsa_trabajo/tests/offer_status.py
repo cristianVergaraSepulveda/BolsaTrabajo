@@ -28,29 +28,26 @@ class OfferStatusTestCase(TestCase):
         resp = self.client.get('/account/closed_offers/4/')
         self.assertEqual(200,resp.status_code)
 
-        #print resp.content
-
         # test messages
         self.assertTrue("Enterprise3" in resp.content)
         self.assertTrue("fono:</b> 222" in resp.content)
         self.assertTrue("Email:</b> test@example.com" in resp.content)
         self.assertTrue("Offer7" in resp.content)
         self.assertTrue(message1 in resp.content)
-        self.assertTrue("Offer8" in resp.content)
+        self.assertTrue("Offer8" in resp.content)      
         self.assertTrue(message2 in resp.content)
-
         self.assertTrue(message3 in resp.content)
 
     def test_view(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        self.assertNumberPendingOffers('3')
+        self.assertNumberPendingOffers('2')
 
 
     def test_closed_offers_view(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        self.assertPendingOffersMessages('No se ha establecido una raz','No se ha establecido una raz','')
+        self.assertPendingOffersMessages('No se especific','No se especific','')
 
     def test_change_offers_view(self):
         # login as test staff user
@@ -66,7 +63,7 @@ class OfferStatusTestCase(TestCase):
     def test_change_offers(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        status_name = 'La oferta de trabajo ya no aplica'
+        status_name = u'La oferta de trabajo ya no aplica'
 
         # create dictionary with status info
         new_offer_data = {'closure_reason':2}
@@ -76,18 +73,15 @@ class OfferStatusTestCase(TestCase):
 
         # get the new Offer object from the database
         new_offer = Offer.objects.get(title='Offer7')
-        
-        import ipdb
-        ipdb.set_trace()
 
         # assert that the Offer object has the expected status
         self.assertEqual(new_offer.get_closure_reason_name(),status_name)
 
         # assert the message in closed offers site
-        self.assertPendingOffersMessages(new_offer.get_closure_reason_name(),'La oferta de trabajo ya no aplica','Feedback editado exitosamente')
+        self.assertPendingOffersMessages(new_offer.get_closure_reason_name(), 'No se especific','Feedback editado exitosamente')
 
         # test changes in pending offer site
-        self.assertNumberPendingOffers('2')
+        self.assertNumberPendingOffers('1')
 
 
     def test_view_all_closed_offers(self):
@@ -96,5 +90,5 @@ class OfferStatusTestCase(TestCase):
         resp = self.client.get('/account/all_closed_offers/')
         self.assertEqual(200,resp.status_code)
         # assert that messages are correct
-        self.assertTrue('Enterprise3</a> (3 pendiente(s))' in resp.content)
+        self.assertTrue('Enterprise3</a> (2 pendiente(s))' in resp.content)
 

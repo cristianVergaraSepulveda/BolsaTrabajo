@@ -72,7 +72,7 @@ class Offer(models.Model):
 
     def change_status_from_form(self, form):
         data = form.cleaned_data
-        self.status = data['status']
+        self.closure_reason = data['closure_reason']
         
     def is_closed(self):
         return self.status == 3

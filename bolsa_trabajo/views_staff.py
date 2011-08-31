@@ -161,16 +161,13 @@ def accept_pending_offer_request(request, request_id):
 
 @staff_login_required
 def reject_pending_offer_request(request, request_id):
-    try:
-        offer = Offer.objects.get(pk = request_id)
-        if offer.validated:
-            raise Exception
-        offer.notify_rejection()
-        offer.delete()
-        request.flash['message'] = 'Solicitud rechazada exitosamente'
-        url = reverse('bolsa_trabajo.views_staff.pending_offer_request')
-    except:
-        url = reverse('bolsa_trabajo.views_account.index')
+    offer = Offer.objects.get(pk = request_id)
+    if offer.is_open():
+        return HttpResponseRedirect(reverse('bolsa_trabajo.views_account.index'))
+    offer.notify_rejection()
+    offer.delete()
+    request.flash['message'] = 'Solicitud rechazada exitosamente'
+    url = reverse('bolsa_trabajo.views_staff.pending_offer_request')
     return HttpResponseRedirect(url)
 
 
