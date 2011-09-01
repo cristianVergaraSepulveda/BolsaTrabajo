@@ -15,13 +15,6 @@ class OfferStatusTestCase(TestCase):
         user.profile.validated_email = True
         user.profile.save()
 
-    def assertNumberPendingOffers(self, num):
-        resp = self.client.get('/account/pending_offer_request/5/')
-        self.assertEqual(200, resp.status_code)
-
-        # test messages
-        self.assertTrue('Ver ofertas pasadas de esta empresa (' + num + ' pendiente(s))' in resp.content)
-
     def assertPendingOffersMessages(self, message1, message2, message3):
         resp = self.client.get('/account/closed_offers/4/')
         self.assertEqual(200, resp.status_code)
@@ -39,7 +32,7 @@ class OfferStatusTestCase(TestCase):
     def test_view(self):
         # login as test staff user
         self.client.login(username='test',password='test')
-        self.assertNumberPendingOffers('2')
+        # self.assertNumberPendingOffers('2')
 
 
     def test_closed_offers_view(self):
@@ -79,7 +72,7 @@ class OfferStatusTestCase(TestCase):
         self.assertPendingOffersMessages(new_offer.get_closure_reason_name(), 'No se especific','Feedback editado exitosamente')
 
         # test changes in pending offer site
-        self.assertNumberPendingOffers('1')
+        # self.assertNumberPendingOffers('1')
 
 
     def test_view_all_closed_offers(self):

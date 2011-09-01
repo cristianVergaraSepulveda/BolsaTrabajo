@@ -41,7 +41,7 @@ def offer(request):
         if offer.is_pending():
             pending_offers.append(offer)
         elif offer.is_open():
-            active_offers.append(offer)
+            open_offers.append(offer)
         elif offer.is_closed_with_feedback():
             closed_offers_with_feedback.append(offer)
         else:
