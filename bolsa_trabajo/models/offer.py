@@ -11,15 +11,18 @@ from .utils import get_delta
 from .utils import pretty_price
 from ..email import send_email
 
-
 class Offer(models.Model):
+
+    CLOSURE_REASON_CHOICES = (
+        (1,'Se llenaron los cupos disponibles'),
+        (2,'La oferta de trabajo ya no aplica'),
+    )
+    
     STATUS_CHOICES = (
-        (1, 'No se ha establecido una razón'),
-        (2, 'Se contrató a más de un postulante utilizando este medio'),
-        (3, 'Se contrató sólo a un estudiante utilizando este medio'),
-        (4, 'Se contrató sólo postulantes fuera de este medio'),
-        (5, 'No se ha contratado a nadie'),
-        )
+        (1,'Esperando validación'),
+        (2,'Validada y abierta'),
+        (3,'Validada y cerrada')
+    )
 
     enterprise = models.ForeignKey(Enterprise)
     title = models.CharField(max_length=255)
@@ -29,9 +32,10 @@ class Offer(models.Model):
     level = models.ManyToManyField(OfferLevel)
     creation_date = models.DateTimeField(auto_now_add=True)
     available_slots = models.IntegerField()
-    closed = models.BooleanField(default=False)
-    has_unread_comments = models.BooleanField(default=False)
-    validated = models.BooleanField(default=False)
+    has_unread_comments = models.BooleanField(default = False)
+    # closure_reason with default value 0 means that the cron system closed
+    # the offer due to its expiration date
+    closure_reason = models.IntegerField(choices=CLOSURE_REASON_CHOICES, default=0)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
 
     @staticmethod
@@ -65,27 +69,40 @@ class Offer(models.Model):
 
     def change_status_from_form(self, form):
         data = form.cleaned_data
-        self.status = data['status']
+        self.closure_reason = data['closure_reason']
+        
+    def is_closed(self):
+        return self.status == 3
+        
+    def close(self):
+        self.status = 3
+        
+    def is_waiting_validation(self):
+        return self.status == 1
+        
+    def open(self):
+        self.status = 2
+        
+    def is_open(self):
+        return self.status == 2
 
     @staticmethod
     def get_pending_requests():
-        return Offer.objects.filter(validated=False).filter(creation_date__gte=get_delta()).filter(closed=False)
+        return Offer.objects.filter(status=1)
 
     @staticmethod
-    def get_unexpired():
-        return Offer.objects.filter(validated=True).filter(closed=False).filter(creation_date__gte=get_delta())
+    def get_unexpired_offers():
+        return Offer.objects.filter(status=2)
 
     @staticmethod
-    def get_expired():
-        return Offer.objects.filter(validated=True).filter(closed=False).filter(creation_date__lte=get_delta())
+    def get_expired_offers():
+        return Offer.objects.filter(status=2).filter(creation_date__lte=get_delta())
 
     @staticmethod
-    def get_pendings_feedback_offers(enterpriseId=None):
-        delta = get_delta()
+    def get_pendings_feedback_offers(enterpriseId = None):
         if (enterpriseId):
-            return Offer.objects.filter(enterprise=enterpriseId).filter(status=1).filter(
-                Q(closed=True) | (Q(creation_date__lte=delta) & Q(validated=True)))
-        return Offer.objects.filter(status=1).filter(Q(closed=True) | (Q(creation_date__lte=delta) & Q(validated=True)))
+            return Offer.objects.filter(enterprise=enterpriseId, closure_reason=0, status=3)
+        return Offer.objects.filter(closure_reason=0, status=3)
 
     def get_salary_string(self):
         if self.liquid_salary == 0:
@@ -115,7 +132,7 @@ class Offer(models.Model):
 
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.get_unexpired().filter(closed=False).filter(validated=True).order_by('-creation_date')
+        offers = Offer.get_unexpired_offers().filter(status=2).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access=False)
 
@@ -174,8 +191,11 @@ class Offer(models.Model):
     def expired(self):
         return self.creation_date <= get_delta() and self.validated
 
-    def get_status_name(self):
-        return self.STATUS_CHOICES[int(self.status) - 1][1]
+    def get_closure_reason_name(self):
+        if self.closure_reason:
+            return self.CLOSURE_REASON_CHOICES[int(self.closure_reason)-1][1]
+        else:
+            return u'No se especificó un razón'
 
     def __unicode__(self):
         return unicode(self.title)

@@ -17,7 +17,7 @@
 	
 <br />
     
-{% if not close_or_expired %}
+{% if not offer.is_closed %}
     <p><a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar la oferta</a></p>
 {% else %}
 	<form method="post" action="">

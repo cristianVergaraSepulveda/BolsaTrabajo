@@ -18,22 +18,11 @@
 </ul>
 <div class="content-separator"></div>
 
-<h4>Ofertas caducadas</h4>
-{% if expired_offers %}
-    <ul>
-        {% for offer in expired_offers %}
-            <li><a href="{% url bolsa_trabajo.views_staff.change_offer_status offer.id %}"><b>{{offer}}</b></a>: {{offer.get_status_name}}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p><b>No hay ofertas caducadas</b></p>
-{% endif %}
-
 <h4>Ofertas cerradas</h4>
 {% if closed_offers %}
     <ul>
         {% for offer in closed_offers %}
-            <li><a href="{% url bolsa_trabajo.views_staff.change_offer_status offer.id %}"><b>{{offer}}</b></a>: {{offer.get_status_name}}</li>
+            <li><a href="{% url bolsa_trabajo.views_staff.change_offer_status offer.id %}"><b>{{offer}}</b></a>: {{offer.get_closure_reason_name}}</li>
         {% endfor %}
     </ul>
 {% else %}

@@ -6,10 +6,10 @@ from bolsa_trabajo.models.offer import *
 
 class OfferStatusForm(forms.Form):
 
-    status = forms.ChoiceField(choices = Offer.STATUS_CHOICES, label = 'Razón por la que se cerró la oferta')
+    closure_reason = forms.ChoiceField(choices = Offer.CLOSURE_REASON_CHOICES, label = 'Razón por la que se cerró la oferta')
 
     @staticmethod
     def create_from_offer(offer):
         form = OfferStatusForm()
-        form.fields['status'].initial = offer.status
+        form.fields['closure_reason'].initial = offer.closure_reason
         return form
