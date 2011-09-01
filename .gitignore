@@ -1,6 +1,23 @@
-*.pyc
-bolsa_trabajo.db
-settings.py
-settings/local.py
+# Temporary files:
 *~
 *.swp
+*.pyc
+*.pyo
+
+# SQLite3 DB files:
+*.db
+
+# Python virtual environments:
+env
+
+# File cache:
+cache
+
+# Log files:
+log
+
+# Secret key:
+SECRET
+
+# local settings
+BolsaTrabajo/settings/local.py
