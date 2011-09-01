@@ -9,3 +9,4 @@ from .offer_comment import OfferComment
 from .offer_message_ring import OfferMessageRing
 from .offer_message import OfferMessage
 from .user_profile import UserProfile
+from .postulation import Postulation
