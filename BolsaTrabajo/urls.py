@@ -24,6 +24,10 @@ urlpatterns = patterns('',
     # django-sentry log viewer.
     url(r'^sentry/', include('sentry.urls')),
 
-    # Our applications
+    # Our applications.
     (r'^', include('bolsa_trabajo.urls')),
+
+    # Favicon
+    (r'^favicon\.ico$', 'django.views.generic.simple.redirect_to',
+    {'url': settings.MEDIA_URL + 'images/favicon.ico'}),
 )
