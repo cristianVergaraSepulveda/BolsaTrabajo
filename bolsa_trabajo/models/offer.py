@@ -11,13 +11,14 @@ from .utils import get_delta
 from .utils import pretty_price
 from ..email import send_email
 
+
 class Offer(models.Model):
 
     CLOSURE_REASON_CHOICES = (
         (1,'Se llenaron los cupos disponibles'),
         (2,'La oferta de trabajo ya no aplica'),
     )
-    
+
     STATUS_CHOICES = (
         (1,'Esperando validación'),
         (2,'Validada y abierta'),
@@ -70,19 +71,19 @@ class Offer(models.Model):
     def change_status_from_form(self, form):
         data = form.cleaned_data
         self.closure_reason = data['closure_reason']
-        
+
     def is_closed(self):
         return self.status == 3
-        
+
     def close(self):
         self.status = 3
-        
+
     def is_waiting_validation(self):
         return self.status == 1
-        
+
     def open(self):
         self.status = 2
-        
+
     def is_open(self):
         return self.status == 2
 
@@ -193,7 +194,7 @@ class Offer(models.Model):
 
     def get_closure_reason_name(self):
         if self.closure_reason:
-            return self.CLOSURE_REASON_CHOICES[int(self.closure_reason)-1][1]
+            return self.CLOSURE_REASON_CHOICES[int(self.closure_reason) - 1][1]
         else:
             return u'No se especificó un razón'
 
