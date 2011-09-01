@@ -142,11 +142,10 @@ def pending_offer_request(request):
 @staff_login_required
 def pending_offer_request_details(request, request_id):
     offer = Offer.objects.get(pk = request_id)
-    if not offer.is_waiting_validation():
+    if not offer.is_pending():
         return HttpResponseRedirect(reverse('bolsa_trabajo.views_account.index'))
     return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
         'offer': offer,
-        'pending_status': len(Offer.get_pendings_feedback_offers(offer.enterprise.id))
     })
         
 
@@ -154,7 +153,7 @@ def pending_offer_request_details(request, request_id):
 @staff_login_required
 def accept_pending_offer_request(request, request_id):
     offer = Offer.objects.get(pk = request_id)
-    if not offer.is_waiting_validation():
+    if not offer.is_pending():
         return HttpResponseRedirect(reverse('bolsa_trabajo.views_account.index'))
     offer.open()
     offer.save()

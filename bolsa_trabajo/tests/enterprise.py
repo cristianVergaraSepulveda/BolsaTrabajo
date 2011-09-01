@@ -219,7 +219,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertEqual(new_offer.description, 'oferta num 1')
 
         # assert that the Offer object is not validated
-        self.assertTrue(new_offer.is_waiting_validation())
+        self.assertTrue(new_offer.is_pending())
 
         # assert the message
         resp = self.client.get('/account/')

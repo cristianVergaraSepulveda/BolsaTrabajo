@@ -8,7 +8,7 @@
 
 <div class="content-separator"></div>
 
-<h4>Ofertas esperando validación</h4>
+<h4>Ofertas pendientes de validación</h4>
 
 {% if pending_offers %}
     <ul>
@@ -20,23 +20,23 @@
     <p><b>No hay ofertas pendientes</b></p>
 {% endif %}
 
-<h4>Ofertas activas</h4>
+<h4>Ofertas abiertas</h4>
 
-{% if active_offers %}
+{% if open_offers %}
     <ul>
-        {% for offer in active_offers %}
+        {% for offer in open_offers %}
             <li><a href="{% url bolsa_trabajo.views.offer_details offer.id %}">{{ offer }}</a> (<a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar</a>)</li>
         {% endfor %}
     </ul>
 {% else %}
-    <p><b>No hay ofertas activas</b></p>
+    <p><b>No hay ofertas abiertas</b></p>
 {% endif %}
 
 <h4>Ofertas cerradas</h4>
 
-{% if closed_offers %}
+{% if closed_offers_with_feedback %}
     <ul>
-        {% for offer in closed_offers %}
+        {% for offer in closed_offers_with_feedback %}
             <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a>: {{offer.get_closure_reason_name}}</li>
         {% endfor %}
     </ul>
@@ -44,6 +44,23 @@
     <p><b>No hay ofertas registradas</b></p>
 {% endif %}
 
-<p><a href="{% url bolsa_trabajo.views_enterprise.add_offer %}">Crear nueva oferta laboral</a></p>
+<h4>Ofertas cerradas sin feedback</h4>
 
+{% if closed_offers_without_feedback %}
+    <ul>
+        {% for offer in closed_offers_without_feedback %}
+            <li><a href="{% url bolsa_trabajo.views_enterprise.offer_details offer.id %}">{{ offer }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><b>No hay ofertas registradas</b></p>
+{% endif %}
+
+<p>
+{% if closed_offers_without_feedback %}
+<span style="color:gray;">Crear nueva oferta laboral</span><br /><i>(No puede crear nuevas ofertas hasta que entregue el feedback de todas sus ofertas cerradas)</i>
+{% else %}
+<a href="{% url bolsa_trabajo.views_enterprise.add_offer %}">Crear nueva oferta laboral</a>
+{% endif %}
+</p>
 {% endblock %}

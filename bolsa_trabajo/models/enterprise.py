@@ -26,6 +26,10 @@ class Enterprise(User):
         subject = '[Bolsa Trabajo CaDCC] Solicitud aceptada'
 
         send_email(self, subject, t, {})
+        
+    def get_closed_offers_without_feedback(self):
+        from . import Offer
+        return Offer.get_closed_without_feedback().filter(enterprise=self)
 
     def notify_rejection(self):
         t = get_template('mails/enterprise_rejection.html')

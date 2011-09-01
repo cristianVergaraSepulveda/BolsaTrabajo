@@ -31,23 +31,27 @@ def successful_enterprise_registration(request):
 def offer(request):
     enterprise = Enterprise.objects.get(pk=request.user.id)
     offers = enterprise.offer_set.all()
+    
     pending_offers = []
-    active_offers = []
-    closed_offers = []
-    expired_offers = []
+    open_offers = []
+    closed_offers_with_feedback = []
+    closed_offers_without_feedback = []
 
     for offer in offers:
-        if offer.is_closed():
-            closed_offers.append(offer)
+        if offer.is_pending():
+            pending_offers.append(offer)
         elif offer.is_open():
             active_offers.append(offer)
+        elif offer.is_closed_with_feedback():
+            closed_offers_with_feedback.append(offer)
         else:
-            pending_offers.append(offer)
+            closed_offers_without_feedback.append(offer)
 
     return append_user_to_response(request, 'enterprise/offer.html', {
         'pending_offers': pending_offers,
-        'active_offers': active_offers,
-        'closed_offers': closed_offers,
+        'open_offers': open_offers,
+        'closed_offers_with_feedback': closed_offers_with_feedback,
+        'closed_offers_without_feedback': closed_offers_without_feedback
         })
 
 
@@ -122,6 +126,12 @@ def close_offer(request, offer_id):
 def add_offer(request):
     enterprise = Enterprise.objects.get(pk=request.user.id)
     error = None
+    
+    # If the enterprise has closed offers without feedback
+    if enterprise.get_closed_offers_without_feedback():
+        request.flash['error_message'] = 'No puede crear nuevas ofertas hasta entregar el feedback de las ya cerradas'
+        return HttpResponseRedirect(reverse('bolsa_trabajo.views_enterprise.offer'))
+    
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():

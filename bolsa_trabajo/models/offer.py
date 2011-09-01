@@ -20,9 +20,9 @@ class Offer(models.Model):
     )
 
     STATUS_CHOICES = (
-        (1,'Esperando validación'),
-        (2,'Validada y abierta'),
-        (3,'Validada y cerrada')
+        (1,'Pendiente'),
+        (2,'Abierta'),
+        (3,'Cerrada')
     )
 
     enterprise = models.ForeignKey(Enterprise)
@@ -38,6 +38,10 @@ class Offer(models.Model):
     # the offer due to its expiration date
     closure_reason = models.IntegerField(choices=CLOSURE_REASON_CHOICES, default=0)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
+    
+    @classmethod
+    def get_closed_without_feedback(self):
+        return self.objects.filter(status=3, closure_reason=0)
 
     @staticmethod
     def create_from_form(enterprise, form):
@@ -71,6 +75,12 @@ class Offer(models.Model):
     def change_status_from_form(self, form):
         data = form.cleaned_data
         self.closure_reason = data['closure_reason']
+        
+    def is_closed_with_feedback(self):
+        return self.is_closed() and self.closure_reason
+        
+    def is_closed_without_feedback(self):
+        return self.is_closed() and not self.closure_reason
 
     def is_closed(self):
         return self.status == 3
@@ -78,7 +88,7 @@ class Offer(models.Model):
     def close(self):
         self.status = 3
 
-    def is_waiting_validation(self):
+    def is_pending(self):
         return self.status == 1
 
     def open(self):

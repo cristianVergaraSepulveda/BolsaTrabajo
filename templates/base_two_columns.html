@@ -9,6 +9,18 @@
                     <p>{{ flash.message }}</p>
                 </div>
             {% endif %}
+            
+            {% if flash.notice %}
+                <div id="notice_message" class="notice">
+                    <p>{{ flash.notice }}</p>
+                </div>
+            {% endif %}
+            
+            {% if flash.error_message %}
+                <div id="error_message" class="error">
+                    <p>{{ flash.error_message }}</p>
+                </div>
+            {% endif %}
 		    
             {% block main %}
             {% endblock %}
