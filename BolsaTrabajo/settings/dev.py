@@ -5,7 +5,7 @@
 
 from os.path import join, normpath
 
-from .common import *
+from .common import * 
 
 
 ########## DEBUG CONFIGURATION
@@ -15,7 +15,7 @@ TEMPLATE_DEBUG = DEBUG
 
 
 ########## EMAIL CONFIGURATION
-# EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 ########## END EMAIL CONFIGURATION
 
 

@@ -24,8 +24,9 @@ def append_account_metadata_to_response(request, template, args={}):
 
     return append_user_to_response(request, template, args)
 
-# Wrapper for the base_generic.html template
+
 def append_user_to_response(request, template, args={}):
+    """Wrapper for the base_generic.html template"""
     args['user'] = request.user
     args['path'] = request.path
 

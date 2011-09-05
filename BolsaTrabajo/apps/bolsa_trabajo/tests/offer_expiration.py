@@ -23,8 +23,8 @@ class OfferExpirationTestCase(TestCase):
         now = datetime.now()
         unexpired_open_offer.creation_date = now
         unexpired_closed_offer.creation_date = now
-        expired_open_offer.creation_date = now - timedelta(days=(settings.OFFER_EXPIRATION_LIMIT + 1))
-        expired_closed_offer.creation_date = now - timedelta(days=(settings.OFFER_EXPIRATION_LIMIT + 1))
+        expired_open_offer.creation_date = now - timedelta(days=(settings.OFFER_MAX_EXPIRATION_LIMIT + 1))
+        expired_closed_offer.creation_date = now - timedelta(days=(settings.OFFER_MAX_EXPIRATION_LIMIT + 1))
         unexpired_open_offer.save()
         unexpired_closed_offer.save()
         expired_open_offer.save()

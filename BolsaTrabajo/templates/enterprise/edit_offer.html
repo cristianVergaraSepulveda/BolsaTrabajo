@@ -1,10 +1,18 @@
 {% extends 'account/base.html' %}
 
 {% block header %}
-	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui-1.8.6.custom.css" media="screen" />
-	<script type="text/javascript" src="/media/js/jquery-ui-1.8.6.custom.min.js"></script>
 	<script type="text/javascript" src="/media/js/tags_autocomplete.js"></script>
 	<script type="text/javascript" src="/media/js/edit_offer.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $.datepicker.setDefaults($.datepicker.regional["es"]);
+            $(".datePicker").datepicker({
+                dateFormat: "yy-mm-dd",
+                minDate: "{{offer_form.min_date.isoformat}}",
+                maxDate: "{{offer_form.max_date.isoformat}}"
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block main %}

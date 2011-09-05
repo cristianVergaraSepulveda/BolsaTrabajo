@@ -19,6 +19,8 @@
         <li><b>Sueldo líquido:</b> {{ offer.get_salary_string }}</li>
         <li><b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}</li>
         <li><b>Nivel:</b> {{ offer.get_level_string }}</li>
+        <li><b>Fecha creación:</b> {{ offer.creation_date.date }}</li>
+        <li><b>Fecha cierre:</b> {{ offer.end_date }}</li>
         <li><b>Términos clave:</b> {{ offer.get_tags_string }}</li>
     </ul>
     

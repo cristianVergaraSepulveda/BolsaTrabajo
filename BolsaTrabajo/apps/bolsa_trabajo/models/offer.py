@@ -5,10 +5,10 @@ from django.db import models
 from django.template.loader import get_template
 
 from . import Tag
-from . import Enterprise
 from . import OfferLevel
 from .utils import get_delta
 from .utils import pretty_price
+from .utils import now_plus_min_end_date
 from ..email import send_email
 
 
@@ -25,7 +25,7 @@ class Offer(models.Model):
         (3,'Cerrada')
     )
 
-    enterprise = models.ForeignKey(Enterprise)
+    enterprise = models.ForeignKey('Enterprise')
     title = models.CharField(max_length=255)
     description = models.TextField()
     tags = models.ManyToManyField(Tag, blank=True, null=True)
@@ -33,12 +33,13 @@ class Offer(models.Model):
     level = models.ManyToManyField(OfferLevel)
     creation_date = models.DateTimeField(auto_now_add=True)
     available_slots = models.IntegerField()
-    has_unread_comments = models.BooleanField(default = False)
+    has_unread_comments = models.BooleanField(default=False)
     # closure_reason with default value 0 means that the cron system closed
     # the offer due to its expiration date
     closure_reason = models.IntegerField(choices=CLOSURE_REASON_CHOICES, default=0)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
-    
+    end_date = models.DateField(default=now_plus_min_end_date, blank=False, null=False)
+
     @classmethod
     def get_closed_without_feedback(self):
         return self.objects.filter(status=3, closure_reason=0)
@@ -58,6 +59,7 @@ class Offer(models.Model):
         for tag in tags:
             offer.tags.add(tag)
         offer.level = data['level']
+        offer.end_date = data['end_date']
         return offer
 
     def load_from_form(self, form):
@@ -71,14 +73,15 @@ class Offer(models.Model):
         for tag in tags:
             self.tags.add(tag)
         self.level = data['level']
+        self.end_date = data['end_date']
 
     def change_status_from_form(self, form):
         data = form.cleaned_data
         self.closure_reason = data['closure_reason']
-        
+
     def is_closed_with_feedback(self):
         return self.is_closed() and self.closure_reason
-        
+
     def is_closed_without_feedback(self):
         return self.is_closed() and not self.closure_reason
 

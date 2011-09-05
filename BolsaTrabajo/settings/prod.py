@@ -2,8 +2,9 @@
 
 """Production settings and globals."""
 
+from os.path import join, normpath
 
-from common import *
+from .common import *
 
 
 ########## EMAIL CONFIGURATION

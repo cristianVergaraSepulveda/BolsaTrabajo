@@ -6,12 +6,6 @@
 import sys
 from os.path import abspath, basename, dirname, join, normpath
 
-# local settings
-try:
-    from .local import *
-except ImportError:
-    pass
-
 from .helpers import gen_secret_key
 
 
@@ -81,7 +75,9 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
+
+DATE_INPUT_FORMATS = ('%Y-%m-%d',)
 ########## END GENERAL CONFIGURATION
 
 
@@ -197,9 +193,10 @@ INSTALLED_APPS = (
 
 
 ########## BOLSA_TRABAJO CONFIGURATION
-OFFER_EXPIRATION_LIMIT = 30  # in days
+OFFER_MIN_EXPIRATION_LIMIT = 14  # in days
+OFFER_MAX_EXPIRATION_LIMIT = 60  # in days
+ACCEPTED_EMAIL = 'dcc.uchile.cl'  # email addresses without this ending need administrator's approval
 
-ACCEPTED_EMAIL = 'dcc.uchile.cl'
 ########## END BOLSA_TRABAJO CONFIGURATION
 
 
@@ -227,3 +224,10 @@ except IOError:
     except IOError:
         raise Exception('Cannot open file `%s` for writing.' % SECRET_FILE)
 ########## END KEY CONFIGURATION
+
+########## LOCAL SETTINGS CONFIGURATION
+try:
+    from .local import *
+except ImportError:
+    pass
+########## END LOCAL SETTINGS CONFIGURATION

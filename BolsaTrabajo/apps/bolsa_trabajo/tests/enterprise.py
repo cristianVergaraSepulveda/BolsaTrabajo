@@ -7,8 +7,10 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+
 from ..models.enterprise import Enterprise
 from ..models.offer import Offer
+from ..models.utils import now_plus_min_end_date
 
 
 class AdminNewEnterpriseTestCase(TestCase):
@@ -206,7 +208,7 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertTrue(self.client.login(username='test-enterprise3', password='test'))
 
         # create dictionary with new offer info
-        new_offer_data = {'title': 'Oferta1', 'description': 'oferta num 1', 'liquid_salary': '1111',
+        new_offer_data = {'title': 'Oferta1', 'description': 'oferta num 1', 'liquid_salary': 0,
                           'available_slots': '2', 'level': 1, 'tags': 'SQL'}
 
         # do a POST request including the new offer
@@ -261,8 +263,9 @@ class PublishEnterpriseTestCase(TestCase):
         self.assertFalse('$ 1500000' in resp.content)
 
         # create dictionary to edit the offer
-        new_offer_data = {'title': 'Oferta1', 'description': 'oferta num 1', 'liquid_salary': '1111',
-                          'available_slots': '2', 'level': 1, 'tags': 'SQL'}
+        end_date = now_plus_min_end_date().isoformat()
+        new_offer_data = {'title': 'Oferta1', 'description': 'oferta num 1', 'liquid_salary': 0,
+                          'available_slots': '2', 'level': 1, 'end_date': end_date, 'tags': 'SQL'}
 
         # do a POST request including the new offer info
         resp = self.client.post('/account/offer/6/edit', new_offer_data)
@@ -271,7 +274,7 @@ class PublishEnterpriseTestCase(TestCase):
         new_offer = Offer.objects.get(title='Oferta1')
 
         # assert that the Offer object has the expected description
-        self.assertEqual(new_offer.liquid_salary, 1111)
+        self.assertEqual(new_offer.liquid_salary, 0)
 
         resp = self.client.get('/account/offer/6/')
         self.assertTrue('Oferta editada exitosamente' in resp.content)
