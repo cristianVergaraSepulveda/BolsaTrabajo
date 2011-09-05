@@ -2,10 +2,11 @@
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
-from .forms import *
-from .models import *
-from .utils import *
+from models import Enterprise, Offer, UserProfile
+from forms import OfferStatusForm, OfferForm
+from utils import append_user_to_response
 
 
 def enterprise_login_required(f):
@@ -31,7 +32,7 @@ def successful_enterprise_registration(request):
 def offer(request):
     enterprise = Enterprise.objects.get(pk=request.user.id)
     offers = enterprise.offer_set.all()
-    
+
     pending_offers = []
     open_offers = []
     closed_offers_with_feedback = []
@@ -60,8 +61,8 @@ def offer_details(request, offer_id):
     offer = Offer.objects.get(pk=offer_id)
     enterprise = Enterprise.objects.get(pk=request.user.id)
     if offer.enterprise != enterprise:
-        url = reverse('bolsa_trabajo.views_enterprise.offer')
-        return HttpResponseRedirect(url)
+        request.flash['error_message'] = 'No tiene permisos para ver esta oferta'
+        return redirect('bolsa_trabajo.views_enterprise.offer')
 
     form = None
     if offer.is_closed():
@@ -87,6 +88,11 @@ def offer_details(request, offer_id):
 def edit_offer(request, offer_id):
     offer = Offer.objects.get(pk=offer_id)
     enterprise = Enterprise.objects.get(pk=request.user.id)
+
+    # check if user has permission to edit this offer
+    if offer.enterprise != enterprise:
+        request.flash['error_message'] = 'No tiene permisos para editar esta oferta'
+        return redirect('bolsa_trabajo.views_enterprise.offer')
 
     if request.method == 'POST':
         form = OfferForm(request.POST)
@@ -126,12 +132,12 @@ def close_offer(request, offer_id):
 def add_offer(request):
     enterprise = Enterprise.objects.get(pk=request.user.id)
     error = None
-    
+
     # If the enterprise has closed offers without feedback
     if enterprise.get_closed_offers_without_feedback():
         request.flash['error_message'] = 'No puede crear nuevas ofertas hasta entregar el feedback de las ya cerradas'
         return HttpResponseRedirect(reverse('bolsa_trabajo.views_enterprise.offer'))
-    
+
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
