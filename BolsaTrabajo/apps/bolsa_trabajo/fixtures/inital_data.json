@@ -1,38 +1,42 @@
 [
-
     {
         "model": "bolsa_trabajo.OfferLevel",
         "pk": 1,
         "fields": {
-            "name": "Práctica I"
+            "name": "Práctica I",
+            "minimum_salary": 0
         }
     },
     {
         "model": "bolsa_trabajo.OfferLevel",
         "pk": 2,
         "fields": {
-            "name": "Práctica II"
+            "name": "Práctica II",
+            "minimum_salary": 0
         }
     },
     {
         "model": "bolsa_trabajo.OfferLevel",
         "pk": 3,
         "fields": {
-            "name": "Práctica III"
+            "name": "Práctica III",
+            "minimum_salary": 0
         }
     },
     {
         "model": "bolsa_trabajo.OfferLevel",
         "pk": 4,
         "fields": {
-            "name": "Trabajo media jornada"
+            "name": "Trabajo media jornada",
+            "minimum_salary": 0
         }
     },
     {
         "model": "bolsa_trabajo.OfferLevel",
         "pk": 5,
         "fields": {
-            "name": "Trabajo jornada completa"
+            "name": "Trabajo jornada completa",
+            "minimum_salary": 0
         }
     },
     {
