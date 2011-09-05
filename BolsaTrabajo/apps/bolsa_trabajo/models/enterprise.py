@@ -73,5 +73,12 @@ class Enterprise(User):
             raise ValidationError('')
         super(Enterprise, self).save()
 
+    def send_postulation_notification_email(self, postulation):
+        subject = u'[Bolsa Trabajo CaDCC] Nueva postulación a oferta %s' % (unicode(postulation.offer),)
+
+        t = get_template('mails/new_offer_postulation_mail.html')
+
+        send_email(self, subject, t, {'postulation':postulation})
+
     class Meta:
         app_label = 'bolsa_trabajo'

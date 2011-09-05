@@ -1,0 +1,24 @@
+{% extends 'base_single_column.html' %}
+
+{% block main %}
+
+<h2>{{ offer.title }}</h2>
+<div class="content-separator"></div>
+
+     <b>Empresa:</b> <a href="{% url bolsa_trabajo.views.enterprise_details offer.enterprise.id %}">{{ offer.enterprise }}</a><br />
+     <b>Descripción:</b> {{ offer.description|linebreaks }}<br />
+     <b>Sueldo líquido:</b> {{ offer.get_salary_string }}<br />
+     <b>Puestos disponibles:</b> {{ offer.get_available_slots_string }}<br />
+     <b>Nivel:</b> {{ offer.get_level_string }}<br />
+     <b>Términos clave:</b> {{ offer.get_tags_string }}<br />
+<br />
+{% if error_message %}
+<p><strong>{{error_message}}</strong></p>
+{%else%}
+<form method="post" action=".">
+{% csrf_token %}
+<input type="submit" value="Postular"/>
+</form>
+{%endif%}
+
+{% endblock %}

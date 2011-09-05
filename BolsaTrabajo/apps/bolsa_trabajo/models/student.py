@@ -93,7 +93,7 @@ class Student(User):
         if extension.lower() != '.pdf':
             raise Exception('Por favor seleccione un archivo PDF')
 
-        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/cv/%d.pdf' % self.id), 'wb+')
+        destination = open(os.path.join(settings.DJANGO_ROOT, 'media/cv/%d.pdf' % self.id), 'wb+')
         for chunk in uploaded_file.chunks():
             destination.write(chunk)
         destination.close()
@@ -101,7 +101,7 @@ class Student(User):
     def delete_cv(self):
         self.has_cv = False
         try:
-            filename = os.path.join(settings.PROJECT_ROOT, 'media/cv/%d.pdf' % self.id)
+            filename = os.path.join(settings.DJANGO_ROOT, 'media/cv/%d.pdf' % self.id)
             print filename
             os.remove(filename)
         except:
@@ -139,6 +139,14 @@ class Student(User):
         if same_username_users:
             raise ValidationError('')
         super(Student, self).save()
+
+    def is_postulating_to(self, offer):
+        from .postulation import Postulation
+        try:
+            Postulation.objects.get(student=self, offer=offer)
+        except Postulation.DoesNotExist:
+            return False
+        return True
 
     class Meta:
         app_label = 'bolsa_trabajo'
