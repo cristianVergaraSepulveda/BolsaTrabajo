@@ -156,3 +156,18 @@ def add_offer(request):
         'offer_form': form,
         'error': error
     })
+
+@enterprise_login_required
+def offer_postulations(request, offer_id):
+    offer = Offer.objects.get(pk=offer_id)
+    uid = request.user.id
+    enterprise = Enterprise.objects.get(pk=uid)
+    if offer.enterprise != enterprise:
+        request.flash['error_message'] = 'Error de acceso'
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+    postulations = offer.postulation_set.all()
+    return append_user_to_response(request, 'enterprise/offer_postulations.html', {
+        'postulations': postulations,
+        'offer': offer
+    })

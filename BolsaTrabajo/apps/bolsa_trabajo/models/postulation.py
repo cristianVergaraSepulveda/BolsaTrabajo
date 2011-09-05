@@ -23,6 +23,8 @@ class Postulation(models.Model):
     status = models.IntegerField(choices=STATUS_OPTIONS, default=1)
     offer = models.ForeignKey('Offer')
     student = models.ForeignKey('Student')
+    is_closed = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'bolsa_trabajo'
+        unique_together = ("offer", "student")

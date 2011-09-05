@@ -271,7 +271,7 @@ def download_cv(request, student_id):
             raise Exception
         if student.profile.block_public_access and not request.user.is_authenticated():
             raise Exception
-        filename = settings.PROJECT_ROOT + '/media/cv/%d.pdf' % student.id
+        filename = settings.DJANGO_ROOT + '/media/cv/%d.pdf' % student.id
         wrapper = FileWrapper(file(filename))
         response = HttpResponse(wrapper, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=curriculum-%s.pdf' % student.get_full_name().replace(' '

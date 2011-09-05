@@ -28,6 +28,7 @@
 <div class="content-separator"></div>
 <ul>
     <li><a href="{% url bolsa_trabajo.views.offer_send_message offer.id %}">Hacer una consulta privada acerca de esta oferta a la empresa</a></li>
+    <li><a href="{% url bolsa_trabajo.views_student.apply_to_offer offer.id %}">Postular a la oferta de trabajo</a></li>
 </ul>
 {% endif %}
 
