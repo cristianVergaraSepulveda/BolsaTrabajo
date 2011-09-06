@@ -1,0 +1,17 @@
+Estimado {{ user.get_full_name }},
+
+La oferta laboral {{ offer }} expiró y ha sido cerrada automáticamente.
+
+Agradecemos de antemano especificar el motivo de cierre de la oferta en la dirección
+
+{{ server_name }}{% url enterprise_offer_details offer.id %}
+
+De lo contrario, no le será posible publicar nuevas ofertas a través del sistema.
+
+Si tiene alguna duda, por favor no dude en contactarnos
+
+{{ server_name }}/contact/
+
+Atentamente,
+
+El staff de la Bolsa de Trabajo CaDCC

@@ -1,8 +1,11 @@
 #-*- coding: utf-8 -*-
 
+import datetime
+
 from django.db.models import Q
 from django.db import models
 from django.template.loader import get_template
+from django.contrib.auth.models import User
 
 from . import Tag
 from . import OfferLevel
@@ -105,12 +108,13 @@ class Offer(models.Model):
         return Offer.objects.filter(status=1)
 
     @staticmethod
-    def get_unexpired_offers():
+    def get_unexpired():
         return Offer.objects.filter(status=2)
 
     @staticmethod
-    def get_expired_offers():
-        return Offer.objects.filter(status=2).filter(creation_date__lte=get_delta())
+    def get_expired():
+        """returns offers with past end_date, but still not closed status"""
+        return Offer.objects.filter(status=2).filter(end_date__lt=datetime.date.today)
 
     @staticmethod
     def get_pendings_feedback_offers(enterpriseId = None):
@@ -146,7 +150,7 @@ class Offer(models.Model):
 
     @staticmethod
     def get_from_form(form, include_hidden):
-        offers = Offer.get_unexpired_offers().filter(status=2).order_by('-creation_date')
+        offers = Offer.get_unexpired().filter(status=2).order_by('-creation_date')
         if not include_hidden:
             offers = offers.filter(enterprise__profile__block_public_access=False)
 
@@ -201,6 +205,19 @@ class Offer(models.Model):
         subject = '[Bolsa Trabajo CaDCC] Oferta rechazada'
 
         send_email(self.enterprise, subject, t, {'offer': self})
+
+    def notify_expiration(self):
+        t = get_template('mails/offer_expiration_enterprise.html')
+        subject = '[Bolsa Trabajo CaDCC] Oferta expirada'
+        send_email(self.enterprise, subject, t, {'offer': self})
+
+        t = get_template('mails/offer_expiration_staff.html')
+        for user in User.objects.filter(is_staff=True):
+            send_email(user, subject, t, {'enterprise': self.enterprise, 'offer': self})
+
+        t = get_template('mails/offer_expiration_applicant.html')
+        for user in (postulation.student for postulation in self.postulation_set.filter(status=1)):  # only open postulations
+            send_email(user, subject, t, {'enterprise': self.enterprise, 'offer': self})
 
     def expired(self):
         return self.creation_date <= get_delta() and self.validated

@@ -196,13 +196,14 @@ INSTALLED_APPS = (
 OFFER_MIN_EXPIRATION_LIMIT = 14  # in days
 OFFER_MAX_EXPIRATION_LIMIT = 60  # in days
 ACCEPTED_EMAIL = 'dcc.uchile.cl'  # email addresses without this ending need administrator's approval
-
 ########## END BOLSA_TRABAJO CONFIGURATION
 
 
 ########## CELERY CONFIGURATION
 import djcelery
+# from celery.schedules import crontab
 djcelery.setup_loader()
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 ########## END CELERY CONFIGURATION
 
 
