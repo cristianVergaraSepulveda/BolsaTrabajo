@@ -6,7 +6,7 @@ django-celery==2.3.3
 django-debug-toolbar==0.8.5
 django-flash==1.8
 django-kombu==0.9.4
-django-sentry==1.9.0 # http://readthedocs.org/docs/sentry/en/latest/index.html
+django-sentry==1.10.1 # http://readthedocs.org/docs/sentry/en/latest/index.html
 docutils==0.8.1
 gunicorn==0.13.1
 python-memcached==1.47
