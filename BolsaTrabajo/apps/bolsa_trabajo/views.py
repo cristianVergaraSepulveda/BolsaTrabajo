@@ -137,14 +137,12 @@ def offer_details(request, offer_id):
 
 def student_details(request, student_id):
     student = Student.objects.get(pk=student_id)
-    #if not student.is_active or student.profile.block_public_access:
-    if not student.profile.approved or student.profile.block_public_access:
+    if not user_may_see_student_private_data(request.user, student):
         url = reverse('bolsa_trabajo.views.student')
         return HttpResponseRedirect(url)
     return append_student_search_form_to_response(request, 'public/student_details.html', {
         'student': student,
         })
-
 
 def offer_send_message(request, offer_id):
     offer = Offer.objects.get(pk=offer_id)

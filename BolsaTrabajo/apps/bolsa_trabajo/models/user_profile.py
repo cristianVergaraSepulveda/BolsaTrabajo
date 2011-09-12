@@ -66,6 +66,21 @@ class UserProfile(models.Model):
 
         return response
 
+    def may_access_student_private_data(self, student):
+        if self.user.id == student.id:
+            return True
+        if not student.get_profile().block_public_access:
+            return True
+        if self.user.is_staff:
+            return True
+        try:
+            enterprise = Enterprise.objects.get(pk=self.user.id)
+            if student.has_open_postulations_with(enterprise):
+                return True
+        except Enterprise.DoesNotExist:
+            pass
+        return False
+
     def can_reply_to_enterprise(self, enterprise):
         response = False
         if self.user.is_authenticated() and self.user.is_active:

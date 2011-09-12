@@ -263,24 +263,21 @@ def edit_enterprise_profile(request):
 
 def download_cv(request, student_id):
     try:
-        students = Student.objects.filter(pk=student_id)
-        if not students:
-            raise Exception
-        student = students[0]
-        if not student.has_cv:
-            raise Exception
-        if student.profile.block_public_access and not request.user.is_authenticated():
-            raise Exception
-        filename = settings.DJANGO_ROOT + '/media/cv/%d.pdf' % student.id
-        wrapper = FileWrapper(file(filename))
-        response = HttpResponse(wrapper, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=curriculum-%s.pdf' % student.get_full_name().replace(' '
-                                                                                                                     ,
-                                                                                                                     '-')
-        response['Content-Length'] = os.path.getsize(filename)
-        return response
-    except:
+        student = Student.objects.get(pk=student_id)
+    except Student.DoesNotExist:
         return HttpResponseRedirect('/')
+    if not user_may_see_student_private_data(request.user, student):
+        return HttpResponseRedirect('/')
+    if not student.has_cv:
+        return HttpResponseRedirect('/')
+    filename = settings.DJANGO_ROOT + '/media/cv/%d.pdf' % student.id
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=curriculum-%s.pdf' % student.get_full_name().replace(' '
+                                                                                                                 ,
+                                                                                                                 '-')
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
 
 
 @student_login_required

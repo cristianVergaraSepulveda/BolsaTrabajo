@@ -210,6 +210,8 @@ djcelery.setup_loader()
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 ########## END URL CONFIGURATION
 
+AUTH_PROFILE_MODULE = 'bolsa_trabajo.UserProfile'
+
 
 ########## KEY CONFIGURATION
 # Try to load the SECRET_KEY from our SECRET_FILE. If that fails, then generate

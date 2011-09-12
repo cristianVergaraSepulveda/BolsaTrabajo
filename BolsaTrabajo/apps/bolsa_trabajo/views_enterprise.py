@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 
-from models import Enterprise, Offer, UserProfile
+from models import Enterprise, Offer, UserProfile, Postulation
 from forms import OfferStatusForm, OfferForm
 from utils import append_user_to_response
 
@@ -170,4 +170,26 @@ def offer_postulations(request, offer_id):
     return append_user_to_response(request, 'enterprise/offer_postulations.html', {
         'postulations': postulations,
         'offer': offer
+    })
+
+@enterprise_login_required
+def postulation_details(request, offer_id, postulation_id):
+    from models import WorkRegistry
+    offer = Offer.objects.get(pk=offer_id)
+    uid = request.user.id
+    enterprise = Enterprise.objects.get(pk=uid)
+    postulation = Postulation.objects.get(pk=postulation_id)
+    if offer.enterprise != enterprise or postulation.offer != offer:
+        request.flash['error_message'] = 'Error de acceso'
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+    if request.method == 'POST':
+        form = OfferForm(request.POST)
+        if form.is_valid():
+            if offer.has_avaliable_slots_for(self):
+                postulation.hire_student()
+
+
+    return append_user_to_response(request, 'enterprise/postulation_details.html', {
+        'postulation': postulation
     })

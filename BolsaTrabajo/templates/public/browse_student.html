@@ -3,13 +3,6 @@
 
 <div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Buscar profesionales</a></div>
 
-    {% if not user.is_authenticated %}
-    <div class="notice">
-        <p>Si no está registrado no podrá ver todas las ofertas de profesionales.</p>
-        <p><a href="{% url bolsa_trabajo.views_account.register %}">Registrarse</a> | <a href="{% url bolsa_trabajo.views_account.login %}">Iniciar sesión</a></p>
-    </div>
-    {% endif %}
-
     <h2>Resultados de la búsqueda</h2>
     <div class="content-separator"></div>
     {% if students %}

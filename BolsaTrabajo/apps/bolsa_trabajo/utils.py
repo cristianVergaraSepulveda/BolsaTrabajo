@@ -10,6 +10,13 @@ from .models import Enterprise
 from .models import Offer
 from .models import Student
 
+def user_may_see_student_private_data(user, student):
+    if student.profile.approved:
+        if not student.profile.block_public_access:
+            return True
+        if user.is_authenticated() and user.get_profile().may_access_student_private_data(student):
+            return True
+    return False
 
 def append_account_metadata_to_response(request, template, args={}):
     template_suffix = 'account/base.html'

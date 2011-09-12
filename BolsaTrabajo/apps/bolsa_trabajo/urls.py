@@ -61,6 +61,7 @@ urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/offer/(?P<offer_id>\d+)/close/$', 'close_offer'),
     (r'^account/offer/add$', 'add_offer'),
     (r'^account/offer/(?P<offer_id>\d+)/postulations/$', 'offer_postulations'),
+    (r'^account/offer/(?P<offer_id>\d+)/postulations/(?P<postulation_id>\d+)/$', 'postulation_details'),
                         )
 
 urlpatterns += patterns('bolsa_trabajo.views_student',

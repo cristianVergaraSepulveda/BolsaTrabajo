@@ -32,8 +32,10 @@ class Student(User):
 
     @staticmethod
     def get_from_form(form, include_hidden):
+        from . import UserProfile
         #students = Student.objects.filter(is_active = True).filter(profile__block_public_access = False)
-        students = Student.objects.filter(profile__approved=True).filter(profile__block_public_access=False)
+        profiles = [p.user.id for p in UserProfile.objects.filter(approved=True, block_public_access=False)]
+        students = Student.objects.filter(id__in=profiles)
 
         if form.is_valid():
             data = form.cleaned_data
@@ -147,6 +149,11 @@ class Student(User):
         except Postulation.DoesNotExist:
             return False
         return True
+
+    def has_open_postulations_with(self, enterprise):
+        from .postulation import Postulation
+        postulations = Postulation.objects.filter(student=self, is_closed=False, offer__enterprise=enterprise)
+        return bool(postulations)
 
     class Meta:
         app_label = 'bolsa_trabajo'

@@ -19,7 +19,9 @@ def apply_to_offer(request,offer_id):
 	student = Student.objects.get(pk=request.user.id)
 	is_already_postulating = student.is_postulating_to(offer)
 	error_message = None
-	if is_already_postulating:
+	if not student.profile.approved:
+		error_message = u'Su perfil aun no ha sido aprobado'
+	elif is_already_postulating:
 		error_message = u'Usted ya esta postulando a esta oferta'
 	elif not student.has_cv:
 		error_message = u'Usted debe subir su CV antes de poder postular a una oferta'

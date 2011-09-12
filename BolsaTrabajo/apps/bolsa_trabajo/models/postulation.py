@@ -25,6 +25,12 @@ class Postulation(models.Model):
     student = models.ForeignKey('Student')
     is_closed = models.BooleanField(default=False)
 
+    def hire_student(self):
+        from . import WorkRegistry
+        work_registry = WorkRegistry(postulation=self)
+        work_registry.save()
+
+
     class Meta:
         app_label = 'bolsa_trabajo'
         unique_together = ("offer", "student")

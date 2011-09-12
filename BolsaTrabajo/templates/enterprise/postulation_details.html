@@ -1,0 +1,32 @@
+{% extends 'account/base.html' %}
+
+{% block main %}
+
+<div class="breadcrumbs"><a href="{% url bolsa_trabajo.views_account.index %}">Inicio</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer %}">Ofertas laborales</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.offer_details postulation.offer.id %}">{{ postulation.offer.title }}</a> &gt; <a href="{% url bolsa_trabajo.views_enterprise.postulation_details postulation.offer.id postulation.id %}">Postulacion de {{postulation.student.get_full_name}}</a></div>
+
+<h2>{{ postulation.student.get_full_name }}</h2>
+<div class="content-separator"></div>
+
+    <b>Nivel:</b> {{ postulation.student.level }}<br />
+    <b>Currículum vitae:</b> <a href="{% url bolsa_trabajo.views_account.download_cv postulation.student.id %}">Descargar</a>
+    <br />
+    <b>Resumen:</b> {{ postulation.student.get_resume_string|linebreaks }}
+    <b>Términos clave:</b> {{ postulation.student.get_tags_string }}
+<br />
+<br />
+<ul>
+    <li><a href="{% url bolsa_trabajo.views.student_send_message postulation.student.id %}">Envíe un mensaje a este profesional</a></li>
+</ul>
+	<form method="post" action="">
+        {% csrf_token %}
+        {% if error %}
+            <div class="errorlist">{{ error }}</div>
+        {% endif %}
+        <table class="table_no_width">
+            {{ offer_form.as_table }}
+        </table>
+        <input type="submit" value="Contratar" />
+    </form>
+
+
+{% endblock %}
