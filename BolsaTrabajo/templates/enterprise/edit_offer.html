@@ -2,7 +2,6 @@
 
 {% block header %}
 	<script type="text/javascript" src="/media/js/tags_autocomplete.js"></script>
-	<script type="text/javascript" src="/media/js/edit_offer.js"></script>
     <script type="text/javascript">
         $(function() {
             $.datepicker.setDefaults($.datepicker.regional["es"]);
@@ -34,7 +33,15 @@
         <input type="submit" value="Guardar cambios" />
     </form>
     
-<br />    
-<p><a id="reject_link" class="no_decoration reject" href="">Cerrar la oferta</a></p>
+<br /> 
+
+<h2>Cerrar la Oferta</h2>
+<form action="{% url enterprise_close_offer offer.id %}" method="post" onsubmit="return confirm('¿Está seguro que desea cerrar la oferta? El proceso no es reversible');">
+    {% csrf_token %}
+    <table>
+    {{ close_form.as_table }}
+    </table>
+    <input type="submit" value="Cerrar Oferta" />
+</form>
 
 {% endblock %}

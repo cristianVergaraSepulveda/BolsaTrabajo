@@ -13,7 +13,7 @@ def enterprise_login_required(f):
     def wrap(request, *args, **kwargs):
         uid = request.user.id
         enterprises = Enterprise.objects.filter(pk=uid)
-        if enterprises:
+        if request.user.is_staff or enterprises:
             return f(request, *args, **kwargs)
         else:
             url = reverse('bolsa_trabajo.views_account.login')
@@ -94,6 +94,11 @@ def edit_offer(request, offer_id):
         request.flash['error_message'] = 'No tiene permisos para editar esta oferta'
         return redirect('bolsa_trabajo.views_enterprise.offer')
 
+    # check first if offer is closed
+    if offer.is_closed():
+        request.flash['error_message'] = "No puede editar una oferta cerrada"
+        return redirect('bolsa_trabajo.views_enterprise.offer')
+
     if request.method == 'POST':
         form = OfferForm(request.POST)
         if form.is_valid():
@@ -106,26 +111,44 @@ def edit_offer(request, offer_id):
     else:
         form = OfferForm.create_from_offer(offer)
 
+    close_form = OfferStatusForm()
+
     return append_user_to_response(request, 'enterprise/edit_offer.html', {
+        'offer': offer,
         'offer_form': form,
-        'offer': offer
+        'close_form': close_form,
     })
 
 
 @enterprise_login_required
 def close_offer(request, offer_id):
     offer = Offer.objects.get(pk = offer_id)
-    enterprise = Enterprise.objects.get(pk = request.user.id)
-    if offer.is_closed() or offer.enterprise != enterprise:
+    if request.user.is_staff:
+        enterprise = offer.enterprise
+        success_url = reverse('bolsa_trabajo.views.offer_details', args=[offer.id])
+    else:
+        enterprise = Enterprise.objects.get(pk = request.user.id)
+        success_url = reverse('bolsa_trabajo.views_enterprise.offer')
+
+    if offer.enterprise != enterprise:   # unauthorized user
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
+
+    if offer.is_closed():  # do nothing in this case
+        url = reverse('bolsa_trabajo.views_account.index')
+        return HttpResponseRedirect(url)
+
+    if request.user.is_staff:
+        offer.closure_reason = 3  # closed by administrator
+    else:
+        # TODO: use generic offer close method
+        pass
 
     offer.close()
     offer.save()
     request.flash['message'] = 'Oferta cerrada exitosamente'
 
-    url = reverse('bolsa_trabajo.views_enterprise.offer')
-    return HttpResponseRedirect(url)
+    return HttpResponseRedirect(success_url)
 
 
 @enterprise_login_required
