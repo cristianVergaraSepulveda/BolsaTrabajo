@@ -1,12 +1,12 @@
 #-*- coding: UTF-8 -*-
+
 from django import forms
-from django.core.exceptions import ValidationError
-from bolsa_trabajo.models import *
-from bolsa_trabajo.models.offer import *
+from bolsa_trabajo.models import Offer
+
 
 class OfferStatusForm(forms.Form):
 
-    closure_reason = forms.ChoiceField(choices = Offer.CLOSURE_REASON_CHOICES, label = 'Razón por la que se cerró la oferta')
+    closure_reason = forms.ChoiceField(choices = Offer.CLOSURE_REASON_CHOICES[:-1], label = 'Razón de cierre de la oferta')
 
     @staticmethod
     def create_from_offer(offer):

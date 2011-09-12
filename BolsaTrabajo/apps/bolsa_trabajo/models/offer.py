@@ -20,6 +20,7 @@ class Offer(models.Model):
     CLOSURE_REASON_CHOICES = (
         (1,'Se llenaron los cupos disponibles'),
         (2,'La oferta de trabajo ya no aplica'),
+        (3,'Cerrada por el administrador'),
     )
 
     STATUS_CHOICES = (

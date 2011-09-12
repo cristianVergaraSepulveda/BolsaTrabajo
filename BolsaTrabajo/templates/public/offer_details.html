@@ -23,6 +23,15 @@
      <b>Términos clave:</b> {{ offer.get_tags_string }}<br />
 <br />
 
+{% if user.is_staff and not offer.is_closed %}
+
+<form action="{% url enterprise_close_offer offer.id %}" method="post" onsubmit="return confirm('¿Está seguro que desea cerrar la oferta? El proceso no es reversible');">
+    {% csrf_token %}
+    <input type="submit" value="Cerrar Oferta" />
+</form>
+<br />
+{% endif %}
+
 {% if user.profile.is_student %}
 <h3>Opciones</h3>
 <div class="content-separator"></div>
