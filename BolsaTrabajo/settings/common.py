@@ -162,6 +162,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'djangoflash.middleware.FlashMiddleware',  # django-flash
+    'sentry.client.middleware.Sentry404CatchMiddleware',  # sentry
 )
 ########## END MIDDLEWARE CONFIGURATION
 
@@ -210,6 +211,12 @@ import djcelery
 djcelery.setup_loader()
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 ########## END CELERY CONFIGURATION
+
+
+########## SENTRY CONFIGURATION
+SENTRY_TESTING = True
+SENTRY_AUTO_LOG_STACKS = True
+########## END SENTRY CONFIGURATION
 
 
 ########## URL CONFIGURATION
