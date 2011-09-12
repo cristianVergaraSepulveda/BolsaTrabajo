@@ -91,8 +91,14 @@ class Offer(models.Model):
     def is_closed(self):
         return self.status == 3
 
-    def close(self):
+    def close(self, motive):
         self.status = 3
+        self.closure_reason = motive
+        for postulation in self.postulation_set.filter(is_closed=False):
+            postulation.close(student_hired=False)
+    
+    def close_by_admin(self):
+        self.close()
 
     def is_pending(self):
         return self.status == 1
