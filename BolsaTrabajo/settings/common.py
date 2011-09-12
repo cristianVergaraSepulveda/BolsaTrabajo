@@ -132,6 +132,11 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',  # django authentication
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.contrib.messages.context_processors.messages',
     'djangoflash.context_processors.flash',  # django-flash
     )
 
@@ -157,6 +162,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'djangoflash.middleware.FlashMiddleware',  # django-flash
+    'sentry.client.middleware.Sentry404CatchMiddleware',  # sentry
 )
 ########## END MIDDLEWARE CONFIGURATION
 
@@ -196,14 +202,21 @@ INSTALLED_APPS = (
 OFFER_MIN_EXPIRATION_LIMIT = 14  # in days
 OFFER_MAX_EXPIRATION_LIMIT = 60  # in days
 ACCEPTED_EMAIL = 'dcc.uchile.cl'  # email addresses without this ending need administrator's approval
-
 ########## END BOLSA_TRABAJO CONFIGURATION
 
 
 ########## CELERY CONFIGURATION
 import djcelery
+# from celery.schedules import crontab
 djcelery.setup_loader()
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 ########## END CELERY CONFIGURATION
+
+
+########## SENTRY CONFIGURATION
+SENTRY_TESTING = True
+SENTRY_AUTO_LOG_STACKS = True
+########## END SENTRY CONFIGURATION
 
 
 ########## URL CONFIGURATION

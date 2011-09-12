@@ -22,7 +22,7 @@ urlpatterns = patterns('',
          {'document_root': settings.MEDIA_ROOT}),
 
     # django-sentry log viewer.
-    url(r'^sentry/', include('sentry.urls')),
+    (r'^sentry/', include('sentry.web.urls')),
 
     # Our applications.
     (r'^', include('bolsa_trabajo.urls')),

@@ -15,7 +15,7 @@ TEMPLATE_DEBUG = DEBUG
 
 
 ########## EMAIL CONFIGURATION
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 ########## END EMAIL CONFIGURATION
 
 
@@ -99,3 +99,42 @@ INSTALLED_APPS += (
 
 BROKER_BACKEND = 'djkombu.transport.DatabaseTransport'
 ########## END CELERY CONFIGURATION
+
+
+########## LOGGING CONFIGURATION
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'DEBUG',
+            'class': 'sentry.client.handlers.SentryHandler',
+            'formatter': 'verbose'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        '()': {
+            'level': 'WARNING',
+            'handlers': ['sentry'],
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}
+########## END LOGGING CONFIGURATION

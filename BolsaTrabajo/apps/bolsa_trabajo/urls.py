@@ -1,6 +1,8 @@
 # coding: utf-8
 
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
+
+# generic views
 
 urlpatterns = patterns('bolsa_trabajo.views',
     (r'^search_tag$', 'search_tag'),
@@ -13,6 +15,8 @@ urlpatterns = patterns('bolsa_trabajo.views',
     (r'^student/(?P<student_id>\d+)/$', 'student_details'),
     (r'^student/(?P<student_id>\d+)/send_message$', 'student_send_message'),
     (r'^$', 'index'))
+
+# account views
 
 urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/$', 'index'),
@@ -32,6 +36,8 @@ urlpatterns += patterns('bolsa_trabajo.views_account',
     (r'^account/delete_cv/$', 'delete_cv'),
     (r'^student/(?P<student_id>\d+)/download_cv$', 'download_cv'),
                         )
+
+# staff views
 
 urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/pending_enterprise_request/$', 'pending_enterprise_request'),
@@ -53,16 +59,20 @@ urlpatterns += patterns('bolsa_trabajo.views_staff',
     (r'^account/statistics/$', 'concreted_offers'),
                         )
 
+# enteprise views
+
 urlpatterns += patterns('bolsa_trabajo.views_enterprise',
     (r'^account/successful_enterprise_registration/$', 'successful_enterprise_registration'),
     (r'^account/offer/$', 'offer'),
-    (r'^account/offer/(?P<offer_id>\d+)/$', 'offer_details'),
+    url(r'^account/offer/(?P<offer_id>\d+)/$', 'offer_details', name='enterprise_offer_details'),
     (r'^account/offer/(?P<offer_id>\d+)/edit$', 'edit_offer'),
     (r'^account/offer/(?P<offer_id>\d+)/close/$', 'close_offer'),
     (r'^account/offer/add$', 'add_offer'),
     (r'^account/offer/(?P<offer_id>\d+)/postulations/$', 'offer_postulations'),
     (r'^account/offer/(?P<offer_id>\d+)/postulations/(?P<postulation_id>\d+)/$', 'postulation_details'),
                         )
+
+# student views
 
 urlpatterns += patterns('bolsa_trabajo.views_student',
     (r'^offer/(?P<offer_id>\d+)/apply_to_offer/$', 'apply_to_offer'),
