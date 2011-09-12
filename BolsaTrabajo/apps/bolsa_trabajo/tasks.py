@@ -11,6 +11,4 @@ def expire_offers():
     """Get all expired open offers and close them daily at midnight"""
     expired_open_offers = Offer.get_expired()
     for offer in expired_open_offers:
-        offer.close()
-        offer.save()
-        offer.notify_expiration()
+        offer.close_by_task()

@@ -25,11 +25,29 @@ class Postulation(models.Model):
     student = models.ForeignKey('Student')
     is_closed = models.BooleanField(default=False)
 
-    def hire_student(self):
-        from . import WorkRegistry
-        work_registry = WorkRegistry(postulation=self)
-        work_registry.save()
+    def close(self, student_hired):
+        if not student_hired:
+            self.status = 2
+            self.notify_rejection()
+        else:
+            self.status = 3
+            self.notify_hired()
+            from . import WorkRegistry
+            work_registry = WorkRegistry(postulation=self)
+            work_registry.save()
+            if not self.offer.is_closed() and not self.offer.has_available_slots():
+                self.offer.close_by_full_slots()
+        self.save()
 
+    def notify_rejection(self):
+        t = get_template('mails/notify_rejected_postulation.html')
+        subject = u'[Bolsa Trabajo CaDCC] Tu postulación ha sido cerrada'
+        send_email(self.student, subject, t, {'postulation': self})
+
+    def notify_hired(self):
+        t = get_template('mails/notify_hired_postulation.html')
+        subject = u'[Bolsa Trabajo CaDCC] Has sido aceptado para la oferta %s' % unicode(self.offer)
+        send_email(self.student, subject, t, {'postulation': self})
 
     class Meta:
         app_label = 'bolsa_trabajo'

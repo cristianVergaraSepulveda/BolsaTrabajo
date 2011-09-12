@@ -10,3 +10,4 @@ from .offer_message_ring import OfferMessageRing
 from .offer_message import OfferMessage
 from .user_profile import UserProfile
 from .postulation import Postulation
+from .work_registry import WorkRegistry

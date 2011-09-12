@@ -95,11 +95,29 @@ class Offer(models.Model):
     def close(self, motive):
         self.status = 3
         self.closure_reason = motive
+        self.save()
         for postulation in self.postulation_set.filter(is_closed=False):
             postulation.close(student_hired=False)
     
     def close_by_admin(self):
-        self.close()
+        self.close(3)
+        self.notify_closed_by_staff()
+
+    def close_by_task(self):
+        self.close(0)
+        self.notify_expiration()
+    
+    def close_by_full_slots():
+        self.close(1)
+        self.notify_full_slots()
+
+    def has_available_slots(self):
+        from . import WorkRegistry
+        if self.available_slots == 0:
+            return True
+        elif WorkRegistry.objets.filter(postulation__offer=self).count() < self.available_slots:
+            return True
+        return False
 
     def is_pending(self):
         return self.status == 1
@@ -222,9 +240,19 @@ class Offer(models.Model):
         for user in User.objects.filter(is_staff=True):
             send_email(user, subject, t, {'enterprise': self.enterprise, 'offer': self})
 
-        t = get_template('mails/offer_expiration_applicant.html')
-        for user in (postulation.student for postulation in self.postulation_set.filter(status=1)):  # only open postulations
-            send_email(user, subject, t, {'enterprise': self.enterprise, 'offer': self})
+        # t = get_template('mails/offer_expiration_applicant.html')
+        # for user in (postulation.student for postulation in self.postulation_set.filter(status=1)):  # only open postulations
+        #     send_email(user, subject, t, {'enterprise': self.enterprise, 'offer': self})
+
+    def notify_closed_by_staff(self):
+        t = get_template('mails/offer_closed_by_staff.html')
+        subject = '[Bolsa Trabajo CaDCC] Oferta cerrada por el staff'
+        send_email(self.enterprise, subject, t, {'offer': self})
+
+    def notify_full_slots(self):
+        t = get_template('mails/offer_closed_by_full_slots.html')
+        subject = '[Bolsa Trabajo CaDCC] Oferta cerrada por cupos llenos'
+        send_email(self.enterprise, subject, t, {'offer': self})
 
     def expired(self):
         return self.creation_date <= get_delta() and self.validated
