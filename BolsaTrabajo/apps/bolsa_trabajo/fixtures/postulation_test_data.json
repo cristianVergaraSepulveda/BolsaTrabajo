@@ -1,0 +1,78 @@
+[
+    {
+        "model": "auth.User",
+        "pk": 1,
+        "fields": {
+            "first_name": "Administrador",
+            "last_name": "Bolsa Trabajo",
+            "username": "admin",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$877a8$fce404e0e10c0135566256be49727b92535ab350",
+            "is_staff": true,
+            "is_superuser": true
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 1,
+        "fields": {
+            "validated_email": true,
+            "user": 1,
+            "block_public_access": false,
+            "approved": true
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 2,
+        "fields": {
+            "first_name": "Sandra",
+            "last_name": "Gaez",
+            "username": "sgaez",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$ee210$a81ee9e6fafea6e80e4354dcc11c861ac09ef8db",
+            "is_staff": true,
+            "is_superuser": false
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 2,
+        "fields": {
+            "validated_email": true,
+            "user": 2,
+            "block_public_access": false,
+            "approved": true
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 3,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Sin Validar",
+            "username": "estudiante1",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$05b41$6eb350f16d7e023c1df227bb8120a075a8a40fda"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 3,
+        "fields": {
+            "validated_email": false,
+            "user": 3,
+            "block_public_access": false,
+            "approved": false
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 1,
+        "fields": {
+            "user_ptr": 3,
+            "has_cv": false,
+            "level": 1
+        }
+    }
+]
