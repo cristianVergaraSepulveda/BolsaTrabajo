@@ -20,10 +20,10 @@ class Postulation(models.Model):
         (3,'Cerrada y contratado')
     )
 
+    OPEN_POSTULATION=1
     status = models.IntegerField(choices=STATUS_OPTIONS, default=1)
     offer = models.ForeignKey('Offer')
     student = models.ForeignKey('Student')
-    is_closed = models.BooleanField(default=False)
 
     def close(self, student_hired):
         if not student_hired:
@@ -48,6 +48,12 @@ class Postulation(models.Model):
         t = get_template('mails/notify_hired_postulation.html')
         subject = u'[Bolsa Trabajo CaDCC] Has sido aceptado para la oferta %s' % unicode(self.offer)
         send_email(self.student, subject, t, {'postulation': self})
+
+    def is_closed(self):
+        if self.status == 2 or self.status == 3:
+            return True
+        else:
+            return False
 
     class Meta:
         app_label = 'bolsa_trabajo'

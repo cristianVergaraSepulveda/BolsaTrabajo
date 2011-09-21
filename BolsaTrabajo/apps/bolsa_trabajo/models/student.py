@@ -152,7 +152,7 @@ class Student(User):
 
     def has_open_postulations_with(self, enterprise):
         from .postulation import Postulation
-        postulations = Postulation.objects.filter(student=self, is_closed=False, offer__enterprise=enterprise)
+        postulations = Postulation.objects.filter(student=self, status=Postulation.OPEN_POSTULATION, offer__enterprise=enterprise)
         return bool(postulations)
 
     class Meta:
