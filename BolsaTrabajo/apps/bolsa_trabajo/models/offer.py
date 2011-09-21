@@ -99,7 +99,7 @@ class Offer(models.Model):
         self.save()
         for postulation in self.postulation_set.filter(status=Postulation.OPEN_POSTULATION):
             postulation.close(student_hired=False)
-    
+
     def close_by_admin(self):
         self.close(3)
         self.notify_closed_by_staff()
@@ -107,7 +107,7 @@ class Offer(models.Model):
     def close_by_task(self):
         self.close(0)
         self.notify_expiration()
-    
+
     def close_by_full_slots(self):
         self.close(1)
         self.notify_full_slots()
