@@ -189,7 +189,7 @@ def offer_postulations(request, offer_id):
         request.flash['error_message'] = 'Error de acceso'
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
-    postulations = offer.postulation_set.all()
+    postulations = offer.postulation_set.filter(status=Postulation.OPEN_POSTULATION)
     return append_user_to_response(request, 'enterprise/offer_postulations.html', {
         'postulations': postulations,
         'offer': offer
@@ -202,20 +202,20 @@ def postulation_details(request, offer_id, postulation_id):
     uid = request.user.id
     enterprise = Enterprise.objects.get(pk=uid)
     postulation = Postulation.objects.get(pk=postulation_id)
-    if offer.enterprise != enterprise or postulation.offer != offer or postulation.is_closed:
+    if offer.enterprise != enterprise or postulation.offer != offer or postulation.is_closed():
         request.flash['error_message'] = 'Error de acceso'
         url = reverse('bolsa_trabajo.views_account.index')
         return HttpResponseRedirect(url)
     if request.method == 'POST':
-        form = OfferForm(request.POST)
-        if form.is_valid():
-            if offer.has_avaliable_slots():
-                postulation.close(student_hired=True)
-                request.flash['message'] = 'Estudiante contratado exitosamente'
-                url = reverse('bolsa_trabajo.views_account.index')
-            else:
-                request.flash['error_message'] = 'No hay cupos disponibles para esta oferta'
-                url = reverse('bolsa_trabajo.views_account.index')
+        if offer.has_available_slots():
+            postulation.close(student_hired=True)
+            request.flash['message'] = 'Estudiante contratado exitosamente'
+            url = reverse('bolsa_trabajo.views_account.index')
+            return HttpResponseRedirect(url)
+        else:
+            request.flash['error_message'] = 'No hay cupos disponibles para esta oferta'
+            url = reverse('bolsa_trabajo.views_account.index')
+            return HttpResponseRedirect(url)
 
 
     return append_user_to_response(request, 'enterprise/postulation_details.html', {

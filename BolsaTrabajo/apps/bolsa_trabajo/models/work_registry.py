@@ -10,10 +10,5 @@ class WorkRegistry(models.Model):
 
     postulation = models.ForeignKey('Postulation')
 
-    def accept_student(self):
-        self.is_closed = True
-        
-
-
     class Meta:
         app_label = 'bolsa_trabajo'
