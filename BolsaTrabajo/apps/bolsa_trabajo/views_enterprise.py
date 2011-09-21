@@ -139,12 +139,19 @@ def close_offer(request, offer_id):
         return HttpResponseRedirect(url)
 
     if request.user.is_staff:
-        offer.closure_reason = 3  # closed by administrator
-    else:
-        # TODO: use generic offer close method
-        pass
+        offer.close_by_admin()
 
-    offer.close()
+    elif request.method == 'POST':
+        form = OfferStatusForm(request.POST)
+        if form.is_valid():
+            offer.close(motive=form.cleaned_data['closure_reason'])
+        else:
+            request.flash['error_message'] = 'Opción de Cierre de Oferta Inválida'
+            return HttpResponseRedirect(success_url)
+
+    else:  # GET method, do nothing
+        return HttpResponseRedirect(success_url)
+
     offer.save()
     request.flash['message'] = 'Oferta cerrada exitosamente'
 
