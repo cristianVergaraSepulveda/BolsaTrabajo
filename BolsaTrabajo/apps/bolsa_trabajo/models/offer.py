@@ -93,12 +93,13 @@ class Offer(models.Model):
         return self.status == 3
 
     def close(self, motive):
+        from . import Postulation
         self.status = 3
         self.closure_reason = motive
         self.save()
-        for postulation in self.postulation_set.filter(is_closed=False):
+        for postulation in self.postulation_set.filter(status=Postulation.OPEN_POSTULATION):
             postulation.close(student_hired=False)
-    
+
     def close_by_admin(self):
         self.close(3)
         self.notify_closed_by_staff()
@@ -106,8 +107,8 @@ class Offer(models.Model):
     def close_by_task(self):
         self.close(0)
         self.notify_expiration()
-    
-    def close_by_full_slots():
+
+    def close_by_full_slots(self):
         self.close(1)
         self.notify_full_slots()
 
@@ -115,7 +116,7 @@ class Offer(models.Model):
         from . import WorkRegistry
         if self.available_slots == 0:
             return True
-        elif WorkRegistry.objets.filter(postulation__offer=self).count() < self.available_slots:
+        elif WorkRegistry.objects.filter(postulation__offer=self).count() < self.available_slots:
             return True
         return False
 
