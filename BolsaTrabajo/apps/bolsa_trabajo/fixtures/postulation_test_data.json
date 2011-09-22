@@ -74,5 +74,155 @@
             "has_cv": false,
             "level": 1
         }
+    },
+    {
+        "model": "auth.User",
+        "pk": 4,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Validado pero sin aprobar",
+            "username": "estudiante2",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$e6e71$22ac05a94566dd29ff4c42ed02b66ca6b770ec24"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 4,
+        "fields": {
+            "validated_email": true,
+            "user": 4,
+            "block_public_access": false,
+            "approved": false
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 2,
+        "fields": {
+            "user_ptr": 4,
+            "has_cv": false,
+            "level": 1
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 5,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Validado y aprobado, sin cv, perfil publico",
+            "username": "estudiante3",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$fd209$5086c103b1a5be9967cae9c2f7b77d494b601136"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 5,
+        "fields": {
+            "validated_email": true,
+            "user": 5,
+            "block_public_access": false,
+            "approved": true
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 3,
+        "fields": {
+            "user_ptr": 5,
+            "has_cv": false,
+            "level": 1
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 6,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Validado y aprobado, sin cv, perfil privado",
+            "username": "estudiante4",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$e7d40$794589725fcb9152fe4adce2de414618bdf0537b"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 6,
+        "fields": {
+            "validated_email": true,
+            "user": 6,
+            "block_public_access": true,
+            "approved": true
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 4,
+        "fields": {
+            "user_ptr": 6,
+            "has_cv": false,
+            "level": 1
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 7,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Validado y aprobado, con cv, perfil publico",
+            "username": "estudiante5",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$1848b$7db00d3bed85e090a4c675e97faaffe55dbfc05e"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 7,
+        "fields": {
+            "validated_email": true,
+            "user": 7,
+            "block_public_access": false,
+            "approved": true
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 5,
+        "fields": {
+            "user_ptr": 7,
+            "has_cv": true,
+            "level": 1
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 8,
+        "fields": {
+            "first_name": "Estudiante",
+            "last_name": "Validado y aprobado, con cv, perfil privado",
+            "username": "estudiante6",
+            "email": "bolsa.trabajo.cadcc@gmail.com",
+            "password": "sha1$2e6c0$d22f9503a806f22c38175c92c1751035cb1d3019"
+        }
+    },
+    {
+        "model": "bolsa_trabajo.UserProfile",
+        "pk": 8,
+        "fields": {
+            "validated_email": true,
+            "user": 8,
+            "block_public_access": true,
+            "approved": true
+        }
+    },
+    {
+        "model": "bolsa_trabajo.Student",
+        "pk": 6,
+        "fields": {
+            "user_ptr": 8,
+            "has_cv": true,
+            "level": 1
+        }
     }
 ]
