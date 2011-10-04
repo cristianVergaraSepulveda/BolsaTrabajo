@@ -18,15 +18,15 @@ from ..email import send_email
 class Offer(models.Model):
 
     CLOSURE_REASON_CHOICES = (
-        (1,'Se llenaron los cupos disponibles'),
-        (2,'La oferta de trabajo ya no aplica'),
-        (3,'Cerrada por el administrador'),
+        (1, 'Se llenaron los cupos disponibles'),
+        (2, 'La oferta de trabajo ya no aplica'),
+        (3, 'Cerrada por el administrador'),
     )
 
     STATUS_CHOICES = (
-        (1,'Pendiente'),
-        (2,'Abierta'),
-        (3,'Cerrada')
+        (1, 'Pendiente'),
+        (2, 'Abierta'),
+        (3, 'Cerrada')
     )
 
     enterprise = models.ForeignKey('Enterprise')
@@ -146,7 +146,7 @@ class Offer(models.Model):
         return Offer.objects.filter(status=2).filter(end_date__lt=datetime.date.today)
 
     @staticmethod
-    def get_pendings_feedback_offers(enterpriseId = None):
+    def get_pendings_feedback_offers(enterpriseId=None):
         if (enterpriseId):
             return Offer.objects.filter(enterprise=enterpriseId, closure_reason=0, status=3)
         return Offer.objects.filter(closure_reason=0, status=3)
