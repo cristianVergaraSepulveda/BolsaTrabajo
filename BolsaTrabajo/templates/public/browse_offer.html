@@ -19,7 +19,7 @@
                 <a href="{% url bolsa_trabajo.views.offer_details offer.id %}">{{ offer.title }}</a> {% if offer.affinity %}<span class="affinity">({{ offer.affinity }}%)</span>{% endif %}
                 <br />
                 <b>Descripción:</b> {{ offer.get_description_string|linebreaks }}
-                <b>Empresa:</b> <a href="">{{ offer.enterprise }}</a>
+                <b>Empresa:</b> <a href="{% url bolsa_trabajo.views.enterprise_details offer.enterprise.id %}">{{ offer.enterprise }}</a>
                 <br />
                 <b>Sueldo líquido:</b> {{ offer.get_salary_string }}
                 <br />
