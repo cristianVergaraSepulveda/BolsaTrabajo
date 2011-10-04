@@ -18,21 +18,23 @@
     </ul>
 	
 <br />
-    
 {% if not offer.is_closed %}
     <p><a href="{% url bolsa_trabajo.views_enterprise.edit_offer offer.id %}">Editar la oferta</a></p>
     <p><a href="{% url bolsa_trabajo.views_enterprise.offer_postulations offer.id %}">Ver postulaciones</a></p>
 {% else %}
-	<form method="post" action="">
-        {% csrf_token %}
-        {% if error %}
-            <div class="errorlist">{{ error }}</div>
-        {% endif %}
-        <table class="table_no_width">
-            {{ offer_form.as_table }}
-        </table>
-        <input type="submit" value="Guardar cambios" />
-    </form>
+    {% if not offer.is_closed_by_admin %}
+    	<form method="post" action="">
+            {% csrf_token %}
+            {% if error %}
+                <div class="errorlist">{{ error }}</div>
+            {% endif %}
+            <table class="table_no_width">
+                {{ offer_form.as_table }}
+            </table>
+            <input type="submit" value="Guardar cambios" />
+        </form>
+    {% endif %}
+
 {% endif %}
 
 {% endblock %}

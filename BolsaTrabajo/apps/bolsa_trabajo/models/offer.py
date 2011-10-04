@@ -92,6 +92,9 @@ class Offer(models.Model):
     def is_closed(self):
         return self.status == 3
 
+    def is_closed_by_admin(self):
+        return self.is_closed() and self.closure_reason == 3
+
     def close(self, motive):
         from . import Postulation
         self.status = 3

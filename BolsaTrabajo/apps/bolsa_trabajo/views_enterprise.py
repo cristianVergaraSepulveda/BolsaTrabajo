@@ -65,7 +65,7 @@ def offer_details(request, offer_id):
         return redirect('bolsa_trabajo.views_enterprise.offer')
 
     form = None
-    if offer.is_closed():
+    if offer.is_closed() and not offer.is_closed_by_admin():
         if request.method == 'POST':
             form = OfferStatusForm(request.POST)
             if form.is_valid():
