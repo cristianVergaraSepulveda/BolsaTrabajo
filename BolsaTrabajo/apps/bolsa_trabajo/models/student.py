@@ -109,9 +109,15 @@ class Student(User):
         except:
             pass
 
+    def notify_acceptance(self):
+        t = get_template('mails/student_acceptance.html')
+        subject = '[Bolsa Trabajo CaDCC] Solicitud de Registro Aceptada'
+
+        send_email(self, subject, t, {})
+
     def notify_rejection(self):
         t = get_template('mails/user_rejection.html')
-        subject = '[Bolsa Trabajo CaDCC] Registro rechazado'
+        subject = '[Bolsa Trabajo CaDCC] Solicitud de Registro Rechazada'
 
         send_email(self, subject, t, {})
 

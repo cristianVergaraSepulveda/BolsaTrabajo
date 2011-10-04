@@ -1,10 +1,10 @@
-Estimado {{ user.get_full_name }},
+Estimado/a {{ user.get_full_name }},
 
 Hemos recibido una nueva postulación a su oferta "{{postulation.offer}}"
 
 Para ver los detalles de esta postulación, por favor acceda al siguiente sitio:
 
-asdf
+{{ server_name }}{% url enterprise_offer_details postulation.offer.id %}
 
 Atentamente,
 

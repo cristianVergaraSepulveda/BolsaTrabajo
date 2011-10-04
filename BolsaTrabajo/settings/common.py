@@ -199,6 +199,7 @@ INSTALLED_APPS = (
 
 
 ########## BOLSA_TRABAJO CONFIGURATION
+AUTH_PROFILE_MODULE = 'bolsa_trabajo.UserProfile'
 OFFER_MIN_EXPIRATION_LIMIT = 14  # in days
 OFFER_MAX_EXPIRATION_LIMIT = 60  # in days
 ACCEPTED_EMAIL = 'dcc.uchile.cl'  # email addresses without this ending need administrator's approval
@@ -222,8 +223,6 @@ SENTRY_AUTO_LOG_STACKS = True
 ########## URL CONFIGURATION
 ROOT_URLCONF = '%s.urls' % SITE_NAME
 ########## END URL CONFIGURATION
-
-AUTH_PROFILE_MODULE = 'bolsa_trabajo.UserProfile'
 
 
 ########## KEY CONFIGURATION

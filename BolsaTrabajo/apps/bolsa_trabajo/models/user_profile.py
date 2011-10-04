@@ -153,7 +153,6 @@ class UserProfile(models.Model):
             return False
 
     def is_enterprise(self):
-        sek = self.user.id
         enterprises = Enterprise.objects.filter(pk=self.user.id)
         if enterprises:
             return True
@@ -166,5 +165,5 @@ def create_user_profile(sender, instance, created, **kwargs):
         profile, created = UserProfile.objects.get_or_create(user=instance)
 
 post_save.connect(create_user_profile, sender=User)
-# post_save.connect(create_user_profile, sender=Student)
-# post_save.connect(create_user_profile, sender=Enterprise)
+post_save.connect(create_user_profile, sender=Student)
+post_save.connect(create_user_profile, sender=Enterprise)

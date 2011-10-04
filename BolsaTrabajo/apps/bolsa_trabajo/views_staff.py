@@ -102,14 +102,14 @@ def pending_registration_request_details(request, request_id):
 @staff_login_required
 def accept_pending_registration_request(request, request_id):
     try:
-        registration = Student.objects.get(pk=request_id)
-        if registration.profile.approved:
+        student = Student.objects.get(pk=request_id)
+        if student.profile.approved:
             raise Exception
-        registration.profile.approved = True
-        registration.profile.save()
-        #registration.save()
-        registration.notify_acceptance()
-        request.flash['message'] = 'Empresa aceptada exitosamente'
+        student.profile.approved = True
+        student.profile.save()
+        #student.save()
+        student.notify_acceptance()
+        request.flash['message'] = 'Registro aceptado exitosamente'
         url = reverse('bolsa_trabajo.views_account.pending_registration_request')
     except:
         url = reverse('bolsa_trabajo.views_account.index')
@@ -147,7 +147,7 @@ def pending_offer_request_details(request, request_id):
     return append_account_metadata_to_response(request, 'staff/pending_offer_request_details.html', {
         'offer': offer,
     })
-        
+
 
 
 @staff_login_required

@@ -111,7 +111,7 @@ def register_enterprise(request):
             except ValidationError, e:
                 error = 'El nombre de usuario ya está tomado'
             except Exception, e:
-                error = 'Error desconocido'
+                error = str(e)
     else:
         form = EnterpriseRegisterForm()
     return append_user_to_response(request, 'account/register_enterprise.html', {
@@ -178,7 +178,7 @@ def validate_email(request):
         if validation_key != orig_validation_key:
             raise ValidationError('Error en código de validación')
 
-        user.profile.validated_email = True;
+        user.profile.validated_email = True
 
         if user.profile.is_enterprise():
             UserProfile.notify_staff_of_new_register()
