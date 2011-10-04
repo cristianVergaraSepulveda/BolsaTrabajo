@@ -122,12 +122,12 @@ def edit_offer(request, offer_id):
 
 @enterprise_login_required
 def close_offer(request, offer_id):
-    offer = Offer.objects.get(pk = offer_id)
+    offer = Offer.objects.get(pk=offer_id)
     if request.user.is_staff:
         enterprise = offer.enterprise
         success_url = reverse('bolsa_trabajo.views.offer_details', args=[offer.id])
     else:
-        enterprise = Enterprise.objects.get(pk = request.user.id)
+        enterprise = Enterprise.objects.get(pk=request.user.id)
         success_url = reverse('bolsa_trabajo.views_enterprise.offer')
 
     if offer.enterprise != enterprise:   # unauthorized user
@@ -187,6 +187,7 @@ def add_offer(request):
         'error': error
     })
 
+
 @enterprise_login_required
 def offer_postulations(request, offer_id):
     offer = Offer.objects.get(pk=offer_id)
@@ -203,9 +204,9 @@ def offer_postulations(request, offer_id):
         'offer': offer
     })
 
+
 @enterprise_login_required
 def postulation_details(request, offer_id, postulation_id):
-    from models import WorkRegistry
     offer = Offer.objects.get(pk=offer_id)
     postulation = Postulation.objects.get(pk=postulation_id)
     if not request.user.is_staff:
@@ -225,7 +226,6 @@ def postulation_details(request, offer_id, postulation_id):
             request.flash['error_message'] = 'No hay cupos disponibles para esta oferta'
             url = reverse('bolsa_trabajo.views_account.index')
             return HttpResponseRedirect(url)
-
 
     return append_user_to_response(request, 'enterprise/postulation_details.html', {
         'postulation': postulation

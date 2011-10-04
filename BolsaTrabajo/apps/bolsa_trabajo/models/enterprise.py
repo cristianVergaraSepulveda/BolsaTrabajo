@@ -26,7 +26,7 @@ class Enterprise(User):
         subject = '[Bolsa Trabajo CaDCC] Solicitud aceptada'
 
         send_email(self, subject, t, {})
-        
+
     def get_closed_offers_without_feedback(self):
         from . import Offer
         return Offer.get_closed_without_feedback().filter(enterprise=self)
@@ -78,7 +78,7 @@ class Enterprise(User):
 
         t = get_template('mails/new_offer_postulation_mail.html')
 
-        send_email(self, subject, t, {'postulation':postulation})
+        send_email(self, subject, t, {'postulation': postulation})
 
     class Meta:
         app_label = 'bolsa_trabajo'
