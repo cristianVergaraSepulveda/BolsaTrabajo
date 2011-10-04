@@ -14,6 +14,7 @@
     <b>Términos clave:</b> {{ postulation.student.get_tags_string }}
 <br />
 <br />
+{% if not user.is_staff %}
 <ul>
     <li><a href="{% url bolsa_trabajo.views.student_send_message postulation.student.id %}">Envíe un mensaje a este profesional</a></li>
 </ul>
@@ -27,6 +28,6 @@
         </table>
         <input type="submit" value="Contratar" />
     </form>
-
+{% endif %}
 
 {% endblock %}

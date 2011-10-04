@@ -24,7 +24,7 @@
 <br />
 
 {% if user.is_staff and not offer.is_closed %}
-
+<a href="{% url bolsa_trabajo.views_enterprise.offer_postulations offer.id %}"> Ver postulaciones</a>
 <form action="{% url enterprise_close_offer offer.id %}" method="post" onsubmit="return confirm('¿Está seguro que desea cerrar la oferta? El proceso no es reversible');">
     {% csrf_token %}
     <input type="submit" value="Cerrar Oferta" />
